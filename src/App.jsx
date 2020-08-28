@@ -60,7 +60,7 @@ function App() {
             <Route path="/" component={homePage} exact />
             <Route path="/muscles" component={musclesPage} exact />
             <Route path="/bones" component={bonesPage} exact />
-            <GuestRoute path="/loginPage" authenticated={authentication.authenticated} component={loginPage} redirectPath="/" exact />
+            <GuestRoute path="/loginPage" authenticated={authentication.authenticated} component={loginPage} redirectPath="/profile" exact />
             <ProtectedRoute path="/profile" authenticated={authentication.authenticated} component={profilePage} redirectPath="/loginPage" exact />
             <Route path="*" component={notFoundPage} />
           </Switch>
