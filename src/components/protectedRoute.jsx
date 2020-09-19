@@ -11,18 +11,20 @@ const ProtectedRoute = ({
   component: Component,
   redirectPath: RedirectPath,
   authenticated,
+  roles,
   ...rest
 }) => {
   return (
     <Route
       {...rest}
       render={(props) => {
-        if (authenticated) {
+        if (authenticated && roles.expectedRole === roles.currentRole) {
           return <Component {...props} />;
+        } else {
+          return (
+            <Redirect to={{ pathname: RedirectPath }} />
+          );
         }
-        return (
-          <Redirect to={{ pathname: RedirectPath }} />
-        );
       }}
     />
   );

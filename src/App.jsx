@@ -1,67 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-import firebase from 'firebase';
 
 import Navbar from './components/navbar';
 import ProtectedRoute from './components/protectedRoute';
 import GuestRoute from './components/guestRoute';
-import auth from './helpers/auth';
-import firebaseConfig from './config/firebase.config';
 
 import homePage from './pages/homePage';
 import loginPage from './pages/loginPage';
 import bonesPage from './pages/bonesPage';
 import musclesPage from './pages/musclesPage';
-import profilePage from './pages/profilePage';
 import notFoundPage from './pages/pageNotFound';
+
+import promoteToAdminPage from './pages/admin/promoteUsers';
+import patientProfilePage from './pages/patient/profilePage';
+import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
 
-firebase.initializeApp(firebaseConfig);
 
 function App() {
-  const [ authentication, setAuthentication ] = useState({
-    authenticated: false,
-    initializing: true
-  });
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (!!user) {
-        setAuthentication({
-          authenticated: true,
-          initializing: false
-        });
-        localStorage.setItem('userSignedIn', true);
-        auth.login()
-      }
-      else {
-        setAuthentication({
-          authenticated: false,
-          initializing: false
-        });
-        localStorage.setItem('userSignedIn', false);
-        auth.logout()
-      }
-    });
-  }, [setAuthentication]);
-
-  // if (authentication.initializing) {
-  //   return <div>Loading</div>;
-  // }
+  const currentRole = localStorage.getItem('role');
+  const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true')
 
   return (
     <Router>
       <div className="App">
-        <Navbar authenticated={authentication.authenticated} />
+        <Navbar />
         <div style={{ marginTop: '1.5rem', marginLeft: '4rem', marginRight: '4rem' }}>
           <Switch>
             <Route path="/" component={homePage} exact />
             <Route path="/muscles" component={musclesPage} exact />
             <Route path="/bones" component={bonesPage} exact />
-            <GuestRoute path="/loginPage" authenticated={authentication.authenticated} component={loginPage} redirectPath="/profile" exact />
-            <ProtectedRoute path="/profile" authenticated={authentication.authenticated} component={profilePage} redirectPath="/loginPage" exact />
+            <GuestRoute
+              path="/loginPage"
+              component={loginPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              exact
+            />
+            <ProtectedRoute
+              path="/patient/profile"
+              component={patientProfilePage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
+              path="/physio/personalPatients"
+              component={physioPersonalPatientsPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute 
+              path="/admin/promoteToAdmin"
+              component={promoteToAdminPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole: 'ADMIN', currentRole: currentRole }}
+              exact
+            />
             <Route path="*" component={notFoundPage} />
           </Switch>
         </div>

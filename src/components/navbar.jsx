@@ -1,32 +1,58 @@
 import React, { useEffect } from 'react';
-import { Navbar, Nav, Form, Button } from 'react-bootstrap'
-import firebase from 'firebase'
+import { Navbar, Nav, Form, Button,  } from 'react-bootstrap'
+import firebase from './../config/firebase.config';
 
-import auth from '../helpers/auth'
+const NavBar = () => {
 
-const NavBar = ({ authenticated }) => {
+  const currentRole = localStorage.getItem('role');
+  const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true')
+
+  const userLogOut = () => {
+    firebase.auth().signOut();
+    localStorage.setItem('role', null);
+    localStorage.setItem('signedIn', false);
+  }
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
-      if (!!user) auth.login()
-      else auth.logout()
+      if (!!user) {
+
+        user.getIdTokenResult(true).then(idTokenResult => {
+          if (!idTokenResult.claims.role) user.reload();
+
+          localStorage.setItem('role', idTokenResult.claims.role);
+          localStorage.setItem('signedIn', true);
+        })
+      }
+      else {
+        localStorage.setItem('role', null);
+        localStorage.setItem('signedIn', false);
+      }
     });
-  });
+  }, []);
 
   return (
     <Navbar bg="dark" variant="dark">
       <Navbar.Brand href="/">PhysioAtHome</Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link href="/muscles">Muscles</Nav.Link>
-          <Nav.Link href="/bones">Bones</Nav.Link>
-          <Nav.Link href="/profile">Your Profile (P*)</Nav.Link>
+          
+          { currentUserSignedIn && <Nav.Link href="/muscles"> Muscles </Nav.Link> }
+          { currentUserSignedIn && <Nav.Link href="/bones"> Bones </Nav.Link> }
+
+          { (currentRole === 'ADMIN' && currentUserSignedIn ) && <Nav.Link href="/admin/promoteToAdmin"> Promote Users </Nav.Link> }
+          { (currentRole === 'PHYSIOTHERAPIST' && currentUserSignedIn ) && <Nav.Link href="/physio/personalPatients"> My Patients </Nav.Link> }
+          { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href="/patient/profile"> Your Profile </Nav.Link> }
+         
         </Nav>
+        <Navbar.Text style={{ marginRight: '1em' }}> 
+          { currentRole !== 'null' ? currentRole : '' }
+        </Navbar.Text>
       <Form inline>
-        { authenticated // auth.isAuthenticated()
+        { currentUserSignedIn
           ? <Button 
               href='/loginPage'
               variant="outline-info"
-              onClick={ () => { firebase.auth().signOut() } }
+              onClick={userLogOut}
             > Log Out </Button>
           : <Button
               href='/loginPage'
