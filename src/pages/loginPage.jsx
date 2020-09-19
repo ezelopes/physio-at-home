@@ -1,13 +1,12 @@
 import React from 'react';
-import  { Redirect } from 'react-router-dom'
 import firebase from 'firebase';
+import { Spinner } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 
-// import auth from '../helpers/auth';
 
-const LoginPage = (props) => {
+const LoginPage = () => {
   const uiConfig = {
     signInFlow: 'popup',
     signInOptions: [
@@ -17,27 +16,30 @@ const LoginPage = (props) => {
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      signInSuccess: () => {
-        // auth.login()
-        return <Redirect to='/' />
+      signInSuccessWithAuthResult: async () => {
+        document.getElementById('auth-div').style.display = 'none';
+        document.getElementById('load-div').style.display = 'block';
+        setTimeout(() => { window.location.pathname = '/' }, 2000)
+        return false;
       },
     }
   };
 
   return (
     <>
-      <StyledFirebaseAuth 
-        uiConfig={uiConfig}
-        firebaseAuth={firebase.auth()}
-      />
+      <div id='auth-div' style={{ display: 'block' }}>
+        <StyledFirebaseAuth 
+          uiConfig={uiConfig}
+          firebaseAuth={firebase.auth()}
+        />
+      </div>
+      <div id='load-div' style={{ marginTop: '5em', display: 'none' }} > 
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner> 
+      </div>
     </>
   )
 }
 
 export default LoginPage;
-
-/**
- * No redirect URL has been found.
- *  You must either specify a signInSuccessUrl in the configuration,
- *  pass in a redirect URL to the widget URL, or return false from the callback
- */
