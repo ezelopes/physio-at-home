@@ -13,11 +13,11 @@ import notFoundPage from './pages/pageNotFound';
 
 import promoteToAdminPage from './pages/admin/promoteUsers';
 import patientProfilePage from './pages/patient/profilePage';
+import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
-
 
 function App() {
   const currentRole = localStorage.getItem('role');
@@ -42,6 +42,14 @@ function App() {
             <ProtectedRoute
               path="/patient/profile"
               component={patientProfilePage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
+              path="/patient/searchphysiotherapist"
+              component={searchPhysiotherapistPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
