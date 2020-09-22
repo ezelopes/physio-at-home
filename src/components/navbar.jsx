@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navbar, Nav, Form, Button,  } from 'react-bootstrap'
+import { Navbar, Nav, Form, Button } from 'react-bootstrap'
 import firebase from './../config/firebase.config';
 
 const NavBar = () => {
@@ -42,6 +42,7 @@ const NavBar = () => {
           { (currentRole === 'ADMIN' && currentUserSignedIn ) && <Nav.Link href="/admin/promoteToAdmin"> Promote Users </Nav.Link> }
           { (currentRole === 'PHYSIOTHERAPIST' && currentUserSignedIn ) && <Nav.Link href="/physio/personalPatients"> My Patients </Nav.Link> }
           { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href="/patient/profile"> Your Profile </Nav.Link> }
+          { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href="/patient/searchphysiotherapist"> Search Physiotherapists </Nav.Link> }
          
         </Nav>
         <Navbar.Text style={{ marginRight: '1em' }}> 
