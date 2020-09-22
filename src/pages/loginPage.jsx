@@ -19,7 +19,7 @@ const LoginPage = () => {
       signInSuccessWithAuthResult: async () => {
         document.getElementById('auth-div').style.display = 'none';
         document.getElementById('load-div').style.display = 'block';
-        setTimeout(() => { window.location.pathname = '/' }, 2000)
+        setTimeout(() => { window.location.pathname = '/' }, 3000)
         return false;
       },
     }
