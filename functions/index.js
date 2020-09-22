@@ -3,6 +3,29 @@ const admin = require('firebase-admin');
 const cors =  require('cors')({ origin: true });
 
 admin.initializeApp();
+const db = admin.firestore();
+
+exports.getAllPhysiotherapists = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const physiotherapistsList = [];
+      const physiotherapists = await db.collection('physiotherapists').get();
+
+      physiotherapists.forEach((currentPhysiotherapist) => {
+        const currentPhysiotherapistInfo = currentPhysiotherapist.data();
+        physiotherapistsList.push(currentPhysiotherapistInfo);
+        functions.logger.info('Current Physiotherapists', { id: currentPhysiotherapist.id, body: currentPhysiotherapist.data() });
+      });
+
+
+      functions.logger.info('Retrieved Physiotherapists', { body: physiotherapistsList });
+
+      res.send({ data: { physiotherapists: physiotherapistsList } });
+    } catch (err) {
+      res.send({ data: err })
+    }
+  });
+});
 
 exports.setUserAsAdmin = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
@@ -54,7 +77,7 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
   try {
     await admin.auth().setCustomUserClaims(user.uid,{ role: 'PATIENT' })
 
-    await admin.firestore().collection('users').doc(user.email).set({
+    await db.collection('users').doc(user.email).set({
       userId: user.uid,
       email: user.email,
       name: user.displayName,
