@@ -51,10 +51,25 @@ exports.setUserAsPatient = functions.https.onRequest(async (req, res) => {
 
 exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
 
-  await admin.auth().setCustomUserClaims(user.uid,{ role: 'PATIENT' })
+  try {
+    await admin.auth().setCustomUserClaims(user.uid,{ role: 'PATIENT' })
 
-  const userRecord = await admin.auth().getUser(user.uid);
-  functions.logger.info("Role", { body: userRecord.customClaims.role });
+    await admin.firestore().collection('users').doc(user.email).set({
+      userId: user.uid,
+      email: user.email,
+      name: user.displayName,
+    });
+  
+    const userRecord = await admin.auth().getUser(user.uid);
+    functions.logger.info("User Created", {
+      email: user.email,
+      role: userRecord.customClaims.role
+    });
+  
+    return null;
+  } catch (err) {
+    functions.logger.info("Error", { body: err });
+    return null;
+  }
 
-  return null;
 });
