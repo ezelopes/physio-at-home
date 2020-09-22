@@ -2,7 +2,7 @@ import React from 'react';
 
 const ProfilePage = () => {
   return (
-    <div> HERE YOU WILL FIND YOUR PATIENTS </div>
+    <h2> HERE YOU WILL FIND YOUR PATIENTS </h2>
   );
 }
 

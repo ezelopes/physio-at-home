@@ -35,7 +35,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <div> Promote Users Page </div>
+      <h2> Promote Users Page </h2>
       <Form>
         <Form.Group>
           <Form.Label>New Admin Email address</Form.Label>
