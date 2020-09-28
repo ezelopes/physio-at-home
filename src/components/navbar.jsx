@@ -16,12 +16,18 @@ const NavBar = () => {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (!!user) {
-
-        user.getIdTokenResult(true).then(idTokenResult => {
-          if (!idTokenResult.claims.role) user.reload();
+        const userInfo = { 
+          uid: user.uid, 
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        }
+        user.getIdTokenResult(true).then(async (idTokenResult) => {
+          if (!idTokenResult.claims.role) await user.reload();
 
           localStorage.setItem('role', idTokenResult.claims.role);
           localStorage.setItem('signedIn', true);
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
         })
       }
       else {
