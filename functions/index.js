@@ -5,6 +5,49 @@ const cors =  require('cors')({ origin: true });
 admin.initializeApp();
 const db = admin.firestore();
 
+exports.sendConnectionRequest = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      functions.logger.info("Req Body", { body: req.body.data });
+      
+      const { physioID, patientID, patientEmail, patientName } = req.body.data;
+      
+      await db.collection('physiotherapists').doc(physioID).collection('patients').doc(patientID).set({
+        name: patientName,
+        email: patientEmail,
+        status: 'PENDING',
+      })
+
+      await db.collection('patients').doc(patientID).update({
+        requestsList: admin.firestore.FieldValue.arrayUnion(physioID)
+      })
+
+      res.send({ data: { message: 'Request sent!' } })
+    } catch (err) {
+      functions.logger.info("Error", { body: err });
+      res.send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
+exports.getPatientData = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const patientDoc = await db.collection('patients').doc(req.body.data.patientID).get();
+      
+      let patientData = null;
+      if (patientDoc.exists) patientData = patientDoc.data();
+
+      functions.logger.info('Patient Data', { body: patientData });
+
+      res.send({ data: { patientData } });
+    } catch (err) {
+      functions.logger.info("Error", { body: err });
+      res.send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
 exports.getAllPhysiotherapists = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
@@ -13,6 +56,7 @@ exports.getAllPhysiotherapists = functions.https.onRequest(async (req, res) => {
 
       physiotherapists.forEach((currentPhysiotherapist) => {
         const currentPhysiotherapistInfo = currentPhysiotherapist.data();
+        currentPhysiotherapistInfo.id = currentPhysiotherapist.id;
         physiotherapistsList.push(currentPhysiotherapistInfo);
         functions.logger.info('Current Physiotherapists', { id: currentPhysiotherapist.id, body: currentPhysiotherapist.data() });
       });
@@ -22,7 +66,8 @@ exports.getAllPhysiotherapists = functions.https.onRequest(async (req, res) => {
 
       res.send({ data: { physiotherapists: physiotherapistsList } });
     } catch (err) {
-      res.send({ data: err })
+      functions.logger.info("Error", { body: err });
+      res.send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -37,7 +82,8 @@ exports.setUserAsAdmin = functions.https.onRequest(async (req, res) => {
 
       res.send({ data: { message: 'Success! User promoted to Admin' } })
     } catch (err) {
-      res.send({ data: err })
+      functions.logger.info("Error", { body: err });
+      res.send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -52,7 +98,8 @@ exports.setUserAsPhysiotherapist = functions.https.onRequest(async (req, res) =>
 
       res.send({ data: { message: 'Success! User promoted to Physiotherapst' } })
     } catch (err) {
-      res.send({ data: err })
+      functions.logger.info("Error", { body: err });
+      res.send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -67,20 +114,24 @@ exports.setUserAsPatient = functions.https.onRequest(async (req, res) => {
 
       res.send({ data: { message: 'Success! User promoted to Patient' } })
     } catch (err) {
-      res.send({ data: err })
+      functions.logger.info("Error", { body: err });
+      res.send({ data: 'There was an error with the request!' })
     }
   });
 });
 
 exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
-
   try {
-    await admin.auth().setCustomUserClaims(user.uid,{ role: 'PATIENT' })
+    const defaultRole = 'PATIENT';
 
-    await db.collection('users').doc(user.email).set({
+    await admin.auth().setCustomUserClaims(user.uid,{ role: defaultRole })
+
+    await db.collection('patients').doc(user.uid).set({
       userId: user.uid,
       email: user.email,
       name: user.displayName,
+      role: defaultRole,
+      requestsList: [],
     });
   
     const userRecord = await admin.auth().getUser(user.uid);
@@ -94,5 +145,4 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
     functions.logger.info("Error", { body: err });
     return null;
   }
-
 });
