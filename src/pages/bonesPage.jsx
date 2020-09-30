@@ -29,12 +29,12 @@ const BonesPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await Promise.all(youtubeVideosID.map(currentID => getVideoInfo(currentID)))
-      console.log(response);
       setYoutubeVideosDetails(response);
     };
  
     fetchData();
-  }, [youtubeVideosID]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
