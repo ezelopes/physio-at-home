@@ -10,18 +10,6 @@ const ProfilePage = () => {
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
-  // const patientDataTemp = { requestsList: [ 'ceSaDuUw8Kd7U9Dl3Vdj4MyEaCd2' ] };
-
-  // const physiotherapistsListTemp = [
-  //   {
-  //     id: 'ceSaDuUw8Kd7U9Dl3Vdj4MyEaCd2',
-  //     specialisation: [],
-  //     email: 'up872640@myport.ac.uk',
-  //     name: 'Ezequiel Damian Lopes',
-  //     role: 'PHYSIOTHERAPIST',
-  //   },
-  // ];
-
   const [physiotherapistsList, setPhysiotherapistsList] = useState([]);
   const [patientRequestsList, setPatientRequestsList] = useState([]);
 
@@ -44,7 +32,6 @@ const ProfilePage = () => {
       console.log(response);
 
       return response.data.physiotherapists;
-      // return physiotherapistsListTemp
     } catch (err) {
       console.log(err);
     }
@@ -56,7 +43,6 @@ const ProfilePage = () => {
       const response = await getPatientData({ patientID: userID });
 
       return response.data.patientData;
-      // return patientDataTemp;
     } catch (err) {
       console.log(err);
     }
@@ -68,11 +54,11 @@ const ProfilePage = () => {
   //   return stringDate;
   // }
 
-  const sendConnectionRequest = async (physioID) => {
+  const sendInvite = async (physioID) => {
     console.log({ physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name })
-    const sendConnectionRequest = functions.httpsCallable('sendConnectionRequest');
-    const response = await sendConnectionRequest({ 
-      physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name 
+    const sendInvite = functions.httpsCallable('sendInvite');
+    const response = await sendInvite({ 
+      physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name, photoURL: userInfo.photoURL
     });
     console.log(response);
   }
@@ -101,14 +87,14 @@ const ProfilePage = () => {
                 <h6 key={index}>{currentSpec}</h6>
                 ))}
               </td>
-              <td key='sendConnectionRequest'>
+              <td key='sendInvite'>
                 { patientRequestsList.includes(physiotherapist.id) 
                   ? <Button disabled>
                       Request Already Sent
                     </Button>
                   : 
-                  <Button onClick={() => { sendConnectionRequest(physiotherapist.id) }}>
-                    Send Connection Request
+                  <Button onClick={() => { sendInvite(physiotherapist.id) }}>
+                    Send Invite
                   </Button>
                 }
               </td>

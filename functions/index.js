@@ -7,28 +7,16 @@ const db = admin.firestore();
 
 // exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
 
-exports.getAllPhysioPatients = functions.https.onRequest(async (req, res) => {
+exports.declineInviteRequest = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
-      functions.logger.info("Req Body", { body: req.body.data });
-      const pendingPatientsList = [];
-      const patientsList = [];
-      const { physioID } = req.body.data;
-      
-      const patientsDoc = await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('PATIENTS').get();
-      
-      patientsDoc.forEach((currentPatient) => {
-        const currentPatientInfo = currentPatient.data();
-        currentPatientInfo.id = currentPatient.id;
-        console.log('TEEEEST');
-        console.log(currentPatientInfo);
-        if (currentPatientInfo.status === 'PENDING') pendingPatientsList.push(currentPatientInfo);
-        else if (currentPatientInfo.status === 'ACCEPTED') patientsList.push(currentPatientInfo);
-      })
+      const { physioID, patientID } = req.body.data;
+      console.log(physioID, patientID)
 
-      functions.logger.info('Patients Of Physio', { body: patientsList });
+      await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('INVITES').doc(patientID).delete();
 
-      res.send({ data: { pendingPatientsList, patientsList } });
+      console.log('Declined successfully!');
+      res.send({ data: { message: 'Patient Declined!' } });
     } catch (err) {
       console.log(err);
       res.send({ data: 'There was an error with the request!' })
@@ -36,17 +24,85 @@ exports.getAllPhysioPatients = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.sendConnectionRequest = functions.https.onRequest(async (req, res) => {
+exports.acceptInviteRequest = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { physioID, patientID, name, email, photoURL } = req.body.data;
+      console.log(physioID, patientID, name, email, photoURL)
+
+      await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('PATIENTS').doc(patientID).set({ name, email, photoURL });
+      await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('INVITES').doc(patientID).delete();
+
+      console.log('Accepted successfully!');
+      res.send({ data: { message: 'Patient Added!' } });
+    } catch (err) {
+      console.log(err);
+      res.send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
+exports.getAllPhysioInvites =  functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      console.log(req.body.data);
+
+      const invitesList = {};
+      const { physioID } = req.body.data;
+      
+      const invitesDoc = await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('INVITES').get();
+      
+      invitesDoc.forEach((currentPatient) => {
+        const currentPatientInfo = currentPatient.data();
+        invitesList[currentPatient.id] = currentPatientInfo; 
+      })
+
+      console.log(invitesList);
+
+      res.send({ data: { invitesList } });
+    } catch (err) {
+      console.log(err);
+      res.send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
+exports.getAllPhysioPatients = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      console.log(req.body.data);
+
+      const patientsList = {};
+      const { physioID } = req.body.data;
+      
+      const patientsDoc = await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('PATIENTS').get();
+      
+      patientsDoc.forEach((currentPatient) => {
+        const currentPatientInfo = currentPatient.data();
+        patientsList[currentPatient.id] = currentPatientInfo; 
+      })
+
+      console.log(patientsList);
+
+      res.send({ data: { patientsList } });
+    } catch (err) {
+      console.log(err);
+      res.send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
+exports.sendInvite = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       functions.logger.info("Req Body", { body: req.body.data });
       
-      const { physioID, patientID, patientEmail, patientName } = req.body.data;
+      const { physioID, patientID, patientEmail, patientName, photoURL } = req.body.data;
       
-      await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('PATIENTS').doc(patientID).set({
+      await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('INVITES').doc(patientID).set({
         name: patientName,
         email: patientEmail,
-        status: 'PENDING',
+        photoURL: photoURL
       })
 
       await db.collection('PATIENTS').doc(patientID).update({
@@ -159,6 +215,7 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
       userId: user.uid,
       email: user.email,
       name: user.displayName,
+      photoURL: user.photoURL,
       role: null,
     }
 

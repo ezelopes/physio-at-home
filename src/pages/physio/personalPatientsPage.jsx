@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import firebase from '../../config/firebase.config';
 
-import { Container, Row, Col, Table, Button } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col } from 'react-bootstrap'
 
 const functions = firebase.functions();
 
 if (process.env.NODE_ENV === 'development') functions.useFunctionsEmulator("http://localhost:5001");
 
-const ProfilePage = () => {
-
+const PersonalPatientsPage = () => {
+  
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   const [physioPatientsList, setPhysioPatientsList] = useState([]);
-  const [physioPendingPatientsList, setPhysioPendingPatientsList] = useState([]);
+
 
   useEffect(() => {
     const fetchData = async () => { 
       const response = await getAllPhysioPatients(userInfo.uid);
       setPhysioPatientsList(response.patientsList);
-      setPhysioPendingPatientsList(response.pendingPatientsList);
      }
  
      fetchData();
@@ -29,92 +28,40 @@ const ProfilePage = () => {
     try {
       const getAllPhysioPatients = functions.httpsCallable('getAllPhysioPatients');
       const response = await getAllPhysioPatients({ physioID: userID });
-      const { patientsList, pendingPatientsList } = response.data;
+      const { patientsList } = response.data;
+      console.log(patientsList)
 
-      return { patientsList, pendingPatientsList };
+      return { patientsList };
     } catch (err) {
       console.log(err);
     }
-  }
-
-  const acceptRequest = async (patientId) => {
-    console.log(`accepted ${patientId}`);
-    const updatedPendingPatientsList = physioPendingPatientsList.filter((currentPatient) => {
-      return currentPatient.id !== patientId;
-    });
-    setPhysioPendingPatientsList(updatedPendingPatientsList)
-  }
-  const declineRequest = async (patientId) => {
-    console.log(`accepted ${patientId}`);
-  }
-  const seePatientDetails = async (patientId) => {
-    console.log(`seePatientDetails ${patientId}`);
   }
 
   return (
     <>
       <Container style={{ maxWidth: '100%' }}>
         <Row>
-          <Col>
-          <h4> YOUR PATIENTS </h4>
-            <Table responsive>
-              <thead>
-                <tr>
-                  {Array.from(['Name', 'Email', 'See Details']).map((element, index) => (
-                    <th key={index}>{element}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from(physioPatientsList).map((patient, index) => (
-                  <tr key={index}>
-                    <td key='name'>{patient.name}</td>
-                    <td key='email'>{patient.email}</td>
-                    <td key='seeDetails'>
-                      <Button onClick={() => { seePatientDetails(patient.id) }}>
-                        See Details
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>  
-          </Col>
-          <div style={{ borderLeft: '0.2em solid grey', height: '50em' }}> </div>
-          <Col>
-            <h4> PENDING REQUESTS </h4>
-            <Table responsive>
-              <thead>
-                <tr>
-                  {Array.from(['Name', 'Email', 'Accept Request', 'Decline Request']).map((element, index) => (
-                    <th key={index}>{element}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from(physioPendingPatientsList).map((pendingPatient, index) => (
-                  <tr key={index}>
-                    <td key='name'>{pendingPatient.name}</td>
-                    <td key='email'>{pendingPatient.email}</td>
-                    <td key='acceptRequest'>
-                      <Button variant="success" onClick={() => { acceptRequest(pendingPatient.id) }}>
-                        Accept Request
-                      </Button>
-                    </td>
-                    <td key='declineRequest'>
-                      <Button variant="danger" onClick={() => { declineRequest(pendingPatient.id) }}>
-                        Decline Request
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>  
-          </Col>
+        { Object.keys(physioPatientsList).map((patientID) => {
+            return <div id={patientID} key={patientID}>
+              <Col lg={true} style={{ marginTop: '1.5em' }}>
+                <Card style={{ width: '20em' }}>
+                  <Card.Body>
+                    <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL } style={{ borderRadius: '50%' }} />
+                    <Card.Title style={{ marginTop: '1em'}}> Name: { physioPatientsList[patientID].name } </Card.Title>
+                    <Card.Text>
+                      Email: { physioPatientsList[patientID].email }
+                    </Card.Text>
+                    <Button variant="primary">See Details</Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </div>
+          }) 
+        }
         </Row>
       </Container>
     </>
   );
 }
 
-export default ProfilePage;
+export default PersonalPatientsPage;
