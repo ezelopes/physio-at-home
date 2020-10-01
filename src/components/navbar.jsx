@@ -47,6 +47,7 @@ const NavBar = () => {
 
           { (currentRole === 'ADMIN' && currentUserSignedIn ) && <Nav.Link href="/admin/promoteToAdmin"> Promote Users </Nav.Link> }
           { (currentRole === 'PHYSIOTHERAPIST' && currentUserSignedIn ) && <Nav.Link href="/physio/personalPatients"> My Patients </Nav.Link> }
+          { (currentRole === 'PHYSIOTHERAPIST' && currentUserSignedIn ) && <Nav.Link href="/physio/patientInvites"> Invites </Nav.Link> }
           { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href="/patient/profile"> Your Profile </Nav.Link> }
           { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href="/patient/searchphysiotherapist"> Search Physiotherapists </Nav.Link> }
          
