@@ -15,6 +15,7 @@ import promoteToAdminPage from './pages/admin/promoteUsers';
 import patientProfilePage from './pages/patient/profilePage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
+import patientInvitesPage from './pages/physio/patientInvitesPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
@@ -58,6 +59,14 @@ function App() {
             <ProtectedRoute
               path="/physio/personalPatients"
               component={physioPersonalPatientsPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
+              path="/physio/patientInvites"
+              component={patientInvitesPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
