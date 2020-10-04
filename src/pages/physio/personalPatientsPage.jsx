@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import firebase from '../../config/firebase.config';
-
 import { Button, Card, Container, Row, Col } from 'react-bootstrap'
+import { ToastContainer, toast } from 'react-toastify';
+
+import firebase from '../../config/firebase.config';
+import toastConfig from '../../config/toast.config';
+import 'react-toastify/dist/ReactToastify.css';
 
 const functions = firebase.functions();
 
@@ -37,8 +40,32 @@ const PersonalPatientsPage = () => {
     }
   }
 
+  const removeConnection = async (patientID) => {
+    try {
+      const physioID = userInfo.uid;
+      document.getElementById(`${patientID}-removeConnectionButton`).disabled = true;
+      document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Loading...';
+      document.getElementById(`${patientID}-removeConnectionButton`).className = 'btn btn-primary';
+      
+      const removeConnection = functions.httpsCallable('removeConnection');
+      const response = await removeConnection({ 
+        physioID, patientID,
+      });
+      console.log(response);
+
+      document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Connection Removed!';
+      toast.success('🚀 Connection Removed Successfully!', toastConfig);
+    } catch (err) {
+      toast.error('😔 There was an error removing this connection!', toastConfig);
+      document.getElementById(`${patientID}-removeConnectionButton`).className = 'btn btn-warning';
+      document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Refresh Page!';
+      console.log(err);
+    }
+  }
+
   return (
     <>
+      <ToastContainer />
       <Container style={{ maxWidth: '100%' }}>
         <Row>
         { Object.keys(physioPatientsList).map((patientID) => {
@@ -51,7 +78,14 @@ const PersonalPatientsPage = () => {
                     <Card.Text>
                       Email: { physioPatientsList[patientID].email }
                     </Card.Text>
-                    <Button variant="primary">See Details</Button>
+                    <Button variant="primary" style={{ marginRight: '1em' }}>See Details</Button>
+                    <Button 
+                      id={`${patientID}-removeConnectionButton`}
+                      variant="danger"
+                      onClick={() => { removeConnection(patientID) }}
+                    >
+                      Remove Patient
+                    </Button>
                   </Card.Body>
                 </Card>
               </Col>
