@@ -12,7 +12,11 @@ code {
     monospace;
 }
 
-h2, th, td {
+h2, th, td, Form {
   color: white
 }
 
+option {
+  color: white;
+  background-color: #181A1B;
+}
