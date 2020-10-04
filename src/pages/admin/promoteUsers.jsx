@@ -7,7 +7,7 @@ const functions = firebase.functions();
 
 if (process.env.NODE_ENV === 'development') functions.useFunctionsEmulator("http://localhost:5001");
 
-const ProfilePage = () => {
+const PromoteUsersPage = () => {
 
   const makeAdmin = async () => {
     try {
@@ -63,4 +63,4 @@ const ProfilePage = () => {
   );
 }
 
-export default ProfilePage;
+export default PromoteUsersPage;

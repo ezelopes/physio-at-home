@@ -9,11 +9,11 @@ import PropTypes from 'prop-types';
  */
 const PageNotFound = (props) => {
   return (
-    <>
+    <h2>
       <div> 404 - PAGE NOT FOUND! </div>
       <div> Looks like you followed a broken link or entered a URL that does not exist on this site </div>
       <Button onClick={() => { props.history.push('/'); }}> HOME PAGE </Button>
-    </>
+    </h2>
   );
 };
 
