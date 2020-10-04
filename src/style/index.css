@@ -20,3 +20,24 @@ option {
   color: white;
   background-color: #181A1B;
 }
+
+/* RANGE BAR */
+.inputR {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  opacity: 1;
+  outline: none;
+  margin: 0 auto;
+  border-radius: 10%;
+}
+
+.inputR::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  background: white;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
