@@ -7,19 +7,39 @@ const db = admin.firestore();
 
 // exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
 
+exports.removeConnection = functions.https.onRequest(async(req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { physioID, patientID } = req.body.data;
+      console.log(physioID, patientID)
+
+      await db.collection('PATIENTS').doc(patientID).update({ physiotherapistsList: admin.firestore.FieldValue.arrayRemove(physioID) })
+      await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('PATIENTS').doc(patientID).delete(); 
+
+      console.log('Connection removed successfully!');
+      res.status(200).send({ data: { message: 'Connection removed successfully!' } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
 exports.declineInviteRequest = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { physioID, patientID } = req.body.data;
       console.log(physioID, patientID)
 
+      // REMOVE PHYSIO ID FROM PATIENT REQUESTSLIST FIELD
+      await db.collection('PATIENTS').doc(patientID).update({ requestsList: admin.firestore.FieldValue.arrayRemove(physioID) })
       await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('INVITES').doc(patientID).delete();
 
       console.log('Declined successfully!');
-      res.send({ data: { message: 'Patient Declined!' } });
+      res.status(200).send({ data: { message: 'Patient Declined!' } });
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -30,14 +50,20 @@ exports.acceptInviteRequest = functions.https.onRequest(async (req, res) => {
       const { physioID, patientID, name, email, photoURL } = req.body.data;
       console.log(physioID, patientID, name, email, photoURL)
 
+      // REMOVE PHYSIO ID FROM PATIENT REQUESTSLIST FIELD AND ADD IT TO physiotherapistsList
+      
+      await db.collection('PATIENTS').doc(patientID).update({ 
+        physiotherapistsList: admin.firestore.FieldValue.arrayUnion(physioID),
+        requestsList: admin.firestore.FieldValue.arrayRemove(physioID)
+      })
       await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('PATIENTS').doc(patientID).set({ name, email, photoURL });
       await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('INVITES').doc(patientID).delete();
 
       console.log('Accepted successfully!');
-      res.send({ data: { message: 'Patient Added!' } });
+      res.status(200).send({ data: { message: 'Patient Added!' } });
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -59,10 +85,10 @@ exports.getAllPhysioInvites =  functions.https.onRequest(async (req, res) => {
 
       console.log(invitesList);
 
-      res.send({ data: { invitesList } });
+      res.status(200).send({ data: { invitesList } });
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -84,10 +110,10 @@ exports.getAllPhysioPatients = functions.https.onRequest(async (req, res) => {
 
       console.log(patientsList);
 
-      res.send({ data: { patientsList } });
+      res.status(200).send({ data: { patientsList } });
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -109,10 +135,11 @@ exports.sendInvite = functions.https.onRequest(async (req, res) => {
         requestsList: admin.firestore.FieldValue.arrayUnion(physioID)
       })
 
-      res.send({ data: { message: 'Request sent!' } })
+      res.status(200).send({ data: { message: 'Request sent!' } })
     } catch (err) {
+      console.log('YOOOO');
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -127,10 +154,10 @@ exports.getPatientData = functions.https.onRequest(async (req, res) => {
 
       functions.logger.info('Patient Data', { body: patientData });
 
-      res.send({ data: { patientData } });
+      res.status(200).send({ data: { patientData } });
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -151,10 +178,10 @@ exports.getAllPhysiotherapists = functions.https.onRequest(async (req, res) => {
 
       functions.logger.info('Retrieved Physiotherapists', { body: physiotherapistsList });
 
-      res.send({ data: { physiotherapists: physiotherapistsList } });
+      res.status(200).send({ data: { physiotherapists: physiotherapistsList } });
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -167,10 +194,10 @@ exports.setUserAsAdmin = functions.https.onRequest(async (req, res) => {
       const user = await admin.auth().getUserByEmail(req.body.data.email);
       await admin.auth().setCustomUserClaims(user.uid, { role: 'ADMIN' });
 
-      res.send({ data: { message: 'Success! User promoted to Admin' } })
+      res.status(200).send({ data: { message: 'Success! User promoted to Admin' } })
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -183,10 +210,10 @@ exports.setUserAsPhysiotherapist = functions.https.onRequest(async (req, res) =>
       const user = await admin.auth().getUserByEmail(req.body.data.email);
       await admin.auth().setCustomUserClaims(user.uid, { role: 'PHYSIOTHERAPIST' });
 
-      res.send({ data: { message: 'Success! User promoted to Physiotherapst' } })
+      res.status(200).send({ data: { message: 'Success! User promoted to Physiotherapst' } })
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -199,10 +226,10 @@ exports.setUserAsPatient = functions.https.onRequest(async (req, res) => {
       const user = await admin.auth().getUserByEmail(req.body.data.email);
       await admin.auth().setCustomUserClaims(user.uid, { role: 'PATIENT' });
 
-      res.send({ data: { message: 'Success! User promoted to Patient' } })
+      res.status(200).send({ data: { message: 'Success! User promoted to Patient' } })
     } catch (err) {
       console.log(err);
-      res.send({ data: 'There was an error with the request!' })
+      res.status(500).send({ data: 'There was an error with the request!' })
     }
   });
 });
@@ -224,7 +251,7 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
 
     if (isAdmin) { userData.role = 'ADMIN'; }
     else if (physiotherapist) { userData.role = 'PHYSIOTHERAPIST'; userData.specialisation = [] }
-    else { userData.role = 'PATIENT'; userData.requestsList = [] }
+    else { userData.role = 'PATIENT'; userData.requestsList = [], userData.physiotherapistsList = [] }
 
     const dbCollection = userData.role + 'S';
     
@@ -232,10 +259,7 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
     functions.logger.info("Collection", { dbCollection: dbCollection });
     
     await db.collection(dbCollection).doc(user.uid).set(userData);
-    functions.logger.info("TEST1", { message: 'TEST1', role: userData.role });
     await admin.auth().setCustomUserClaims(user.uid, { role: userData.role })
-    functions.logger.info("TEST2", { message: 'TEST2' });
-    
 
     const userRecord = await admin.auth().getUser(user.uid);
     functions.logger.info("User Created", { role: userRecord.customClaims.role });
