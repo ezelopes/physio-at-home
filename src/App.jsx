@@ -12,7 +12,7 @@ import musclesPage from './pages/musclesPage';
 import notFoundPage from './pages/pageNotFound';
 
 import promoteToAdminPage from './pages/admin/promoteUsers';
-import patientProfilePage from './pages/patient/profilePage';
+import addNewSymptomPage from './pages/patient/addNewSymptomPage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 import patientInvitesPage from './pages/physio/patientInvitesPage';
@@ -41,8 +41,8 @@ function App() {
               exact
             />
             <ProtectedRoute
-              path="/patient/profile"
-              component={patientProfilePage}
+              path="/patient/addNewSymptomPage"
+              component={addNewSymptomPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
