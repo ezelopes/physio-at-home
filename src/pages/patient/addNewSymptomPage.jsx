@@ -1,29 +1,37 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap'
 
 import RangeBar from '../../components/rangeBar'
+import KneeImage from '../../components/kneeImage'
 
 const AddNewSymptomPage = () => {
 
-  const active = '#64c3ef';
-  const inactive = '#dbdbdb';
+  const bodyPartsList = [ 'Knee', 'Shoulder', 'Back' ];
 
-  const painRangeRef = useRef();
+  // const submitNewSymptom = async () => {
+  //   const temp = document.getElementById('painRangeID');
+  //   console.log(temp.value);
+  // }
 
-  const handleRangeChange = (e) => {
-    const { value, min, max } = e.target;
-    console.log(min, max)
-    const progress = (value/max) * 100 + '%'
-    painRangeRef.current.value = value;
-    console.log(painRangeRef)
-    const newBackgroundStyle = `linear-gradient(90deg, ${active} 0% ${progress}%, ${inactive} ${progress}% 100%)`
+  const [selectedBodyPart, setBodyPart] = useState('Knee');
 
-    document.getElementById('painRange').value = value; 
-    if (value > 50) document.getElementById('painRange').style.backgroundColor = 'red';
-    else  document.getElementById('painRange').style.backgroundColor = 'yellow';
-    console.log(e.target.value)
+  const handleBodyPartChange = (e) => {
+    const { value } = e.target;
+    setBodyPart(value);
   }
 
+  const renderSwitch = (bodyPart) => {
+    switch(bodyPart.toUpperCase()) {
+      case 'KNEE':
+        return <KneeImage />;
+      case 'SHOULDER':
+        return 'SHOULDER IMG';
+      case 'BACK':
+        return 'BACK IMG';
+      default:
+        return null;
+    }
+  }
   return (
     <>
       <h2 style={{ marginBottom: '1em' }}> Add New Symptoms Here </h2>
@@ -31,22 +39,26 @@ const AddNewSymptomPage = () => {
         <Form.Group>
           <Form.Label> Where do you feel pain? </Form.Label>
           <Form.Control
+            placeholder='Choose...'
             as="select"
             className="my-1 mr-sm-2"
-            id="inlineFormCustomSelectPref"
+            id="bodyPartSelect"
+            onChange={(e) => { handleBodyPartChange(e) }}
             custom
           >
-            <option value="0">Choose...</option>
-            <option value="1">Knee</option>
-            <option value="2">Shoulder</option>
-            <option value="3">Back</option>
+            {bodyPartsList.map((currentBodyPart, index) => {
+              return <option value={currentBodyPart} key={index}> {currentBodyPart} </option>
+            })}
           </Form.Control>
           {/* IMG WITH BUTTONS - DEFAULT VISIBLE FALSE. CHANGE SRC BASED ON SELECTION */}
         </Form.Group>
+          <div>{renderSwitch(selectedBodyPart)}</div>
+          
+        {/* <BodyImageComponent bodyPart={selectedBodyPart} /> */}
 
         <Form.Group style={{ marginTop: '2em' }}>
           <Form.Label>How much pain do you feel?</Form.Label>
-          <RangeBar id="sliderId" onChange={(e) => { console.log(e) }} />
+          <RangeBar id="painRangeID" />
         </Form.Group>
 
         <Form.Group style={{ marginTop: '2em' }}>
@@ -55,10 +67,10 @@ const AddNewSymptomPage = () => {
         </Form.Group>
 
         <Form.Group style={{ marginTop: '2em' }}>
-          <Button variant="primary" style={{ marginRight: '1em' }}>
+          <Button variant="primary" type="button" style={{ marginRight: '1em' }}>
             Record Video
           </Button>
-          <Button variant="primary">
+          <Button variant="primary" type="button">
             Upload Video
           </Button>
         </Form.Group>
