@@ -16,6 +16,7 @@ import addNewSymptomPage from './pages/patient/addNewSymptomPage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 import patientInvitesPage from './pages/physio/patientInvitesPage';
+import selectedPatientPage from './pages/physio/selectedPatientPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
@@ -59,6 +60,14 @@ function App() {
             <ProtectedRoute
               path="/physio/personalPatients"
               component={physioPersonalPatientsPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
+              path="/physio/selectedPatient"
+              component={selectedPatientPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
