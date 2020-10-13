@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const KneeImage = () => {
+const KneeImage = ({ setSpecificBodyPart }) => {
 
   const [kneePart, setKneePart] = useState(null);
   const kneePartsList = ['KNEE CAP', 'UPPER LEFT KNEE', 'LOWER LEFT KNEE', 'UPPER RIGHT KNEE', 'LOWER RIGHT KNEE']
@@ -31,13 +31,14 @@ const KneeImage = () => {
     const xCoordinate = e.nativeEvent.offsetX;
     const yCoordinate = e.nativeEvent.offsetY;
     const selectedKneePart = getPointerPosition(xCoordinate, yCoordinate);
-    setKneePart(selectedKneePart)
+    setKneePart(selectedKneePart);
+    setSpecificBodyPart(selectedKneePart);
   }
 
   const handleMouseMove = (e) => {
-    const xCoordinate = e.nativeEvent.offsetX;
-    const yCoordinate = e.nativeEvent.offsetY;
-    const pointerPosition = getPointerPosition(xCoordinate, yCoordinate);
+    // const xCoordinate = e.nativeEvent.offsetX;
+    // const yCoordinate = e.nativeEvent.offsetY;
+    // const pointerPosition = getPointerPosition(xCoordinate, yCoordinate);
     // console.log(pointerPosition);
   }
 
