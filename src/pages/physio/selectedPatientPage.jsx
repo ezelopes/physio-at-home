@@ -46,9 +46,11 @@ const SelectedPatientPage = (props) => {
                     <Card style={{ width: '20em' }}>
                       <Card.Body>
                         <Card.Title>
-                          { console.log(patientSymptomsList[currentSymptomID]) }
-                          Body Part: { patientSymptomsList[currentSymptomID].specificBodyPart }
+                          { patientSymptomsList[currentSymptomID].symptomTitle }
                         </Card.Title>
+                        <Card.Text style={{ color: 'black' }}>
+                          Body Part: { patientSymptomsList[currentSymptomID].specificBodyPart }
+                        </Card.Text>
                         <Card.Text style={{ color: 'black' }}>
                           Pain Range Value: { patientSymptomsList[currentSymptomID].painRangeValue }
                         </Card.Text>

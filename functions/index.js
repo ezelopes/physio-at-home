@@ -32,10 +32,10 @@ exports.getAllSymptomsFromPatient = functions.https.onRequest(async (req, res) =
 exports.addNewPatientSymptom = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
-      const { patientID, painRangeValue, specificBodyPart, symptomDetails } = req.body.data;
-      console.log(patientID, painRangeValue, specificBodyPart, symptomDetails);
+      const { patientID, symptomTitle, painRangeValue, specificBodyPart, symptomDetails } = req.body.data;
+      console.log(patientID, symptomTitle, painRangeValue, specificBodyPart, symptomDetails);
 
-      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ painRangeValue, specificBodyPart, symptomDetails })
+      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ symptomTitle, painRangeValue, specificBodyPart, symptomDetails })
 
       console.log('Symptom Added Successfully!');
       res.status(200).send({ data: { message: 'Symptom Added Successfully!' } });

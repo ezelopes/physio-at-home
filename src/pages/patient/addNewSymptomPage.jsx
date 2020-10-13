@@ -25,12 +25,13 @@ const AddNewSymptomPage = () => {
     document.getElementById('addNewSymptomButton').disabled = true;
     document.getElementById('addNewSymptomButton').textContent = 'Loading...';
     try {
+      const symptomTitle = document.getElementById('symptomTitle').value;
       const painRangeValue = document.getElementById('painRangeID').value;
       const symptomDetails = document.getElementById('symptomDetails').value;
       console.log(painRangeValue, specificBodyPart, symptomDetails)
     
       const addNewPatientSymptom = functions.httpsCallable('addNewPatientSymptom');
-      const response = await addNewPatientSymptom({ patientID: userInfo.uid, painRangeValue, specificBodyPart, symptomDetails });
+      const response = await addNewPatientSymptom({ patientID: userInfo.uid, symptomTitle, painRangeValue, specificBodyPart, symptomDetails });
       console.log(response);
     
       toast.success('🚀 Symptom Added Successfully!', toastConfig);
@@ -64,7 +65,12 @@ const AddNewSymptomPage = () => {
       <ToastContainer />
       <h2 style={{ marginBottom: '1em' }}> Add New Symptoms Here </h2>
       <Form style={{ width: '60%', margin: 'auto', border: 'solid', padding: '2em' }}>
-        <Form.Group>
+      <Form.Group>
+          <Form.Label>Symptom Title</Form.Label>
+          <Form.Control as='text' placeholder="Insert here a title..." id='symptomTitle' />
+        </Form.Group>
+
+        <Form.Group style={{ marginTop: '2em' }}>
           <Form.Label> Where do you feel pain? </Form.Label>
           <Form.Control
             placeholder='Choose...'
