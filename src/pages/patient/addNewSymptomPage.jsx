@@ -1,19 +1,46 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap'
+import { ToastContainer, toast } from 'react-toastify';
+
+import firebase from '../../config/firebase.config';
+import toastConfig from '../../config/toast.config';
+import 'react-toastify/dist/ReactToastify.css';
 
 import RangeBar from '../../components/rangeBar'
 import KneeImage from '../../components/kneeImage'
 
+const functions = firebase.functions();
+
 const AddNewSymptomPage = () => {
 
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const bodyPartsList = [ 'Knee', 'Shoulder', 'Back' ];
 
-  // const submitNewSymptom = async () => {
-  //   const temp = document.getElementById('painRangeID');
-  //   console.log(temp.value);
-  // }
-
   const [selectedBodyPart, setBodyPart] = useState('Knee');
+  const [specificBodyPart, setSpecificBodyPart] = useState('');
+
+  const submitNewSymptom = async (e) => {
+    e.preventDefault();
+
+    document.getElementById('addNewSymptomButton').disabled = true;
+    document.getElementById('addNewSymptomButton').textContent = 'Loading...';
+    try {
+      const painRangeValue = document.getElementById('painRangeID').value;
+      const symptomDetails = document.getElementById('symptomDetails').value;
+      console.log(painRangeValue, specificBodyPart, symptomDetails)
+    
+      const addNewPatientSymptom = functions.httpsCallable('addNewPatientSymptom');
+      const response = await addNewPatientSymptom({ patientID: userInfo.uid, painRangeValue, specificBodyPart, symptomDetails });
+      console.log(response);
+    
+      toast.success('🚀 Symptom Added Successfully!', toastConfig);
+    } catch(err) {
+      toast.error('😔 There was an error adding your symptom!', toastConfig);
+    }
+      
+    document.getElementById('addNewSymptomButton').disabled = false;
+    document.getElementById('addNewSymptomButton').textContent = 'Submit';
+  }
 
   const handleBodyPartChange = (e) => {
     const { value } = e.target;
@@ -23,7 +50,7 @@ const AddNewSymptomPage = () => {
   const renderSwitch = (bodyPart) => {
     switch(bodyPart.toUpperCase()) {
       case 'KNEE':
-        return <KneeImage />;
+        return <KneeImage setSpecificBodyPart={setSpecificBodyPart} />;
       case 'SHOULDER':
         return 'SHOULDER IMG';
       case 'BACK':
@@ -34,6 +61,7 @@ const AddNewSymptomPage = () => {
   }
   return (
     <>
+      <ToastContainer />
       <h2 style={{ marginBottom: '1em' }}> Add New Symptoms Here </h2>
       <Form style={{ width: '60%', margin: 'auto', border: 'solid', padding: '2em' }}>
         <Form.Group>
@@ -63,7 +91,7 @@ const AddNewSymptomPage = () => {
 
         <Form.Group style={{ marginTop: '2em' }}>
           <Form.Label>Please insert more details</Form.Label>
-          <Form.Control as='textarea' placeholder="Insert here details..." />
+          <Form.Control as='textarea' placeholder="Insert here details..." id='symptomDetails' />
         </Form.Group>
 
         <Form.Group style={{ marginTop: '2em' }}>
@@ -75,7 +103,13 @@ const AddNewSymptomPage = () => {
           </Button>
         </Form.Group>
 
-        <Button variant="success" type="submit" style={{ marginTop: '2em' }}>
+        <Button 
+          id='addNewSymptomButton'
+          variant="success"
+          type="submit"
+          style={{ marginTop: '2em' }}
+          onClick={(e) => submitNewSymptom(e)}
+        >
           Submit
         </Button>
       </Form>

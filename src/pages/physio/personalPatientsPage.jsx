@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -63,6 +64,11 @@ const PersonalPatientsPage = () => {
     }
   }
 
+  // const seePatientDetails = async (patientID) => {
+  //   console.log(patientID)
+  //   return <Link to={`/selectedPatientsPage/${patientID}`}>{patientID}</Link>;
+  // }
+
   return (
     <>
       <ToastContainer />
@@ -78,7 +84,9 @@ const PersonalPatientsPage = () => {
                     <Card.Text>
                       Email: { physioPatientsList[patientID].email }
                     </Card.Text>
-                    <Button variant="primary" style={{ marginRight: '1em' }}>See Details</Button>
+                    <Link to={{ pathname: `/physio/selectedPatient`, state: { patientID, name: physioPatientsList[patientID].name } }}>
+                      <Button variant="primary" style={{ marginRight: '1em' }}> See Details </Button>
+                    </Link>
                     <Button 
                       id={`${patientID}-removeConnectionButton`}
                       variant="danger"

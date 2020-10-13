@@ -7,7 +7,46 @@ const db = admin.firestore();
 
 // exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
 
-exports.removeConnection = functions.https.onRequest(async(req, res) => {
+exports.getAllSymptomsFromPatient = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { patientID } = req.body.data;
+      const symptomList = {};
+      
+      const symptomsDoc = await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').get();
+      symptomsDoc.forEach((currentSymptom) => {
+        const currentSymptomInfo = currentSymptom.data();
+        symptomList[currentSymptom.id] = currentSymptomInfo; 
+      })
+
+      console.log(symptomList);
+
+      res.status(200).send({ data: { symptomList } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  })
+})
+
+exports.addNewPatientSymptom = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { patientID, painRangeValue, specificBodyPart, symptomDetails } = req.body.data;
+      console.log(patientID, painRangeValue, specificBodyPart, symptomDetails);
+
+      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ painRangeValue, specificBodyPart, symptomDetails })
+
+      console.log('Symptom Added Successfully!');
+      res.status(200).send({ data: { message: 'Symptom Added Successfully!' } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
+exports.removeConnection = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { physioID, patientID } = req.body.data;
