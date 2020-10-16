@@ -22,6 +22,7 @@ import selectedPatientPage from './pages/physio/selectedPatientPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
 
+const pathsWhereNavbarIsHidden = ['/patient/startUpKinect']
 
 function App(props) {
   const currentLocation = props.location.pathname;
@@ -31,7 +32,7 @@ function App(props) {
 
   return (
       <div className="App">
-        { currentLocation === '/patient/startUpKinect' ? <></> : <Navbar /> }
+        { pathsWhereNavbarIsHidden.includes(currentLocation) ? <></> : <Navbar /> }
         <div style={{ marginTop: '1.5rem', marginLeft: '4rem', marginRight: '4rem' }}>
           <Switch>
             <Route path="/" component={homePage} exact />
