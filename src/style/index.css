@@ -12,7 +12,11 @@ code {
     monospace;
 }
 
-h2, th, td, Form, p {
+h2 {
+  color: #0069D9;
+  font-family: 'Roboto';
+}
+th, td, Form, p {
   color: white;
   font-family: 'Roboto';
 }

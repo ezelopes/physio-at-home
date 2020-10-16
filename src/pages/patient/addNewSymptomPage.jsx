@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Form } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
+import socketIOClient from "socket.io-client";
 
 import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
@@ -9,9 +10,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import RangeBar from '../../components/rangeBar'
 import KneeImage from '../../components/kneeImage'
 
+const ENDPOINT = "http://127.0.0.1:8069";
+const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff'];
+
 const functions = firebase.functions();
 
 const AddNewSymptomPage = () => {
+
+  const canvasRef = useRef(null);
+  let socket= null;
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const bodyPartsList = [ 'Knee', 'Shoulder', 'Back' ];
@@ -43,6 +50,45 @@ const AddNewSymptomPage = () => {
     document.getElementById('addNewSymptomButton').textContent = 'Submit';
   }
 
+  const startRecording = () => {
+    try {
+      socket = socketIOClient(ENDPOINT);
+      socket.on('connect_error', function(){
+        console.log('Connection Failed - Server might be down or Kinect disconnected!');
+        socket.disconnect()
+      });
+      socket.on('connect', () => { console.log('CONNECTED') })
+      socket.on("bodyFrame", (resBodyFrame) => {
+        interpretData(resBodyFrame, canvasRef.current.getContext('2d'))
+       }
+      );
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const interpretData = (bodyFrame, ctx) => {
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+    for (let i = 0; i < bodyFrame.bodies.length; i++) {
+      if (bodyFrame.bodies[i].tracked === true) {
+        console.log('tracked');
+        for (let j = 0; j < bodyFrame.bodies[i].joints.length; j++) {
+          const joint = bodyFrame.bodies[i].joints[j];
+          ctx.fillStyle = colors[i];
+          ctx.beginPath();
+          ctx.arc(joint.depthX * 400, joint.depthY * 400, 10, 0, Math.PI * 2, true);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+    }
+  }
+
+  const stopRecording = () => {
+    socket.disconnect();
+  }
+
   const handleBodyPartChange = (e) => {
     const { value } = e.target;
     setBodyPart(value);
@@ -67,7 +113,7 @@ const AddNewSymptomPage = () => {
       <Form style={{ width: '60%', margin: 'auto', border: 'solid', padding: '2em' }}>
       <Form.Group>
           <Form.Label>Symptom Title</Form.Label>
-          <Form.Control as='text' placeholder="Insert here a title..." id='symptomTitle' />
+          <Form.Control type="text" placeholder="Insert here a title..." />
         </Form.Group>
 
         <Form.Group style={{ marginTop: '2em' }}>
@@ -101,13 +147,18 @@ const AddNewSymptomPage = () => {
         </Form.Group>
 
         <Form.Group style={{ marginTop: '2em' }}>
-          <Button variant="primary" type="button" style={{ marginRight: '1em' }}>
+          <Button variant="primary" type="button" style={{ marginRight: '1em' }} onClick={() => startRecording()}>
             Record Video
           </Button>
-          <Button variant="primary" type="button">
-            Upload Video
+
+          <Button variant="primary" type="button" onClick={() => stopRecording()}>
+            Stop Video
           </Button>
         </Form.Group>
+
+        <div style={{color: 'white', border: 'solid', borderColor: '#0069D9' }}>
+          <canvas id="canvasKinect" width="512" height="640" ref={canvasRef} className="img-fluid"></canvas>
+        </div>
 
         <Button 
           id='addNewSymptomButton'
