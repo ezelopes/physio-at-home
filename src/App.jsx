@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 
 import Navbar from './components/navbar';
 import ProtectedRoute from './components/protectedRoute';
@@ -14,6 +14,7 @@ import notFoundPage from './pages/pageNotFound';
 import promoteToAdminPage from './pages/admin/promoteUsers';
 import addNewSymptomPage from './pages/patient/addNewSymptomPage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
+// import startUpKinectPage from './pages/patient/startUpKinect';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 import patientInvitesPage from './pages/physio/patientInvitesPage';
 import selectedPatientPage from './pages/physio/selectedPatientPage';
@@ -21,14 +22,16 @@ import selectedPatientPage from './pages/physio/selectedPatientPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
 
-function App() {
+
+function App(props) {
+  const currentLocation = props.location.pathname;
+
   const currentRole = localStorage.getItem('role');
-  const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true')
+  const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true');
 
   return (
-    <Router>
       <div className="App">
-        <Navbar />
+        { currentLocation === '/patient/startUpKinect' ? <></> : <Navbar /> }
         <div style={{ marginTop: '1.5rem', marginLeft: '4rem', marginRight: '4rem' }}>
           <Switch>
             <Route path="/" component={homePage} exact />
@@ -93,8 +96,7 @@ function App() {
           </Switch>
         </div>
       </div>
-    </Router>
   );
 }
 
-export default App;
+export default withRouter(props => <App {...props} />);
