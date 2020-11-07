@@ -16,14 +16,52 @@ h2 {
   color: #0069D9;
   font-family: 'Roboto';
 }
+
 th, td, Form, p {
-  color: white;
+  color: #191919;
   font-family: 'Roboto';
+  /* font-weight: 500; */
+  font-size: large;
 }
 
-option {
+/* option {
   color: white;
   background-color: #181A1B;
+} */
+
+#userModal {
+  background-color: #FAFBFC;
+  position: absolute;
+  padding: 1em;
+  right: 8px;
+  margin-top: 15em;
+  border-radius: 8px;
+}
+
+#addSymptomForm {
+  width: 60%;
+  margin: auto;
+  border: solid;
+  border-color: #FAFBFC;
+  padding: 2em;
+  margin-bottom: 2em;
+  background-color: #FAFBFC;
+  border-radius: 8px;
+  box-shadow: 4px 4px 4px 4px rgba(0,0,0,.2);
+}
+
+.selectedBodyPartLabel {
+  color: white;
+  margin-top: 2em;
+  font-family: Roboto;
+  padding: 1em;
+  font-weight: 500;
+  border-radius: 8px;
+  background-color: #1976D2;
+}
+
+.selectedBodyPartLabel selected {
+  background-color: #28a745;
 }
 
 /* RANGE BAR */
@@ -41,8 +79,12 @@ option {
 .inputR::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
-  background: white;
+  background: #191919;
   height: 15px;
   width: 15px;
   border-radius: 50%;
+}
+
+.RFS-StepCircle {
+  pointer-events: none;
 }
