@@ -1,12 +1,22 @@
 import React, { useState, useRef } from 'react';
+import { useEffect } from 'react';
 
-const RangeBar = ({ id }) => {
+const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
   const inactiveColor = '#EFEFEF'
   const min = 1;
   const max = 300;
   
   const inputRef = useRef();
-  const [rangeBarValue, setRangeBarValue] = useState(0);
+  const [rangeBarValue, setRangeBarValue] = useState(painRangeValue);
+
+  useEffect(() => {
+    const activeColor = getColor((painRangeValue / max));
+
+    const progress = (painRangeValue / max) * 100 + '%';
+    const newBackgroundStyle = `linear-gradient(90deg, ${activeColor} 0% ${progress}, ${inactiveColor} ${progress} 100%)`
+    inputRef.current.style.background = newBackgroundStyle
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   const styleInput = { background: `linear-gradient(90deg, #FF0000 0% 0%, ${inactiveColor} 0% 100%)` }
  
@@ -16,6 +26,7 @@ const RangeBar = ({ id }) => {
 
     const progress = (newValue / max) * 100 + '%'
     setRangeBarValue(newValue)
+    setPainRangeValue(newValue)
     const newBackgroundStyle = `linear-gradient(90deg, ${activeColor} 0% ${progress}, ${inactiveColor} ${progress} 100%)`
     inputRef.current.style.background = newBackgroundStyle
   }
