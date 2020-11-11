@@ -23,7 +23,7 @@ const MusclesPage = () => {
         <Row>
           { youtubeVideosID.map((currentID) => {
               return <div id={currentID} key={currentID}>
-                  <Col lg={true} style={{ marginTop: '1.5em' }}>
+                  <Col lg={true}>
                     <YouTube videoId={currentID} opts={opts} />
                   </Col>
                 </div>

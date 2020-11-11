@@ -88,14 +88,14 @@ const PatientInvitesPage = () => {
   return (
     <>
       <ToastContainer />
-      <Container style={{ maxWidth: '100%' }}>
+      <Container>
         <Row>
         { Object.keys(patientInvitesList).map((patientID, index) => {
             const { name, email, photoURL } = patientInvitesList[patientID];
             return (
               <div id={patientID} key={patientID}>
-                <Col lg={true} style={{ marginTop: '1.5em' }}>
-                  <Card style={{ width: '20em' }}>
+                <Col lg={true}>
+                  <Card>
                     <Card.Body>
                       <Card.Img variant="top" src={photoURL} style={{ borderRadius: '50%' }} />
                       <Card.Title style={{ marginTop: '1em'}} > Name: {name} </Card.Title>

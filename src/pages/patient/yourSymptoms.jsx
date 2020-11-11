@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap'
 
 import firebase from '../../config/firebase.config';
@@ -6,22 +6,26 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const functions = firebase.functions();
 
-const SelectedPatientPage = (props) => {
+if (process.env.NODE_ENV === 'development') functions.useFunctionsEmulator("http://localhost:5001");
 
-  const { patientID, name } = props.location.state;
-  const [patientSymptomsList, setPatientSymptoms] = useState({});
+const YourSymptoms = () => {
+  
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+  const [symptomsList, setSymptoms] = useState({});
+
 
   useEffect(() => {
     const fetchData = async () => { 
-      const response = await getAllPatientSymptoms(patientID);
-      setPatientSymptoms(response.symptomList);
+      const response = await getAllSymptoms(userInfo.uid);
+      setSymptoms(response.symptomList);
      }
  
      fetchData();
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getAllPatientSymptoms = async (patientID) => {
+  const getAllSymptoms = async (patientID) => {
     try {
       const getAllSymptomsFromPatient = functions.httpsCallable('getAllSymptomsFromPatient');
       const response = await getAllSymptomsFromPatient({ patientID });
@@ -36,33 +40,32 @@ const SelectedPatientPage = (props) => {
 
   return (
     <>
-      <Button onClick={() => props.history.goBack() } style={{ marginRight: '90%'}} > <span role="img" aria-label="back"> ⬅️ </span> GO BACK </Button> 
-      <h2> List of Symptoms of {name} </h2>
       <Container>
         <Row>
-          { Object.keys(patientSymptomsList).map((currentSymptomID) => {
+          { Object.keys(symptomsList).map((currentSymptomID) => {
                 return <div id={currentSymptomID} key={currentSymptomID}>
                   <Col lg={true}>
                     <Card>
                       <Card.Body>
                         <Card.Title>
-                          { patientSymptomsList[currentSymptomID].symptomTitle }
+                          { symptomsList[currentSymptomID].symptomTitle }
                         </Card.Title>
                         <Card.Text>
-                          Body Part: { patientSymptomsList[currentSymptomID].specificBodyPart }
+                          Body Part: { symptomsList[currentSymptomID].specificBodyPart }
                         </Card.Text>
                         <Card.Text>
-                          Pain Range Value: { patientSymptomsList[currentSymptomID].painRangeValue }
+                          Pain Range Value: { symptomsList[currentSymptomID].painRangeValue }
                         </Card.Text>
                         <Card.Text>
-                          Details: { patientSymptomsList[currentSymptomID].symptomDetails }
+                          Details: { symptomsList[currentSymptomID].symptomDetails }
                         </Card.Text>
                         <Button 
                           id={`${currentSymptomID}`}
                           variant="success"
                           onClick={() => { console.log(currentSymptomID) }}
                         >
-                          Give some feedback!
+                          Read Feedbacks!
+                          {/* OPEN MODAL */}
                         </Button>
                       </Card.Body>
                     </Card>
@@ -76,4 +79,4 @@ const SelectedPatientPage = (props) => {
   );
 }
 
-export default SelectedPatientPage;
+export default YourSymptoms;

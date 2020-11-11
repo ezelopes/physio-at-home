@@ -14,6 +14,7 @@ import notFoundPage from './pages/pageNotFound';
 import promoteToAdminPage from './pages/admin/promoteUsers';
 import addNewSymptomPage from './pages/patient/addNewSymptomPage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
+import yourSymptomsPage from './pages/patient/yourSymptoms';
 // import startUpKinectPage from './pages/patient/startUpKinect';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 import patientInvitesPage from './pages/physio/patientInvitesPage';
@@ -56,6 +57,14 @@ function App(props) {
             <ProtectedRoute
               path="/patient/searchphysiotherapist"
               component={searchPhysiotherapistPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
+              path="/patient/yoursymptoms"
+              component={yourSymptomsPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}

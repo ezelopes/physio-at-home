@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Spinner, Button, Card, Container, Row, Col } from 'react-bootstrap';
+
 import { ToastContainer, toast } from 'react-toastify';
 
 import firebase from '../../config/firebase.config';
@@ -21,10 +22,12 @@ const SearchPhysiotherapistsPage = () => {
   useEffect(() => {
     const fetchData = async () => { 
      const responsePhysio = await getPhysiotherapistsList(); 
-     setPhysiotherapistsList(responsePhysio);
+     if (responsePhysio) setPhysiotherapistsList(responsePhysio);
      const patientData = await getPatientData(userInfo.uid);
-     setPatientRequestsList(patientData.requestsList);
-     setMyPhysiotherapistList(patientData.physiotherapistsList);
+     if (patientData){
+       setPatientRequestsList(patientData.requestsList);
+       setMyPhysiotherapistList(patientData.physiotherapistsList);
+     }
     }
 
     fetchData();
@@ -55,12 +58,6 @@ const SearchPhysiotherapistsPage = () => {
     }
   }
 
-  // const convertTimestampToDate = (timestamp) => {
-  //   const fomrattedDate = new Date(timestamp * 1000);
-  //   const stringDate = fomrattedDate.getDate()+ '/' + (fomrattedDate.getMonth()+1) + '/' + fomrattedDate.getFullYear();
-  //   return stringDate;
-  // }
-
   const sendInvite = async (physioID) => {
     try {
       console.log({ physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name })
@@ -80,7 +77,7 @@ const SearchPhysiotherapistsPage = () => {
       toast.error('😔 There was an error sending your invite!', toastConfig);
       document.getElementById(`${physioID}-sendInviteButton`).className = 'btn btn-warning'; // -danger?
       document.getElementById(`${physioID}-sendInviteButton`).textContent = 'Refresh Page!';
-      console.log(err);
+      // console.log(err);
     }
   }
 
@@ -103,7 +100,7 @@ const SearchPhysiotherapistsPage = () => {
       toast.error('😔 There was an error removing this connection!', toastConfig);
       document.getElementById(`${physioID}-removeConnectionButton`).className = 'btn btn-warning';
       document.getElementById(`${physioID}-removeConnectionButton`).textContent = 'Refresh Page!';
-      console.log(err);
+      // console.log(err);
     }
   }
 
@@ -113,51 +110,61 @@ const SearchPhysiotherapistsPage = () => {
       <h2> SEND REQUEST TO YOUR PREFERRED PHYSIOTHERAPISTS </h2>
       <br />
 
-      <Table responsive>
-        <thead>
-          <tr>
-            {Array.from(['Name', 'Email', 'Specialisation', 'Send Request']).map((element, index) => (
-              <th key={index}>{element}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from(physiotherapistsList).map((physiotherapist, index) => (
-            <tr key={index}>
-              <td key='name' >{physiotherapist.name}</td>
-              <td key='email' >{physiotherapist.email}</td>
-              <td key='specialisation' > 
-                {physiotherapist.specialisation.length === 0 ? <h6> NOT SPECIALISED </h6>
-                : Array.from(physiotherapist.specialisation).map((currentSpec, index) => (
-                <h6 key={index}>{currentSpec}</h6>
-                ))}
-              </td>
-              <td key='sendInvite'>
-                { patientRequestsList.includes(physiotherapist.id) 
-                  ? <Button disabled>
-                      Invite Sent!
-                    </Button>
-                  : (myPhysiotherapistList.includes(physiotherapist.id) 
-                    ? <Button
-                        variant='danger'
-                        id={`${physiotherapist.id}-removeConnectionButton`}
-                        onClick={() => { removeConnection(physiotherapist.id) }}
-                      >
-                        Remove Connection
-                      </Button>
-                    : <Button
-                        variant='success'
-                        id={`${physiotherapist.id}-sendInviteButton`}
-                        onClick={() => { sendInvite(physiotherapist.id) }}>
-                        Send Invite
-                      </Button>
-                  )
-                }
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <Container>
+        <Row>
+        { physiotherapistsList.length > 0
+          ? Array.from(physiotherapistsList).map((physiotherapist, index) => {
+
+            return (
+              <div id={index} key={index}>
+                <Col lg={true}>
+                  <Card>
+                    <Card.Body>
+                      <Card.Title> {physiotherapist.name} </Card.Title>
+                      <Card.Text>
+                        Email: {physiotherapist.email}
+                      </Card.Text>
+                      <Card.Text> 
+                        Specialisation:
+                        { physiotherapist.specialisation.length === 0
+                          ? <h6> NOT SPECIALISED </h6>
+                          : Array.from(physiotherapist.specialisation).map((currentSpec, index) => (
+                              <h6 key={index}>{currentSpec}</h6>
+                            ))
+                        }
+                      </Card.Text>
+                      { patientRequestsList.includes(physiotherapist.id) 
+                        ? <Button disabled>
+                            Invite Sent!
+                          </Button>
+                        : (myPhysiotherapistList.includes(physiotherapist.id) 
+                          ? <Button
+                              variant='danger'
+                              id={`${physiotherapist.id}-removeConnectionButton`}
+                              onClick={() => { removeConnection(physiotherapist.id) }}
+                            >
+                              Remove Connection
+                            </Button>
+                          : <Button
+                              variant='success'
+                              id={`${physiotherapist.id}-sendInviteButton`}
+                              onClick={() => { sendInvite(physiotherapist.id) }}>
+                              Send Invite
+                            </Button>
+                        )
+                      }
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </div>
+            )
+          }) 
+          : <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner> 
+        }
+        </Row>
+      </Container>
     </>
   );
 }

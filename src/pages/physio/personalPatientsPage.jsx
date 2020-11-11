@@ -64,20 +64,15 @@ const PersonalPatientsPage = () => {
     }
   }
 
-  // const seePatientDetails = async (patientID) => {
-  //   console.log(patientID)
-  //   return <Link to={`/selectedPatientsPage/${patientID}`}>{patientID}</Link>;
-  // }
-
   return (
     <>
       <ToastContainer />
-      <Container style={{ maxWidth: '100%' }}>
+      <Container>
         <Row>
         { Object.keys(physioPatientsList).map((patientID) => {
             return <div id={patientID} key={patientID}>
-              <Col lg={true} style={{ marginTop: '1.5em' }}>
-                <Card style={{ width: '20em' }}>
+              <Col lg={true}>
+                <Card>
                   <Card.Body>
                     <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL } style={{ borderRadius: '50%' }} />
                     <Card.Title style={{ marginTop: '1em'}}> Name: { physioPatientsList[patientID].name } </Card.Title>

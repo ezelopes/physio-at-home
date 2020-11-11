@@ -33,7 +33,7 @@ const LoginPage = () => {
           firebaseAuth={firebase.auth()}
         />
       </div>
-      <div id='load-div' style={{ marginTop: '5em', display: 'none' }} > 
+      <div id='load-div' style={{ display: 'none' }} > 
         <Spinner animation="border" role="status">
           <span className="sr-only">Loading...</span>
         </Spinner> 

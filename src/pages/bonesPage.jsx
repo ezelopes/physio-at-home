@@ -44,8 +44,8 @@ const BonesPage = () => {
       <Row>
         { youtubeVideosDetails.map((currentVideo) => {
             return <div id={currentVideo.videoID} key={currentVideo.videoID} >
-                <Col lg={true} style={{ marginTop: '1.5em' }}>
-                  <Card style={{ width: '15em' }}>
+                <Col lg={true}>
+                  <Card>
                     <Card.Body>
                       <Card.Title> { currentVideo.title } </Card.Title>
                       <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>

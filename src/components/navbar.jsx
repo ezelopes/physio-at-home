@@ -55,6 +55,7 @@ const NavBar = () => {
         { (currentRole === 'PHYSIOTHERAPIST' && currentUserSignedIn ) && <Nav.Link href='/physio/patientInvites'> Invites </Nav.Link> }
         { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href='/patient/addNewSymptomPage'> Add New Symptom </Nav.Link> }
         { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href='/patient/searchphysiotherapist'> Search Physiotherapists </Nav.Link> }
+        { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href='/patient/yoursymptoms'> Your Symptoms </Nav.Link> }
         
       </Nav>
         { currentUserSignedIn

@@ -50,9 +50,6 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
           onChange={(e) => handleChange(e)}
           style={styleInput}
         />
-        {/* <div className="label" style={{ textAlign: 'center', color: 'white' }}>
-          {rangeBarValue}
-        </div> */}
       </div>
     )
 };
