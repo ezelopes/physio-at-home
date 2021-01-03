@@ -30,9 +30,9 @@ const StepFour = ({
     document.getElementById('addNewSymptomButton').disabled = true;
     document.getElementById('addNewSymptomButton').textContent = 'Loading...';
     try {
-      const symptomTitle = document.getElementById('symptomTitle').value;
-      const painRangeValue = document.getElementById('painRangeID').value;
-      const symptomDetails = document.getElementById('symptomDetails').value;
+      // const symptomTitle = document.getElementById('symptomTitle').value;
+      // const painRangeValue = document.getElementById('painRangeID').value;
+      // const symptomDetails = document.getElementById('symptomDetails').value;
       console.log(painRangeValue, specificBodyPart, symptomDetails)
     
       const addNewPatientSymptom = functions.httpsCallable('addNewPatientSymptom');
@@ -61,7 +61,6 @@ const StepFour = ({
       <p> Max Left Angle: { maxLeftAngle } </p>
 
         <Button 
-          id='addNewSymptomButton'
           // variant="warning"
           type="submit"
           style={{ marginTop: '2em', marginRight: '1em' }}

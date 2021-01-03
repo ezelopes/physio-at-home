@@ -37,7 +37,6 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
       </Form.Group>
 
       <Button 
-          id='addNewSymptomButton'
           variant="success"
           type="submit"
           style={{ marginTop: '2em' }}

@@ -126,7 +126,6 @@ const StepThree = ({ prevStep, nextStep, setMinRightAngle, setMaxRightAngle, set
       </div>
 
       <Button 
-        id='addNewSymptomButton'
         // variant="warning"
         type="submit"
         style={{ marginTop: '2em', marginRight: '1em' }}

@@ -26,7 +26,6 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
       </Form.Group>
 
       <Button 
-        id='addNewSymptomButton'
         // variant="warning"
         type="submit"
         style={{ marginTop: '2em', marginRight: '1em' }}
