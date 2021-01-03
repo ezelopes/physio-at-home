@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Container, Row, Col } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col, Modal } from 'react-bootstrap'
+import ColoredLine from '../../components/coloredLine'
 
 import firebase from '../../config/firebase.config';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,7 +14,8 @@ const YourSymptoms = () => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   const [symptomsList, setSymptoms] = useState({});
-
+  const [currentFeedbackList, setCurrentFeedbackList] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => { 
@@ -24,6 +26,16 @@ const YourSymptoms = () => {
      fetchData();
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const handleShowModal = (currentSymptomID) => { 
+    setCurrentFeedbackList(symptomsList[currentSymptomID].feedbackList);
+    setShowModal(true);
+  }
+
+  const handleCloseModal = () => { 
+    setCurrentFeedbackList([]);
+    setShowModal(false);
+  }
 
   const getAllSymptoms = async (patientID) => {
     try {
@@ -62,7 +74,7 @@ const YourSymptoms = () => {
                         <Button 
                           id={`${currentSymptomID}`}
                           variant="success"
-                          onClick={() => { console.log(currentSymptomID) }}
+                          onClick={() => { handleShowModal(currentSymptomID) }}
                         >
                           Read Feedbacks!
                           {/* OPEN MODAL */}
@@ -74,6 +86,32 @@ const YourSymptoms = () => {
               }) 
             }
         </Row>
+
+        <Modal show={showModal} onHide={handleCloseModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title> Found below your feedback </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{'max-height': 'calc(100vh - 210px)', 'overflow-y': 'auto'}}>
+            {
+              currentFeedbackList.length !== 0 
+              ? currentFeedbackList.map((currentFeedback, index) => {
+                  return (<div style={{ marginBottom: '1em' }}> 
+                    <p> {index + 1}. <b> {currentFeedback.physioName} </b> says: </p>
+                    {currentFeedback.feedbackContent} 
+                    <ColoredLine color='#0069D9' />
+                  </div>)
+                })
+              : <div> No feedback to display yet! </div>
+            }
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={() => { handleCloseModal() } }>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        {/* <div id='modalBody'></div> */}
+
       </Container>
     </>
   );

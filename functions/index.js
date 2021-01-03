@@ -7,6 +7,27 @@ const db = admin.firestore();
 
 // exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
 
+exports.addFeebackToSymptom = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { patientID, symptomID, feedbackObject } = req.body.data;
+      // feedbackObject -> { doctorID, doctorName, feedbackContent, dateCreated }
+      feedbackObject.dateCreated = admin.firestore.Timestamp.now(); // admin.firestore.FieldValue.serverTimestamp();
+
+      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc(symptomID).update({ 
+        feedbackList: admin.firestore.FieldValue.arrayUnion(feedbackObject),
+      })
+
+      console.log('Feedback added successfully');
+
+      res.status(200).send({ data: { message: 'Feedback Added Successfully!' } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  })
+})
+
 exports.getAllSymptomsFromPatient = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
@@ -33,9 +54,10 @@ exports.addNewPatientSymptom = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { patientID, symptomTitle, painRangeValue, specificBodyPart, symptomDetails } = req.body.data;
+      const feedbackList = [];
       console.log(patientID, symptomTitle, painRangeValue, specificBodyPart, symptomDetails);
 
-      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ symptomTitle, painRangeValue, specificBodyPart, symptomDetails })
+      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ symptomTitle, painRangeValue, specificBodyPart, symptomDetails, feedbackList })
 
       console.log('Symptom Added Successfully!');
       res.status(200).send({ data: { message: 'Symptom Added Successfully!' } });
