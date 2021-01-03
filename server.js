@@ -16,15 +16,9 @@ if (kinect.open()) {
       kinect.on('bodyFrame', (bodyFrame) => {
         socket.emit('bodyFrame', bodyFrame);
       });
-
-      // kinect.on('multiSourceFrame', (multiSourceFrame) => {
-      //   socket.emit('multiSourceFrame', multiSourceFrame)
-      // });
     });
   
     kinect.openBodyReader();
-    // kinect.openMultiSourceReader({ frameTypes: Kinect2.FrameType.color | Kinect2.FrameType.depth | Kinect2.FrameType.body });
-  
   } catch (err) {
     const message = 'KINECT IS NOT CONNECTED. SERVER WILL NOT WORK WITHOUT A FUNCTIONAL KINECT';
     io.sockets.emit('error', { message })
