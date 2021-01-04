@@ -7,6 +7,23 @@ const db = admin.firestore();
 
 // exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
 
+exports.deleteSymptomOfPatient = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { patientID, symptomID } = req.body.data;
+
+      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc(symptomID).delete();
+
+      console.log('Symptom deleted successfully');
+
+      res.status(200).send({ data: { message: 'Symptom Deleted Successfully!' } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  })
+})
+
 exports.addFeebackToSymptom = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {

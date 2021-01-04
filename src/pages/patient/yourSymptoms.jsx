@@ -50,6 +50,21 @@ const YourSymptoms = () => {
     }
   }
 
+  const deleteSymptom = async (patientID, symptomID) => {
+    try {
+      const deleteSymptomOfPatient = functions.httpsCallable('deleteSymptomOfPatient');
+      const response = await deleteSymptomOfPatient({ patientID, symptomID });
+      
+      alert(response.data.message)
+
+      delete symptomsList[symptomID];
+      setSymptoms(symptomsList);
+      console.log(symptomsList)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <Container>
@@ -57,7 +72,7 @@ const YourSymptoms = () => {
           { Object.keys(symptomsList).map((currentSymptomID) => {
                 return <div id={currentSymptomID} key={currentSymptomID}>
                   <Col lg={true}>
-                    <Card>
+                    <Card style={{ width: '22em'}}>
                       <Card.Body>
                         <Card.Title>
                           { symptomsList[currentSymptomID].symptomTitle }
@@ -71,13 +86,22 @@ const YourSymptoms = () => {
                         <Card.Text>
                           Details: { symptomsList[currentSymptomID].symptomDetails }
                         </Card.Text>
+
                         <Button 
-                          id={`${currentSymptomID}`}
+                          style={{ marginRight: '1em' }}
+                          id={`read-${currentSymptomID}`}
                           variant="success"
                           onClick={() => { handleShowModal(currentSymptomID) }}
                         >
                           Read Feedbacks!
-                          {/* OPEN MODAL */}
+                        </Button>
+
+                        <Button 
+                          id={`delete-${currentSymptomID}`}
+                          variant="danger"
+                          onClick={() => { deleteSymptom(userInfo.uid, currentSymptomID) }}
+                        >
+                          Delete Symptom
                         </Button>
                       </Card.Body>
                     </Card>
@@ -110,7 +134,6 @@ const YourSymptoms = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-        {/* <div id='modalBody'></div> */}
 
       </Container>
     </>
