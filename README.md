@@ -2,12 +2,15 @@
 
 TO DO LIST:
 
-- Read Feedback feature
-- Delete symptom feature
-- Combine Muscles & Bones into one page 'Videos'
+- STORE KINECT VALUES INTO FIRESTORE
+- Select right / left elbow or knee in the form
+- Search therapist by name and filter specialisation
 - Create 'Your Account' Page
+- Update therapist specialisation list
+- Combine Muscles & Bones into one page 'Videos'
+- Database -> Historic data for symptoms?
 - Click outside Top-Right Profile Menu closes it automatically
 - Search physiotherapist -> Faster loading and avoid showing 'Send Invite' when they already have a connection
-- Add New Symptom -> 'Select Right or Left'
-- Add New Symptom -> ELBOW
 - Edit ReadMe file
+- Write and Read Feedback feature ✔️
+- Delete symptom feature ✔️
