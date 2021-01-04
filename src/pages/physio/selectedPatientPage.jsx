@@ -70,13 +70,17 @@ const SelectedPatientPage = (props) => {
           { Object.keys(patientSymptomsList).map((symptomID) => {
                 return <div id={symptomID} key={symptomID}>
                   <Col lg={true}>
-                    <Card>
-                      <Card.Body>
+                    <Card style={{ width: '23em' }}>
+                      <Card.Body style={{'max-height': '40vh', 'overflow-y': 'auto'}}>
                         <Card.Title>
                           { patientSymptomsList[symptomID].symptomTitle }
                         </Card.Title>
                         <Card.Text>
-                          Body Part: { patientSymptomsList[symptomID].specificBodyPart }
+                          Body Part: { 
+                            patientSymptomsList[symptomID].bodyPart.rightOrLeft + ' ' + 
+                            patientSymptomsList[symptomID].bodyPart.bodyPart + ' (' + 
+                            patientSymptomsList[symptomID].bodyPart.specificBodyPart + ')' 
+                          }
                         </Card.Text>
                         <Card.Text>
                           Pain Range Value: { patientSymptomsList[symptomID].painRangeValue }
@@ -84,6 +88,13 @@ const SelectedPatientPage = (props) => {
                         <Card.Text>
                           Details: { patientSymptomsList[symptomID].symptomDetails }
                         </Card.Text>
+                        <Card.Text>
+                          Range of Motion: { 
+                            patientSymptomsList[symptomID].rangeOfMotion.minAngle + '° to ' + 
+                            patientSymptomsList[symptomID].rangeOfMotion.maxAngle + '°'
+                          }
+                        </Card.Text>
+
                         <Button 
                           id={`${symptomID}-showModal`}
                           variant="primary"
