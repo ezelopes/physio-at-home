@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Form } from 'react-bootstrap'
 import KneeImage from '../kneeImage'
+import ElbowImage from '../elbowImage'
 
 const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, specificBodyPart, setSymptomDetails, symptomDetails}) => {
 
@@ -9,7 +10,7 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
       case 'KNEE':
         return <KneeImage setSpecificBodyPart={setSpecificBodyPart} specificBodyPart={specificBodyPart} />;
       case 'ELBOW':
-        return 'ELBOW IMG';
+        return <ElbowImage setSpecificBodyPart={setSpecificBodyPart} specificBodyPart={specificBodyPart} />;
       case 'BACK':
         return 'BACK IMG';
       default:

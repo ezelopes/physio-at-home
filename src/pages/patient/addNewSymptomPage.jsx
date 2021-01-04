@@ -16,14 +16,12 @@ const AddNewSymptomPage = () => {
   const [symptomTitle, setSymptomTitle] = useState('');
   const [painRangeValue, setPainRangeValue] = useState(0);
   const [symptomDetails, setSymptomDetails] = useState('');
-  const [selectedBodyPart, setBodyPart] = useState('Knee');
+  const [rightOrLeft, setRightOrLeft] = useState('RIGHT');
+  const [selectedBodyPart, setBodyPart] = useState('KNEE');
   const [specificBodyPart, setSpecificBodyPart] = useState('');
 
-  const [minRightAngle, setMinRightAngle] = useState(180);
-  const [maxRightAngle, setMaxRightAngle] = useState(0);
-
-  const [minLeftAngle, setMinLeftAngle] = useState(180);
-  const [maxLeftAngle, setMaxLeftAngle] = useState(0);
+  const [minAngle, setMinAngle] = useState(180);
+  const [maxAngle, setMaxAngle] = useState(0);
 
   const nextStep = () => { setCurrentStep(currentStep + 1); }
   const prevStep = () => { setCurrentStep(currentStep - 1); }
@@ -39,6 +37,8 @@ const AddNewSymptomPage = () => {
           painRangeValue={painRangeValue}
           setBodyPart={setBodyPart}
           selectedBodyPart={selectedBodyPart}
+          setRightOrLeft={setRightOrLeft}
+          rightOrLeft={rightOrLeft}
         />;
       case 1:
         return <StepTwo
@@ -52,12 +52,12 @@ const AddNewSymptomPage = () => {
         />;
       case 2:
         return <StepThree
+          selectedBodyPart={selectedBodyPart}
+          rightOrLeft={rightOrLeft}
           prevStep={prevStep}
           nextStep={nextStep}
-          setMinRightAngle={setMinRightAngle}
-          setMaxRightAngle={setMaxRightAngle}
-          setMinLeftAngle={setMinLeftAngle}
-          setMaxLeftAngle={setMaxLeftAngle}
+          setMinAngle={setMinAngle}
+          setMaxAngle={setMaxAngle}
         />;
       case 3:
         return <StepFour
@@ -65,12 +65,11 @@ const AddNewSymptomPage = () => {
           symptomTitle={symptomTitle} 
           painRangeValue={painRangeValue} 
           symptomDetails={symptomDetails} 
-          selectedBodyPart={selectedBodyPart} 
+          selectedBodyPart={selectedBodyPart}
+          rightOrLeft={rightOrLeft}
           specificBodyPart={specificBodyPart}
-          minRightAngle={minRightAngle}
-          maxRightAngle={maxRightAngle}
-          minLeftAngle={minLeftAngle}
-          maxLeftAngle={maxLeftAngle}
+          minAngle={minAngle}
+          maxAngle={maxAngle}
         />;
       default:
         return <p> Step not found. Refresh the page! </p>;

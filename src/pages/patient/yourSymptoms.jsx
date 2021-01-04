@@ -78,13 +78,23 @@ const YourSymptoms = () => {
                           { symptomsList[currentSymptomID].symptomTitle }
                         </Card.Title>
                         <Card.Text>
-                          Body Part: { symptomsList[currentSymptomID].specificBodyPart }
+                          Body Part: { 
+                            symptomsList[currentSymptomID].bodyPart.rightOrLeft + ' ' + 
+                            symptomsList[currentSymptomID].bodyPart.bodyPart + ' (' + 
+                            symptomsList[currentSymptomID].bodyPart.specificBodyPart + ')' 
+                          }
                         </Card.Text>
                         <Card.Text>
                           Pain Range Value: { symptomsList[currentSymptomID].painRangeValue }
                         </Card.Text>
                         <Card.Text>
                           Details: { symptomsList[currentSymptomID].symptomDetails }
+                        </Card.Text>
+                        <Card.Text>
+                          Range of Motion: { 
+                            symptomsList[currentSymptomID].rangeOfMotion.minAngle + '° to ' + 
+                            symptomsList[currentSymptomID].rangeOfMotion.maxAngle + '°'
+                          }
                         </Card.Text>
 
                         <Button 

@@ -29,7 +29,7 @@ exports.addFeebackToSymptom = functions.https.onRequest(async (req, res) => {
     try {
       const { patientID, symptomID, feedbackObject } = req.body.data;
       // feedbackObject -> { doctorID, doctorName, feedbackContent, dateCreated }
-      feedbackObject.dateCreated = admin.firestore.Timestamp.now(); // admin.firestore.FieldValue.serverTimestamp();
+      feedbackObject.dateCreated = admin.firestore.Timestamp.now();
 
       await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc(symptomID).update({ 
         feedbackList: admin.firestore.FieldValue.arrayUnion(feedbackObject),
@@ -70,11 +70,11 @@ exports.getAllSymptomsFromPatient = functions.https.onRequest(async (req, res) =
 exports.addNewPatientSymptom = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
-      const { patientID, symptomTitle, painRangeValue, specificBodyPart, symptomDetails } = req.body.data;
+      const { patientID, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion } = req.body.data;
       const feedbackList = [];
-      console.log(patientID, symptomTitle, painRangeValue, specificBodyPart, symptomDetails);
+      console.log(patientID, symptomTitle, painRangeValue, bodyPart.rightOrLeft, bodyPart.bodyPart, bodyPart.specificBodyPart, symptomDetails, rangeOfMotion);
 
-      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ symptomTitle, painRangeValue, specificBodyPart, symptomDetails, feedbackList })
+      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion, feedbackList })
 
       console.log('Symptom Added Successfully!');
       res.status(200).send({ data: { message: 'Symptom Added Successfully!' } });
