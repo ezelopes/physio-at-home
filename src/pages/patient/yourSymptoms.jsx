@@ -67,13 +67,13 @@ const YourSymptoms = () => {
 
   return (
     <>
-      <Container>
+      <Container style={{ marginBottom: '5em' }}>
         <Row>
           { Object.keys(symptomsList).map((currentSymptomID) => {
                 return <div id={currentSymptomID} key={currentSymptomID}>
                   <Col lg={true}>
-                    <Card style={{ width: '22em'}}>
-                      <Card.Body>
+                    <Card style={{ width: '23em' }}>
+                      <Card.Body style={{'max-height': '40vh', 'overflow-y': 'auto'}}>
                         <Card.Title>
                           { symptomsList[currentSymptomID].symptomTitle }
                         </Card.Title>
@@ -113,6 +113,7 @@ const YourSymptoms = () => {
                         >
                           Delete Symptom
                         </Button>
+
                       </Card.Body>
                     </Card>
                   </Col>
