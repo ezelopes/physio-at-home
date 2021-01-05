@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Button } from 'react-bootstrap'
+import { Button, Nav } from 'react-bootstrap'
 
 const ModalUser = ({ userLogOutFunction }) => {
 
   const currentRole = localStorage.getItem('role');
   const [toggleDiv, setToggleDiv] = useState(false);
+
+  const links = {
+    'PATIENT': '/patient/patientAccountPage',
+    'PHYSIOTHERAPIST': '/physio/physioAccountPage',
+  }
 
   return (
     <>
@@ -22,7 +27,8 @@ const ModalUser = ({ userLogOutFunction }) => {
         ? <div id='userModal'>
             <p>{ currentRole !== 'null' ? currentRole : '' }</p>
             <hr />
-            <p>Your Account</p>
+            <Nav.Link href={links[currentRole]}> Your Account </Nav.Link> 
+
             <Button 
               href='/loginPage'
               variant='danger'

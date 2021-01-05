@@ -13,9 +13,10 @@ import notFoundPage from './pages/pageNotFound';
 
 import promoteToAdminPage from './pages/admin/promoteUsers';
 import addNewSymptomPage from './pages/patient/addNewSymptomPage';
+import patientAccountPage from './pages/patient/patientAccountPage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
 import yourSymptomsPage from './pages/patient/yourSymptoms';
-// import startUpKinectPage from './pages/patient/startUpKinect';
+import physioAccountPage from './pages/physio/physioAccountPage';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 import patientInvitesPage from './pages/physio/patientInvitesPage';
 import selectedPatientPage from './pages/physio/selectedPatientPage';
@@ -47,6 +48,14 @@ function App(props) {
               exact
             />
             <ProtectedRoute
+              path="/patient/patientAccountPage"
+              component={patientAccountPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole:  'PATIENT', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
               path="/patient/addNewSymptomPage"
               component={addNewSymptomPage}
               redirectPath="/"
@@ -68,6 +77,14 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
+              path="/physio/physioAccountPage"
+              component={physioAccountPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              roles={{ expectedRole:  'PHYSIOTHERAPIST', currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
