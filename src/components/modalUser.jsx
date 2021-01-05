@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Nav } from 'react-bootstrap'
 
 const ModalUser = ({ userLogOutFunction }) => {
 
   const currentRole = localStorage.getItem('role');
   const [toggleDiv, setToggleDiv] = useState(false);
+  const node = useRef();
 
   const links = {
     'PATIENT': '/patient/patientAccountPage',
     'PHYSIOTHERAPIST': '/physio/physioAccountPage',
   }
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleModalClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleModalClick);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleModalClick = (e) => {
+    if (node.current.contains(e.target)) {
+      // inside click
+      return;
+    }
+
+    setToggleDiv(false)
+  }
+
   return (
     <>
+    <div ref={node}>
       <img 
         src={JSON.parse(localStorage.getItem('userInfo')).photoURL} 
         alt='profile-pic'
@@ -27,7 +47,7 @@ const ModalUser = ({ userLogOutFunction }) => {
         ? <div id='userModal'>
             <p>{ currentRole !== 'null' ? currentRole : '' }</p>
             <hr />
-            <Nav.Link href={links[currentRole]}> Your Account </Nav.Link> 
+            <Nav.Link style={{ marginTop: '-1em'}} href={links[currentRole]}> Your Account </Nav.Link> 
 
             <Button 
               href='/loginPage'
@@ -38,7 +58,8 @@ const ModalUser = ({ userLogOutFunction }) => {
         : null
       }
 
-</> 
+    </div> 
+    </>
   );
 }
 
