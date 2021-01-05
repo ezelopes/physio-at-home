@@ -7,8 +7,7 @@ import GuestRoute from './components/guestRoute';
 
 import homePage from './pages/homePage';
 import loginPage from './pages/loginPage';
-import bonesPage from './pages/bonesPage';
-import musclesPage from './pages/musclesPage';
+import videosPage from './pages/videosPage';
 import notFoundPage from './pages/pageNotFound';
 
 import promoteToAdminPage from './pages/admin/promoteUsers';
@@ -38,8 +37,7 @@ function App(props) {
         <div style={{ marginTop: '1.5rem', marginLeft: '4rem', marginRight: '4rem' }}>
           <Switch>
             <Route path="/" component={homePage} exact />
-            <Route path="/muscles" component={musclesPage} exact />
-            <Route path="/bones" component={bonesPage} exact />
+            <Route path="/videos" component={videosPage} exact />
             <GuestRoute
               path="/loginPage"
               component={loginPage}

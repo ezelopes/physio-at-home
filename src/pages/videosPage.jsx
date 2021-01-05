@@ -2,7 +2,7 @@ import React from 'react';
 import YouTube from 'react-youtube';
 import { Container, Row, Col } from 'react-bootstrap'
 
-const MusclesPage = () => {
+const VideosPage = () => {
 
   const youtubeVideosID = ['N2ukHIBBFAA', 'T7sBeFEu4pw', '1uwAyZ2RyLQ', 'dFpVHc5vtSY', '_nBlN9yp9R8'];
   
@@ -17,7 +17,7 @@ const MusclesPage = () => {
 
   return (
     <>
-      <h2> Muscles Page </h2>
+      <h2> Videos </h2>
 
       <Container>
         <Row>
@@ -35,4 +35,4 @@ const MusclesPage = () => {
   );  
 }
 
-export default MusclesPage;
+export default VideosPage;
