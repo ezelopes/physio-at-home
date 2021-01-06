@@ -2,10 +2,8 @@ import React from 'react';
 import { Button } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 
-import firebase from '../../config/firebase.config';
+import functions from '../../config/firebase.functions';
 import toastConfig from '../../config/toast.config';
-
-const functions = firebase.functions();
 
 const StepFour = ({ 
   prevStep,

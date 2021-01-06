@@ -3,13 +3,9 @@ import { Spinner, Button, Card, Container, Row, Col } from 'react-bootstrap';
 
 import { ToastContainer, toast } from 'react-toastify';
 
-import firebase from '../../config/firebase.config';
+import functions from '../../config/firebase.functions';
 import toastConfig from '../../config/toast.config';
 import 'react-toastify/dist/ReactToastify.css';
-
-const functions = firebase.functions();
-
-if (process.env.NODE_ENV === 'development') functions.useFunctionsEmulator("http://localhost:5001");
 
 const SearchPhysiotherapistsPage = () => {
 
@@ -21,13 +17,13 @@ const SearchPhysiotherapistsPage = () => {
 
   useEffect(() => {
     const fetchData = async () => { 
-     const responsePhysio = await getPhysiotherapistsList(); 
-     if (responsePhysio) setPhysiotherapistsList(responsePhysio);
      const patientData = await getPatientData(userInfo.uid);
      if (patientData){
        setPatientRequestsList(patientData.requestsList);
        setMyPhysiotherapistList(patientData.physiotherapistsList);
      }
+     const responsePhysio = await getPhysiotherapistsList(); 
+     if (responsePhysio) setPhysiotherapistsList(responsePhysio);
     }
 
     fetchData();
@@ -125,10 +121,10 @@ const SearchPhysiotherapistsPage = () => {
                         Email: {physiotherapist.email}
                       </Card.Text>
                       <Card.Text> 
-                        Specialisation:
-                        { physiotherapist.specialisation.length === 0
+                        Specialisations:
+                        { physiotherapist.specialisations.length === 0
                           ? <h6> NOT SPECIALISED </h6>
-                          : Array.from(physiotherapist.specialisation).map((currentSpec, index) => (
+                          : Array.from(physiotherapist.specialisations).map((currentSpec, index) => (
                               <h6 key={index}>{currentSpec}</h6>
                             ))
                         }

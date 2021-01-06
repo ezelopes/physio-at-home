@@ -2,13 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap'
 
-import firebase from '../../config/firebase.config';
+import functions from '../../config/firebase.functions';
 import toastConfig from '../../config/toast.config';
 import 'react-toastify/dist/ReactToastify.css';
-
-const functions = firebase.functions();
-
-if (process.env.NODE_ENV === 'development') functions.useFunctionsEmulator("http://localhost:5001");
 
 const PatientInvitesPage = () => {
 

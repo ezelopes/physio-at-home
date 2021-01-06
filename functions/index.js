@@ -7,6 +7,50 @@ const db = admin.firestore();
 
 // exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
 
+exports.updatePhysioAccount = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      // physioID, dob: newDobTimestamp, specialisations: 
+      const { physioID, name, dob, specialisations } = req.body.data;
+      const dobFormatted = admin.firestore.Timestamp.fromDate(new Date(dob));
+      
+      await db.collection('PHYSIOTHERAPISTS').doc(physioID).update({ 
+        name: name,
+        dob: dobFormatted,
+        specialisations: specialisations
+      })
+
+      console.log('Account Updated successfully');
+
+      res.status(200).send({ data: { message: 'Account Updated Successfully!' } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  })
+})
+
+exports.updatePatientAccount = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { patientID, name, dob } = req.body.data;
+      const dobFormatted = admin.firestore.Timestamp.fromDate(new Date(dob));
+      
+      await db.collection('PATIENTS').doc(patientID).update({ 
+        name: name,
+        dob: dobFormatted
+      })
+
+      console.log('Account Updated successfully');
+
+      res.status(200).send({ data: { message: 'Account Updated Successfully!' } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  })
+})
+
 exports.deleteSymptomOfPatient = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
@@ -222,10 +266,31 @@ exports.sendInvite = functions.https.onRequest(async (req, res) => {
   });
 });
 
+
+
+exports.getPhysioData = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const { physioID } = req.body.data;
+      const physioDoc = await db.collection('PHYSIOTHERAPISTS').doc(physioID).get();
+      
+      let physioData = null;
+      if (physioDoc.exists) physioData = physioDoc.data();
+
+      res.status(200).send({ data: { physioData } });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ data: 'There was an error with the request!' })
+    }
+  });
+});
+
+
 exports.getPatientData = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
-      const patientDoc = await db.collection('PATIENTS').doc(req.body.data.patientID).get();
+      const { patientID } = req.body.data;
+      const patientDoc = await db.collection('PATIENTS').doc(patientID).get();
       
       let patientData = null;
       if (patientDoc.exists) patientData = patientDoc.data();
@@ -321,6 +386,7 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
       email: user.email,
       name: user.displayName,
       photoURL: user.photoURL,
+      dob: new Date('1/1/1900'),
       role: null,
     }
 
@@ -328,7 +394,7 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
     const physiotherapist = user.email.endsWith('@myport.ac.uk');
 
     if (isAdmin) { userData.role = 'ADMIN'; }
-    else if (physiotherapist) { userData.role = 'PHYSIOTHERAPIST'; userData.specialisation = [] }
+    else if (physiotherapist) { userData.role = 'PHYSIOTHERAPIST'; userData.specialisations = [] }
     else { userData.role = 'PATIENT'; userData.requestsList = [], userData.physiotherapistsList = [] }
 
     const dbCollection = userData.role + 'S';

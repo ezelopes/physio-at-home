@@ -47,6 +47,19 @@ th, td, Form, p {
   background-color: #181A1B;
 } */
 
+#accountForm {
+  padding: 1em 2em 2em 2em;
+  border: 1px solid #ececec;
+  width: 35%;
+  border-radius: 8px;
+  text-align: center;
+  display: inline-block;
+}
+
+#accountForm >  .btn, .form-label  {
+  margin-top: 1em;
+}
+
 #userModal {
   background-color: #FAFBFC;
   position: absolute;

@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Container, Row, Col, Modal } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import ColoredLine from '../../components/coloredLine'
 
-import firebase from '../../config/firebase.config';
+import functions from '../../config/firebase.functions';
 import 'react-toastify/dist/ReactToastify.css';
-
-const functions = firebase.functions();
-
-if (process.env.NODE_ENV === 'development') functions.useFunctionsEmulator("http://localhost:5001");
 
 const YourSymptoms = () => {
   
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
+  const [loading, setLoading] = useState(true);
   const [symptomsList, setSymptoms] = useState({});
   const [currentFeedbackList, setCurrentFeedbackList] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -21,6 +18,7 @@ const YourSymptoms = () => {
     const fetchData = async () => { 
       const response = await getAllSymptoms(userInfo.uid);
       setSymptoms(response.symptomList);
+      setLoading(false);
      }
  
      fetchData();
@@ -67,13 +65,17 @@ const YourSymptoms = () => {
 
   return (
     <>
-      <Container style={{ marginBottom: '5em' }}>
+    { loading
+      ? <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner> 
+      : <Container style={{ marginBottom: '5em' }}>
         <Row>
           { Object.keys(symptomsList).map((currentSymptomID) => {
                 return <div id={currentSymptomID} key={currentSymptomID}>
                   <Col lg={true}>
                     <Card style={{ width: '23em' }}>
-                      <Card.Body style={{'max-height': '40vh', 'overflow-y': 'auto'}}>
+                      <Card.Body style={{'max-height': '50vh', 'overflow-y': 'auto'}}>
                         <Card.Title>
                           { symptomsList[currentSymptomID].symptomTitle }
                         </Card.Title>
@@ -147,6 +149,7 @@ const YourSymptoms = () => {
         </Modal>
 
       </Container>
+    }
     </>
   );
 }

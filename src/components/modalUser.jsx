@@ -45,15 +45,15 @@ const ModalUser = ({ userLogOutFunction }) => {
       {
         toggleDiv
         ? <div id='userModal'>
-            <p>{ currentRole !== 'null' ? currentRole : '' }</p>
+            <p> <span role='img' aria-label='account'>👤</span> {currentRole} </p>
             <hr />
-            <Nav.Link style={{ marginTop: '-1em'}} href={links[currentRole]}> Your Account </Nav.Link> 
+            <Nav.Link style={{ marginTop: '-1em'}} href={links[currentRole]}> Edit Your Account </Nav.Link> 
 
             <Button 
               href='/loginPage'
               variant='danger'
               onClick={userLogOutFunction}
-            > Log Out </Button>
+            > Log Out <span role='img' aria-label='wave'>👋</span> </Button>
           </div>
         : null
       }

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Container, Row, Col, Modal } from 'react-bootstrap'
 
-import firebase from '../../config/firebase.config';
+import functions from '../../config/firebase.functions';
 import 'react-toastify/dist/ReactToastify.css';
-
-const functions = firebase.functions();
 
 const SelectedPatientPage = (props) => {
 
