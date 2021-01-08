@@ -13,6 +13,7 @@ const SelectedPatientPage = (props) => {
   const [patientSymptomsList, setPatientSymptoms] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [selectedSymptomID, setSelectedSymptomID] = useState(null);
+  const [feedbackContent, setFeedbackContent] = useState('');
 
   useEffect(() => {
     const fetchData = async () => { 
@@ -32,6 +33,7 @@ const SelectedPatientPage = (props) => {
   const handleCloseModal = () => {
     setSelectedSymptomID(null);
     setShowModal(false);
+    setFeedbackContent('')
   }
 
   const getAllPatientSymptoms = async (patientID) => {
@@ -39,7 +41,6 @@ const SelectedPatientPage = (props) => {
       const getAllSymptomsFromPatient = functions.httpsCallable('getAllSymptomsFromPatient');
       const response = await getAllSymptomsFromPatient({ patientID });
       const { symptomList } = response.data;
-      console.log(symptomList)
 
       return { symptomList };
     } catch (err) {
@@ -49,14 +50,13 @@ const SelectedPatientPage = (props) => {
 
   const saveFeedback = async (selectedSymptomID) => {
     try {
-      const feedbackContent = document.getElementById(`${selectedSymptomID}-feedbackTextField`).value;
-
       const feedbackObject = { physioID: userInfo.uid, physioName: userInfo.name, feedbackContent };
 
       const addFeebackToSymptom = functions.httpsCallable('addFeebackToSymptom');
       const response = await addFeebackToSymptom({ patientID, symptomID: selectedSymptomID, feedbackObject });
       
       toast.success(`🚀 ${response.data.message}`, toastConfig);
+      setFeedbackContent('')
     } catch (err) {
       toast.error('😔 There was an error saving your feedback!', toastConfig)
     }
@@ -120,7 +120,11 @@ const SelectedPatientPage = (props) => {
             <Modal.Title> Write here your feedback to {name} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <textarea  id={`${selectedSymptomID}-feedbackTextField`} style={{ width: '100%', borderRadius: '4px'}}></textarea >
+            <textarea  
+              id={`${selectedSymptomID}-feedbackTextField`}
+              style={{ width: '100%', borderRadius: '4px'}}
+              onChange={(e) => setFeedbackContent(e.target.value)}
+            ></textarea >
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>

@@ -8,11 +8,13 @@ import functions from '../../config/firebase.functions';
 
 import "react-datepicker/dist/react-datepicker.css";
 
+const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+let initialDob;
+
 const PatientAccountPage = () => {
 
   // GET DOB ON LOG IN AND STORE IT INTO. PHYSIO -> PATIENT -> Name is not updating though...
 
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   const [loading, setLoading] = useState(true);
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
@@ -23,6 +25,7 @@ const PatientAccountPage = () => {
     const fetchData = async () => { 
       const data = await getPatientData(userInfo.uid);
       setDateOfBirth(new Date(data.dob._seconds) * 1000)
+      initialDob = new Date(data.dob._seconds) * 1000;
       setLoading(false);
      }
  
@@ -67,6 +70,11 @@ const PatientAccountPage = () => {
     return [d.getFullYear(), pad(d.getMonth()+1), pad(d.getDate())].join('-')
   }
 
+  const clearChanges = () => {
+    setDateOfBirth(initialDob);
+    setUsername(userInfo.name);
+  }
+
   return (
     <>
       <h2 style={{ marginBottom: '1em' }}> Your Details </h2>
@@ -78,24 +86,24 @@ const PatientAccountPage = () => {
       </Spinner> 
 
       : <Form id="accountForm">
-        <Form.Label> Username </Form.Label>
-        <InputGroup>
-          <InputGroup.Prepend>
-            <InputGroup.Text><span role='img' aria-label='patient'>🙋‍♂️</span></InputGroup.Text>
-          </InputGroup.Prepend>
-          <FormControl id="username" placeholder="Name" defaultValue={username} disabled onChange={e => setUsername(e.target.value)} />
-        </InputGroup>
-        <Form.Label> Date of Birth </Form.Label>
-        <InputGroup>
-          <InputGroup.Prepend>
-            <InputGroup.Text><span role='img' aria-label='calendar'>📅</span></InputGroup.Text>
-          </InputGroup.Prepend>
-          <DatePicker id="dob" className="form-control" selected={dateOfBirth} onChange={date => setDateOfBirth(date)} dateFormat='dd/MM/yyyy' />
-        </InputGroup>
-      
-        <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} style={{ marginRight: '1em' }} disabled={btnDisabled}>Update</Button>
-        <Button variant='danger' onClick={() => { console.log('clear') }}> Clear </Button>
-      </Form>
+          <Form.Label> Username </Form.Label>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text><span role='img' aria-label='patient'>🙋‍♂️</span></InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl id="username" placeholder="Name" value={username} disabled onChange={e => setUsername(e.target.value)} />
+          </InputGroup>
+          <Form.Label> Date of Birth </Form.Label>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text><span role='img' aria-label='calendar'>📅</span></InputGroup.Text>
+            </InputGroup.Prepend>
+            <DatePicker id="dob" className="form-control" selected={dateOfBirth} onChange={date => setDateOfBirth(date)} dateFormat='dd/MM/yyyy' />
+          </InputGroup>
+        
+          <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} style={{ marginRight: '1em' }} disabled={btnDisabled}>Update</Button>
+          <Button variant='danger' onClick={() => { clearChanges() }}> <span role='img' aria-label='bin'>🗑️</span> Clear </Button>
+        </Form>
       }
     </>
   );

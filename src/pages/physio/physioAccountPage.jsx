@@ -10,12 +10,16 @@ import functions from '../../config/firebase.functions';
 
 import "react-datepicker/dist/react-datepicker.css";
 
+const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+let initialDob;
+let initialSpecialisation;
+
 const PhysioAccountPage = () => {
 
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState(userInfo.name);
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
+
   const options = [
     { label: "Shoulders", value: "Shoulders" },
     { label: "Knee", value: "Knee" },
@@ -28,8 +32,10 @@ const PhysioAccountPage = () => {
     const fetchData = async () => { 
       const data = await getPhysioData(userInfo.uid);
       setDateOfBirth(new Date(data.dob._seconds) * 1000)
-      const specialisationsFormatted = data.specialisations.map(current => { return { label: current, value: current } })
-      setSpecialisations(specialisationsFormatted)
+      initialDob = new Date(data.dob._seconds) * 1000;
+      const specialisationsFormatted = data.specialisations.map(current => { return { label: current, value: current } });
+      setSpecialisations(specialisationsFormatted);
+      initialSpecialisation = specialisationsFormatted;
       setLoading(false);
      }
  
@@ -41,8 +47,7 @@ const PhysioAccountPage = () => {
     try {
       const getPhysioData = functions.httpsCallable('getPhysioData');
       const response = await getPhysioData({ physioID: userID  });
-      console.log(userID)
-      console.log(response.data)
+
       return response.data.physioData;
     } catch (err) {
       toast.error('😔 There was an error retrieving your account information!', toastConfig)
@@ -51,20 +56,29 @@ const PhysioAccountPage = () => {
 
   const updateAccount = async (physioID) => {
     try {
-      const newUsername = document.getElementById('username').value;
-      const newDob = document.getElementById('dob').value;
-      const newDobTimestamp = newDob.split("/").reverse().join("-");
-
       const specialisationsFormatted = specialisations.map((current) => { return current.value});
 
       const updatePhysioAccount = functions.httpsCallable('updatePhysioAccount');
-      const response = await updatePhysioAccount({ physioID, name: newUsername, dob: newDobTimestamp, specialisations: specialisationsFormatted });
+      const response = await updatePhysioAccount({ physioID, name: username, dob: convertDate(dateOfBirth), specialisations: specialisationsFormatted });
       
       toast.success(`🚀 ${response.data.message}`, toastConfig);
 
     } catch (err) {
       toast.error('😔 There was an error updating your account!', toastConfig)
     }
+  }
+
+  const convertDate = (inputFormat) => {
+    const pad = (s) => { return (s < 10) ? '0' + s : s; }
+
+    const d = new Date(inputFormat)
+    return [d.getFullYear(), pad(d.getMonth()+1), pad(d.getDate())].join('-')
+  }
+
+  const clearChanges = () => {
+    setUsername(userInfo.name);
+    setDateOfBirth(initialDob);
+    setSpecialisations(initialSpecialisation);
   }
 
   return (
@@ -78,45 +92,35 @@ const PhysioAccountPage = () => {
       </Spinner> 
 
       : <Form id="accountForm">
-        <Form.Label> Username </Form.Label>
-        <InputGroup>
-          <InputGroup.Prepend>
-            <InputGroup.Text><span role='img' aria-label='physio'>👨‍⚕️</span></InputGroup.Text>
-          </InputGroup.Prepend>
-          <FormControl id="username" placeholder="Name" defaultValue={userInfo.name} disabled />
-        </InputGroup>
-        <Form.Label> Date of Birth </Form.Label>
-        <InputGroup>
-          <InputGroup.Prepend>
-            <InputGroup.Text><span role='img' aria-label='calendar'>📅</span></InputGroup.Text>
-          </InputGroup.Prepend>
-          <DatePicker id="dob" className="form-control" selected={dateOfBirth} onChange={date => setDateOfBirth(date)} dateFormat='dd/MM/yyyy' />
-        </InputGroup>
-        <Form.Label> Specialisations </Form.Label>
-        {/* <InputGroup>
-          <InputGroup.Prepend>
-            <InputGroup.Text>List</InputGroup.Text>
-          </InputGroup.Prepend> */}
-        <MultiSelect
-          id='specialisations'
-          options={options}
-          value={specialisations}
-          onChange={setSpecialisations}
-          labelledBy={"Select"}
-          hasSelectAll={false}
-          selectAllLabel={false}
-        />
-          {/* <Form.Control id="temp3" as="select" multiple htmlSize={3}>
-            <option>Knee</option>
-            <option>Shoulder</option>
-            <option>Back</option>
-            <option>Elbow</option>
-            <option>Foot</option>
-          </Form.Control> */}
-        {/* </InputGroup> */}
+          <Form.Label> Username </Form.Label>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text><span role='img' aria-label='physio'>👨‍⚕️</span></InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl id="username" placeholder="Name" value={username} disabled onChange={e => setUsername(e.target.value)} />
+          </InputGroup>
+          <Form.Label> Date of Birth </Form.Label>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text><span role='img' aria-label='calendar'>📅</span></InputGroup.Text>
+            </InputGroup.Prepend>
+            <DatePicker id="dob" className="form-control" selected={dateOfBirth} onChange={date => setDateOfBirth(date)} dateFormat='dd/MM/yyyy' />
+          </InputGroup>
+
+          <Form.Label> Specialisations </Form.Label>
+          <MultiSelect
+            id='specialisations'
+            options={options}
+            value={specialisations}
+            onChange={setSpecialisations}
+            labelledBy={"Select"}
+            hasSelectAll={false}
+            selectAllLabel={false}
+          />
+
           <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} style={{ marginRight: '1em' }}>Update</Button>
-          <Button variant='danger' onClick={() => {console.log('clear')}}> Clear </Button>
-      </Form>
+          <Button variant='danger' onClick={() => { clearChanges() }}> <span role='img' aria-label='bin'>🗑️</span> Clear </Button>
+        </Form>
     }
     </>
   );

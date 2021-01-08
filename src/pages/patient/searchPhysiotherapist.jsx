@@ -34,7 +34,6 @@ const SearchPhysiotherapistsPage = () => {
     try {
       const getAllPhysiotherapists = functions.httpsCallable('getAllPhysiotherapists');
       const response = await getAllPhysiotherapists();
-      console.log(response);
 
       return response.data.physiotherapists;
     } catch (err) {
@@ -46,7 +45,6 @@ const SearchPhysiotherapistsPage = () => {
     try {
       const getPatientData = functions.httpsCallable('getPatientData');
       const response = await getPatientData({ patientID: userID });
-      console.log(response.data.patientData)
 
       return response.data.patientData;
     } catch (err) {
@@ -56,16 +54,14 @@ const SearchPhysiotherapistsPage = () => {
 
   const sendInvite = async (physioID) => {
     try {
-      console.log({ physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name })
       document.getElementById(`${physioID}-sendInviteButton`).disabled = true;
       document.getElementById(`${physioID}-sendInviteButton`).textContent = 'Loading...';
       document.getElementById(`${physioID}-sendInviteButton`).className = 'btn btn-primary';
       
       const sendInvite = functions.httpsCallable('sendInvite');
-      const response = await sendInvite({ 
+      await sendInvite({ 
         physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name, photoURL: userInfo.photoURL
       });
-      console.log(response);
 
       document.getElementById(`${physioID}-sendInviteButton`).textContent = 'Invite Sent!';
       toast.success('🚀 Invite Sent Successfully!', toastConfig);
@@ -78,16 +74,14 @@ const SearchPhysiotherapistsPage = () => {
 
   const removeConnection = async (physioID) => {
     try {
-      console.log({ physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name })
       document.getElementById(`${physioID}-removeConnectionButton`).disabled = true;
       document.getElementById(`${physioID}-removeConnectionButton`).textContent = 'Loading...';
       document.getElementById(`${physioID}-removeConnectionButton`).className = 'btn btn-primary';
       
       const removeConnection = functions.httpsCallable('removeConnection');
-      const response = await removeConnection({ 
+      await removeConnection({ 
         physioID, patientID: userInfo.uid,
       });
-      console.log(response);
 
       document.getElementById(`${physioID}-removeConnectionButton`).textContent = 'Connection Removed!';
       toast.success('🚀 Connection Removed Successfully!', toastConfig);
@@ -119,11 +113,11 @@ const SearchPhysiotherapistsPage = () => {
                         Email: {physiotherapist.email}
                       </Card.Text>
                       <Card.Text> 
-                        Specialisations:
+                        Specialisations: <br />
                         { physiotherapist.specialisations.length === 0
-                          ? <h6> NOT SPECIALISED </h6>
+                          ? <b> NOT SPECIALISED </b>
                           : Array.from(physiotherapist.specialisations).map((currentSpec, index) => (
-                              <h6 key={index}>{currentSpec}</h6>
+                              <b key={index}> {currentSpec} <br /> </b>
                             ))
                         }
                       </Card.Text>

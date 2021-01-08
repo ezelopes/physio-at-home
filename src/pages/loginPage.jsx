@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import firebase from 'firebase';
 import { Spinner } from 'react-bootstrap';
 
@@ -7,6 +7,9 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 
 
 const LoginPage = () => {
+  
+  const [loading, setLoading] = useState(false);
+
   const uiConfig = {
     signInFlow: 'popup',
     signInOptions: [
@@ -17,8 +20,7 @@ const LoginPage = () => {
     ],
     callbacks: {
       signInSuccessWithAuthResult: async () => {
-        document.getElementById('auth-div').style.display = 'none';
-        document.getElementById('load-div').style.display = 'block';
+        setLoading(true);
         setTimeout(() => { window.location.pathname = '/' }, 3000)
         return false;
       },
@@ -27,17 +29,15 @@ const LoginPage = () => {
 
   return (
     <>
-      <div id='auth-div' style={{ display: 'block' }}>
-        <StyledFirebaseAuth 
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
-        />
-      </div>
-      <div id='load-div' style={{ display: 'none' }} > 
-        <Spinner animation="border" role="status">
-          <span className="sr-only">Loading...</span>
-        </Spinner> 
-      </div>
+      { loading 
+        ? <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>   
+        : <StyledFirebaseAuth 
+            uiConfig={uiConfig}
+            firebaseAuth={firebase.auth()}
+          />
+      }
     </>
   )
 }

@@ -26,14 +26,12 @@ th, td, Form, p {
 
 .homepage {
   background: url('../images/homepage.jpg'); 
-  /* background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: cover;
   background-color: rgba(255,255,255,0.2);
-  background-blend-mode: lighten; */
+  background-blend-mode: lighten;
   background-size: cover;
   width: 100%;
-  height: 100%;
+  height: 80vh;
 }
 
 .card {

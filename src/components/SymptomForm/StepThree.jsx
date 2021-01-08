@@ -19,15 +19,14 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
   const canvasRef = useRef(null);
 
   const startRecording = () => {
-    // disable button after clicking
     try {
       setRecording(true);
       socket = socketIOClient(ENDPOINT);
       socket.on('connect_error', function(){
-        console.log('Connection Failed - Server might be down or Kinect disconnected!');
+        toast.error('😔 Connection Failed - Server might be down or Kinect disconnected!', toastConfig);
         socket.disconnect()
       });
-      socket.on('connect', () => { console.log('CONNECTED') })
+      socket.on('connect', () => { toast.success('📹 Recording started, make sure you move the highlighted body part!', toastConfig); })
       socket.on("bodyFrame", (resBodyFrame) => {
         interpretData(resBodyFrame, canvasRef.current.getContext('2d'))
        }
@@ -63,7 +62,6 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
 
     const elbowAngle = calculateAngleOfMotion(humerus, ulna, shoulderToWrist);
 
-    console.log('ELBOW', elbowAngle);
     if (elbowAngle < minAngle) minAngle = elbowAngle;
     if (elbowAngle > maxAngle) maxAngle = elbowAngle;
   }
@@ -75,7 +73,6 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
 
     const kneeAngle = calculateAngleOfMotion(femur, tibia, hipToAnkle);
 
-    console.log('KNEE', kneeAngle);
     if (kneeAngle < minAngle) minAngle = kneeAngle;
     if (kneeAngle > maxAngle) maxAngle = kneeAngle;
   }
@@ -90,7 +87,7 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
 
   const interpretData = (bodyFrame, ctx) => {
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    console.log(selectedBodyPart, rightOrLeft)
+
     for (let i = 0; i < bodyFrame.bodies.length; i++) {
       if (bodyFrame.bodies[i].tracked === true) {
         const joints = bodyFrame.bodies[i].joints;
@@ -99,8 +96,6 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
         else if (selectedBodyPart === 'ELBOW' && rightOrLeft === 'RIGHT') calculateElbowAngle(joints[8], joints[9], joints[10]); // right shoulder, elbow, wrist
         else if (selectedBodyPart === 'KNEE' && rightOrLeft === 'LEFT') calculateKneeAngle(joints[12], joints[13], joints[14]); // left hip, knee, ankle
         else if (selectedBodyPart === 'KNEE' && rightOrLeft === 'RIGHT') calculateKneeAngle(joints[16], joints[17], joints[18]); // right hip, knee, ankle
-
-        console.table(minAngle, maxAngle)
 
         for (let j = 0; j < joints.length; j++) {
           const joint = joints[j];

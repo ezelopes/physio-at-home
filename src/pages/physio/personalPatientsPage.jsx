@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, Container, Row, Col } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
 import functions from '../../config/firebase.functions';
@@ -12,13 +12,14 @@ const PersonalPatientsPage = () => {
   
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
+  const [loading, setLoading] = useState(true);
   const [physioPatientsList, setPhysioPatientsList] = useState([]);
-
 
   useEffect(() => {
     const fetchData = async () => { 
       const response = await getAllPhysioPatients(userInfo.uid);
       setPhysioPatientsList(response.patientsList);
+      setLoading(false);
      }
  
      fetchData();
@@ -30,7 +31,6 @@ const PersonalPatientsPage = () => {
       const getAllPhysioPatients = functions.httpsCallable('getAllPhysioPatients');
       const response = await getAllPhysioPatients({ physioID: userID });
       const { patientsList } = response.data;
-      console.log(patientsList)
 
       return { patientsList };
     } catch (err) {
@@ -46,10 +46,7 @@ const PersonalPatientsPage = () => {
       document.getElementById(`${patientID}-removeConnectionButton`).className = 'btn btn-primary';
       
       const removeConnection = functions.httpsCallable('removeConnection');
-      const response = await removeConnection({ 
-        physioID, patientID,
-      });
-      console.log(response);
+      await removeConnection({ physioID, patientID });
 
       document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Connection Removed!';
       toast.success('🚀 Connection Removed Successfully!', toastConfig);
@@ -63,36 +60,42 @@ const PersonalPatientsPage = () => {
   return (
     <>
       <ToastContainer />
-      <Container>
-        <Row>
-        { Object.keys(physioPatientsList).map((patientID) => {
-            return <div id={patientID} key={patientID}>
-              <Col lg={true}>
-                <Card>
-                  <Card.Body>
-                    <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL } style={{ borderRadius: '50%' }} />
-                    <Card.Title style={{ marginTop: '1em'}}> Name: { physioPatientsList[patientID].name } </Card.Title>
-                    <Card.Text>
-                      Email: { physioPatientsList[patientID].email }
-                    </Card.Text>
-                    <Link to={{ pathname: `/physio/selectedPatient`, state: { patientID, name: physioPatientsList[patientID].name } }}>
-                      <Button variant="primary" style={{ marginRight: '1em' }}> See Details </Button>
-                    </Link>
-                    <Button 
-                      id={`${patientID}-removeConnectionButton`}
-                      variant="danger"
-                      onClick={() => { removeConnection(patientID) }}
-                    >
-                      Remove Patient
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </div>
-          }) 
-        }
-        </Row>
-      </Container>
+      { loading ? 
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner> 
+
+      : <Container>
+          <Row>
+          { Object.keys(physioPatientsList).map((patientID) => {
+              return <div id={patientID} key={patientID}>
+                <Col lg={true}>
+                  <Card>
+                    <Card.Body>
+                      <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL } style={{ borderRadius: '50%' }} />
+                      <Card.Title style={{ marginTop: '1em'}}> Name: { physioPatientsList[patientID].name } </Card.Title>
+                      <Card.Text>
+                        Email: { physioPatientsList[patientID].email }
+                      </Card.Text>
+                      <Link to={{ pathname: `/physio/selectedPatient`, state: { patientID, name: physioPatientsList[patientID].name } }}>
+                        <Button variant="primary" style={{ marginRight: '1em' }}> See Details </Button>
+                      </Link>
+                      <Button 
+                        id={`${patientID}-removeConnectionButton`}
+                        variant="danger"
+                        onClick={() => { removeConnection(patientID) }}
+                      >
+                        Remove Patient
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </div>
+            }) 
+          }
+          </Row>
+        </Container>
+      }
     </>
   );
 }

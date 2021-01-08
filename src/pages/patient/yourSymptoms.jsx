@@ -45,7 +45,6 @@ const YourSymptoms = () => {
       const getAllSymptomsFromPatient = functions.httpsCallable('getAllSymptomsFromPatient');
       const response = await getAllSymptomsFromPatient({ patientID });
       const { symptomList } = response.data;
-      console.log(symptomList)
 
       return { symptomList };
     } catch (err) {

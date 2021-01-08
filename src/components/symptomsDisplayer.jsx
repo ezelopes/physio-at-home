@@ -6,7 +6,6 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
   const [symptomsList, setSymptomsList] = useState([]);
 
   useEffect(() => {
-    console.log(symptoms);
     setSymptomsList(symptoms);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updated]);

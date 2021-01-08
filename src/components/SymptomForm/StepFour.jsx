@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 
@@ -17,30 +17,27 @@ const StepFour = ({
   maxAngle,
 }) => {
 
+  const [loading, setLoading] = useState(false);
+
   const submitNewSymptom = async (e) => {
     e.preventDefault();
 
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
-    document.getElementById('addNewSymptomButton').disabled = true;
-    document.getElementById('addNewSymptomButton').textContent = 'Loading...';
     try {
-      // round min and max angles
+      setLoading(true);
+
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       const rangeOfMotion = { minAngle, maxAngle };
       const bodyPart = { rightOrLeft, bodyPart: selectedBodyPart, specificBodyPart }
-      console.log(symptomTitle, painRangeValue, symptomDetails, rangeOfMotion, bodyPart)
       
       const addNewPatientSymptom = functions.httpsCallable('addNewPatientSymptom');
-      const response = await addNewPatientSymptom({ patientID: userInfo.uid, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion });
-      console.log(response);
+      await addNewPatientSymptom({ patientID: userInfo.uid, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion });
     
       toast.success('🚀 Symptom Added Successfully!', toastConfig);
     } catch(err) {
       toast.error('😔 There was an error adding your symptom!', toastConfig);
-    }
-      
-    document.getElementById('addNewSymptomButton').disabled = false;
-    document.getElementById('addNewSymptomButton').textContent = 'Submit';
+    } finally {
+      setLoading(false);
+    } 
   }
 
   return (
@@ -67,8 +64,9 @@ const StepFour = ({
         type="submit"
         style={{ marginTop: '2em' }}
         onClick={(e) => submitNewSymptom(e)}
+        disabled={loading}
       >
-        Submit
+        { loading ? 'Loading...' : 'Submit' }
       </Button>
     </>
   );

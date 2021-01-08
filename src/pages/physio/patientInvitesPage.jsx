@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Button, Card, Container, Row, Col } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 
 import functions from '../../config/firebase.functions';
 import toastConfig from '../../config/toast.config';
@@ -10,13 +10,14 @@ const PatientInvitesPage = () => {
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
+  const [loading, setLoading] = useState(true);
   const [patientInvitesList, setInvitesList] = useState([]);
-
 
   useEffect(() => {
     const fetchData = async () => { 
       const response = await getAllPhysioInvites(userInfo.uid);
       setInvitesList(response.invitesList);
+      setLoading(false);
      }
  
      fetchData();
@@ -28,7 +29,6 @@ const PatientInvitesPage = () => {
       const getAllPhysioInvites = functions.httpsCallable('getAllPhysioInvites');
       const response = await getAllPhysioInvites({ physioID: userID });
       const { invitesList } = response.data;
-      console.log(invitesList)
 
       return { invitesList };
     } catch (err) {
@@ -38,15 +38,13 @@ const PatientInvitesPage = () => {
 
   const acceptInviteRequest = async (patientID, name, email, photoURL) => {
     try {
-      console.log({ physioID: userInfo.uid, patientID, name, email, photoURL });
       const physioID =  userInfo.uid;
       document.getElementById(`${patientID}-acceptButton`).disabled = true;
       document.getElementById(`${patientID}-declineButton`).disabled = true;
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Loading...';
 
       const acceptInviteRequest = functions.httpsCallable('acceptInviteRequest');
-      const response = await acceptInviteRequest({ physioID, patientID, name, email, photoURL });
-      console.log(response);
+      await acceptInviteRequest({ physioID, patientID, name, email, photoURL });
 
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Accepted ✔️';
       toast.success('🚀 Invite Accepted Successfully!', toastConfig);
@@ -58,18 +56,15 @@ const PatientInvitesPage = () => {
   }
   
   const declineInviteRequest = async (patientID) => {
-    // ❌
     try {
-      console.log({ physioID: userInfo.uid, patientID });
       const physioID =  userInfo.uid;
       document.getElementById(`${patientID}-acceptButton`).disabled = true;
       document.getElementById(`${patientID}-declineButton`).disabled = true;
       document.getElementById(`${patientID}-declineButton`).textContent = 'Loading...';
 
       const declineInviteRequest = functions.httpsCallable('declineInviteRequest');
-      const response = await declineInviteRequest({ physioID, patientID });
-      console.log(response);
-
+      await declineInviteRequest({ physioID, patientID });
+      
       document.getElementById(`${patientID}-declineButton`).textContent = 'Declined ❌';
       toast.success('🚀 Invite Declined Successfully!', toastConfig);
     } catch (err) {
@@ -82,40 +77,46 @@ const PatientInvitesPage = () => {
   return (
     <>
       <ToastContainer />
-      <Container>
-        <Row>
-        { Object.keys(patientInvitesList).map((patientID, index) => {
-            const { name, email, photoURL } = patientInvitesList[patientID];
-            return (
-              <div id={patientID} key={patientID}>
-                <Col lg={true}>
-                  <Card>
-                    <Card.Body>
-                      <Card.Img variant="top" src={photoURL} style={{ borderRadius: '50%' }} />
-                      <Card.Title style={{ marginTop: '1em'}} > Name: {name} </Card.Title>
-                      <Card.Text>
-                        Email: {email}
-                      </Card.Text>
-                      <Button
-                        id={`${patientID}-acceptButton`}
-                        variant="success"
-                        onClick={() => acceptInviteRequest(patientID, name, email, photoURL)}
-                        style={{ marginRight: '1em' }}
-                      >
-                        Accept Invite
-                      </Button>
-                      <Button id={`${patientID}-declineButton`} variant="danger" onClick={() => declineInviteRequest(patientID)}>
-                        Decline Invite
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </div>
-            )
-          }) 
-        }
-        </Row>
-      </Container>
+      { loading ? 
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner> 
+
+      : <Container>
+          <Row>
+          { Object.keys(patientInvitesList).map((patientID, index) => {
+              const { name, email, photoURL } = patientInvitesList[patientID];
+              return (
+                <div id={patientID} key={patientID}>
+                  <Col lg={true}>
+                    <Card>
+                      <Card.Body>
+                        <Card.Img variant="top" src={photoURL} style={{ borderRadius: '50%' }} />
+                        <Card.Title style={{ marginTop: '1em'}} > Name: {name} </Card.Title>
+                        <Card.Text>
+                          Email: {email}
+                        </Card.Text>
+                        <Button
+                          id={`${patientID}-acceptButton`}
+                          variant="success"
+                          onClick={() => acceptInviteRequest(patientID, name, email, photoURL)}
+                          style={{ marginRight: '1em' }}
+                        >
+                          Accept Invite
+                        </Button>
+                        <Button id={`${patientID}-declineButton`} variant="danger" onClick={() => declineInviteRequest(patientID)}>
+                          Decline Invite
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </div>
+              )
+            }) 
+          }
+          </Row>
+        </Container>
+      }
     </>
   );
 }
