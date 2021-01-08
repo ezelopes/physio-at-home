@@ -123,8 +123,8 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
   const stopRecording = () => {
     setRecording(false);
     toast.success('🚀 Data captured successfully!', toastConfig);
-    setMinAngle(minAngle);
-    setMaxAngle(maxAngle);
+    setMinAngle(minAngle.toFixed(2));
+    setMaxAngle(maxAngle.toFixed(2));
     socket.disconnect();
   }
 
