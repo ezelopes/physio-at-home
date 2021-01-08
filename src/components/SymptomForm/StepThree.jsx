@@ -1,6 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap'
+import { toast } from 'react-toastify';
 import socketIOClient from "socket.io-client";
+
+import toastConfig from '../../config/toast.config';
 
 let socket = null;
 
@@ -11,12 +14,14 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
 
   const ENDPOINT = "http://127.0.0.1:8069";
   const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff'];
+  const [recording, setRecording] = useState(false);
 
   const canvasRef = useRef(null);
 
   const startRecording = () => {
     // disable button after clicking
     try {
+      setRecording(true);
       socket = socketIOClient(ENDPOINT);
       socket.on('connect_error', function(){
         console.log('Connection Failed - Server might be down or Kinect disconnected!');
@@ -28,7 +33,7 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
        }
       );
     } catch (err) {
-      console.log(err)
+      toast.error('😔 There was an error with the Kinect Connection!', toastConfig);
     }
   }
 
@@ -116,7 +121,8 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
   }
 
   const stopRecording = () => {
-    alert(JSON.stringify({ minAngle, maxAngle }))
+    setRecording(false);
+    toast.success('🚀 Data captured successfully!', toastConfig);
     setMinAngle(minAngle);
     setMaxAngle(maxAngle);
     socket.disconnect();
@@ -125,11 +131,11 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
   return (
     <>
       <Form.Group style={{ marginTop: '2em' }}>
-        <Button variant="primary" type="button" style={{ marginRight: '1em' }} onClick={() => startRecording()}>
+        <Button variant="primary" type="button" style={{ marginRight: '1em' }} onClick={() => startRecording()} disabled={recording}>
           <span role="img" aria-label="back"> Record Video 📹 </span>
         </Button>
 
-        <Button variant="primary" type="button" onClick={() => stopRecording()}>
+        <Button variant="primary" type="button" onClick={() => stopRecording()} disabled={!recording}>
         <span role="img" aria-label="back"> Stop Video 🛑 </span>
         </Button>
       </Form.Group>

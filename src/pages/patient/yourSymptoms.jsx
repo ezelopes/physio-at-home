@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
+import { Button, Container, Row, Modal, Spinner } from 'react-bootstrap'
+import { ToastContainer, toast } from 'react-toastify';
 import ColoredLine from '../../components/coloredLine'
+import SymptomsDisplayer from '../../components/symptomsDisplayer'
+
+import toastConfig from '../../config/toast.config';
 
 import functions from '../../config/firebase.functions';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +17,7 @@ const YourSymptoms = () => {
   const [symptomsList, setSymptoms] = useState({});
   const [currentFeedbackList, setCurrentFeedbackList] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => { 
@@ -44,7 +49,7 @@ const YourSymptoms = () => {
 
       return { symptomList };
     } catch (err) {
-      console.log(err);
+      toast.error('😔 An error occured while retrieving your symptoms!', toastConfig);
     }
   }
 
@@ -52,87 +57,37 @@ const YourSymptoms = () => {
     try {
       const deleteSymptomOfPatient = functions.httpsCallable('deleteSymptomOfPatient');
       const response = await deleteSymptomOfPatient({ patientID, symptomID });
-      
-      alert(response.data.message)
+      toast.success(`🚀 ${response.data.message}`, toastConfig);
 
       delete symptomsList[symptomID];
       setSymptoms(symptomsList);
-      console.log(symptomsList)
+      setUpdated(!updated);
     } catch (err) {
-      console.log(err);
+      toast.error('😔 There was an error deleting your symptom!', toastConfig);
     }
   }
 
   return (
     <>
+    <ToastContainer />
     { loading
       ? <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>
       </Spinner> 
       : <Container style={{ marginBottom: '5em' }}>
         <Row>
-          { Object.keys(symptomsList).map((currentSymptomID) => {
-                return <div id={currentSymptomID} key={currentSymptomID}>
-                  <Col lg={true}>
-                    <Card style={{ width: '23em' }}>
-                      <Card.Body style={{'max-height': '50vh', 'overflow-y': 'auto'}}>
-                        <Card.Title>
-                          { symptomsList[currentSymptomID].symptomTitle }
-                        </Card.Title>
-                        <Card.Text>
-                          Body Part: { 
-                            symptomsList[currentSymptomID].bodyPart.rightOrLeft + ' ' + 
-                            symptomsList[currentSymptomID].bodyPart.bodyPart + ' (' + 
-                            symptomsList[currentSymptomID].bodyPart.specificBodyPart + ')' 
-                          }
-                        </Card.Text>
-                        <Card.Text>
-                          Pain Range Value: { symptomsList[currentSymptomID].painRangeValue }
-                        </Card.Text>
-                        <Card.Text>
-                          Details: { symptomsList[currentSymptomID].symptomDetails }
-                        </Card.Text>
-                        <Card.Text>
-                          Range of Motion: { 
-                            symptomsList[currentSymptomID].rangeOfMotion.minAngle + '° to ' + 
-                            symptomsList[currentSymptomID].rangeOfMotion.maxAngle + '°'
-                          }
-                        </Card.Text>
-
-                        <Button 
-                          style={{ marginRight: '1em' }}
-                          id={`read-${currentSymptomID}`}
-                          variant="success"
-                          onClick={() => { handleShowModal(currentSymptomID) }}
-                        >
-                          Read Feedbacks!
-                        </Button>
-
-                        <Button 
-                          id={`delete-${currentSymptomID}`}
-                          variant="danger"
-                          onClick={() => { deleteSymptom(userInfo.uid, currentSymptomID) }}
-                        >
-                          Delete Symptom
-                        </Button>
-
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </div>
-              }) 
-            }
+          <SymptomsDisplayer updated={updated} symptoms={symptomsList} deleteSymptom={deleteSymptom} handleShowModal={handleShowModal}  userInfo={userInfo} />
         </Row>
 
         <Modal show={showModal} onHide={handleCloseModal} centered>
           <Modal.Header closeButton>
             <Modal.Title> Found below your feedback </Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{'max-height': 'calc(100vh - 210px)', 'overflow-y': 'auto'}}>
+          <Modal.Body style={{'maxHeight': 'calc(100vh - 150px)', 'overflowY': 'auto'}}>
             {
               currentFeedbackList.length !== 0 
               ? currentFeedbackList.map((currentFeedback, index) => {
-                  return (<div style={{ marginBottom: '1em' }}> 
+                  return (<div style={{ marginBottom: '1em' }} key={index}> 
                     <p> {index + 1}. <b> {currentFeedback.physioName} </b> says: </p>
                     {currentFeedback.feedbackContent} 
                     <ColoredLine color='#0069D9' />

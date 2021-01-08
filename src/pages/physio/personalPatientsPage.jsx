@@ -34,7 +34,7 @@ const PersonalPatientsPage = () => {
 
       return { patientsList };
     } catch (err) {
-      console.log(err);
+      toast.error('😔 An error occured when trying to retrieve your patients!', toastConfig);
     }
   }
 
@@ -57,7 +57,6 @@ const PersonalPatientsPage = () => {
       toast.error('😔 There was an error removing this connection!', toastConfig);
       document.getElementById(`${patientID}-removeConnectionButton`).className = 'btn btn-warning';
       document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Refresh Page!';
-      console.log(err);
     }
   }
 

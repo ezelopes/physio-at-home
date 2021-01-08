@@ -12,7 +12,6 @@ const PromoteUsersPage = () => {
       const setUserAsAdmin = functions.httpsCallable('setUserAsAdmin');
       const response = await setUserAsAdmin({ email: newAdminEmail });
       console.log(response.data.message);
-      alert(response.data.message);
     } catch (err) {
       console.log(err);
     }
@@ -25,7 +24,6 @@ const PromoteUsersPage = () => {
       const setUserAsPhysiotherapist = functions.httpsCallable('setUserAsPhysiotherapist');
       const response = await setUserAsPhysiotherapist({ email: newPhysiotherapistEmail });
       console.log(response.data.message);
-      alert(response.data.message);
     } catch (err) {
       console.log(err);
     }

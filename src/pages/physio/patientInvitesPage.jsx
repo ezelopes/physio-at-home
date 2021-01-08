@@ -32,7 +32,7 @@ const PatientInvitesPage = () => {
 
       return { invitesList };
     } catch (err) {
-      console.log(err);
+      toast.error('😔 An error occured while retrieving the information!', toastConfig);
     }
   }
 
@@ -54,7 +54,6 @@ const PatientInvitesPage = () => {
       toast.error('😔 There was an error accepting the invite!', toastConfig);
       document.getElementById(`${patientID}-acceptButton`).className = 'btn btn-warning'; // -danger?
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Refresh Page!';
-      console.log(err);
     }
   }
   
@@ -77,7 +76,6 @@ const PatientInvitesPage = () => {
       toast.error('😔 There was an error declining the invite!', toastConfig);
       document.getElementById(`${patientID}-declineButton`).className = 'btn btn-warning'; // -danger?
       document.getElementById(`${patientID}-declineButton`).textContent = 'Refresh Page!';
-      console.log(err);
     }
   }
 

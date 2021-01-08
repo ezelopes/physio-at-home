@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Container, Row, Col, Modal } from 'react-bootstrap'
+import { ToastContainer, toast } from 'react-toastify';
 
+import toastConfig from '../../config/toast.config';
 import functions from '../../config/firebase.functions';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -41,7 +43,7 @@ const SelectedPatientPage = (props) => {
 
       return { symptomList };
     } catch (err) {
-      console.log(err);
+      toast.error('😔 There was an error retrieving your patient information!', toastConfig)
     }
   }
 
@@ -53,14 +55,16 @@ const SelectedPatientPage = (props) => {
 
       const addFeebackToSymptom = functions.httpsCallable('addFeebackToSymptom');
       const response = await addFeebackToSymptom({ patientID, symptomID: selectedSymptomID, feedbackObject });
-      alert(response.data.message);
+      
+      toast.success(`🚀 ${response.data.message}`, toastConfig);
     } catch (err) {
-      console.log(err);
+      toast.error('😔 There was an error saving your feedback!', toastConfig)
     }
   }
 
   return (
     <>
+      <ToastContainer />
       <Button onClick={() => props.history.goBack() } style={{ marginRight: '90%'}} > <span role="img" aria-label="back"> ⬅️ </span> GO BACK </Button> 
       <h2> List of Symptoms of {name} </h2>
       <Container>

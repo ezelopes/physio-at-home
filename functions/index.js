@@ -390,8 +390,8 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
       role: null,
     }
 
-    const isAdmin = user.email.endsWith('@port.ac.uk');
-    const physiotherapist = user.email.endsWith('@myport.ac.uk');
+    const isAdmin = user.email.endsWith('@port.ac.uk'); // @physioathome.admin.com
+    const physiotherapist = user.email.endsWith('@myport.ac.uk'); // @physioathome.therapist.com
 
     if (isAdmin) { userData.role = 'ADMIN'; }
     else if (physiotherapist) { userData.role = 'PHYSIOTHERAPIST'; userData.specialisations = [] }

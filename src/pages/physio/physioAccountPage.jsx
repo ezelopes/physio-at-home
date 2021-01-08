@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Form, FormControl, InputGroup, Button, Spinner } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import MultiSelect from "react-multi-select-component";
+import { ToastContainer, toast } from 'react-toastify';
 
+
+import toastConfig from '../../config/toast.config';
 import functions from '../../config/firebase.functions';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -31,6 +34,7 @@ const PhysioAccountPage = () => {
      }
  
      fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getPhysioData = async (userID) => {
@@ -41,7 +45,7 @@ const PhysioAccountPage = () => {
       console.log(response.data)
       return response.data.physioData;
     } catch (err) {
-      console.log(err);
+      toast.error('😔 There was an error retrieving your account information!', toastConfig)
     }
   }
 
@@ -56,10 +60,10 @@ const PhysioAccountPage = () => {
       const updatePhysioAccount = functions.httpsCallable('updatePhysioAccount');
       const response = await updatePhysioAccount({ physioID, name: newUsername, dob: newDobTimestamp, specialisations: specialisationsFormatted });
       
-      alert(response.data.message)
+      toast.success(`🚀 ${response.data.message}`, toastConfig);
 
     } catch (err) {
-      console.log(err);
+      toast.error('😔 There was an error updating your account!', toastConfig)
     }
   }
 
@@ -67,6 +71,7 @@ const PhysioAccountPage = () => {
     <>
       <h2 style={{ marginBottom: '1em' }}> Your Details </h2>
 
+      <ToastContainer />
       { loading ? 
       <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>

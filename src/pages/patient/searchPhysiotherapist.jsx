@@ -38,7 +38,7 @@ const SearchPhysiotherapistsPage = () => {
 
       return response.data.physiotherapists;
     } catch (err) {
-      console.log(err);
+      toast.error('😔 An error occured while retrieving the information!', toastConfig);
     }
   }
 
@@ -50,7 +50,7 @@ const SearchPhysiotherapistsPage = () => {
 
       return response.data.patientData;
     } catch (err) {
-      console.log(err);
+      toast.error('😔 An error occured while retrieving the information!', toastConfig);
     }
   }
 
@@ -73,7 +73,6 @@ const SearchPhysiotherapistsPage = () => {
       toast.error('😔 There was an error sending your invite!', toastConfig);
       document.getElementById(`${physioID}-sendInviteButton`).className = 'btn btn-warning'; // -danger?
       document.getElementById(`${physioID}-sendInviteButton`).textContent = 'Refresh Page!';
-      // console.log(err);
     }
   }
 
@@ -96,7 +95,6 @@ const SearchPhysiotherapistsPage = () => {
       toast.error('😔 There was an error removing this connection!', toastConfig);
       document.getElementById(`${physioID}-removeConnectionButton`).className = 'btn btn-warning';
       document.getElementById(`${physioID}-removeConnectionButton`).textContent = 'Refresh Page!';
-      // console.log(err);
     }
   }
 
