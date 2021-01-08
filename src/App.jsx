@@ -24,6 +24,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
 
 const pathsWhereNavbarIsHidden = ['/patient/startUpKinect']
+const NavbarWithRouter = withRouter(Navbar);
 
 function App(props) {
   const currentLocation = props.location.pathname;
@@ -33,7 +34,7 @@ function App(props) {
 
   return (
       <div className="App">
-        { pathsWhereNavbarIsHidden.includes(currentLocation) ? <></> : <Navbar /> }
+        { pathsWhereNavbarIsHidden.includes(currentLocation) ? <></> : <NavbarWithRouter /> }
         <div style={{ marginTop: '1.5rem', marginLeft: '4rem', marginRight: '4rem' }}>
           <Switch>
             <Route path="/" component={homePage} exact />

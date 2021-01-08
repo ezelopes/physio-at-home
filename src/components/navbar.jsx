@@ -5,7 +5,7 @@ import ModalUser from '../components/modalUser';
 import firebase from './../config/firebase.config';
 
 
-const NavBar = () => {
+const NavBar = ({ location }) => {
 
   const currentRole = localStorage.getItem('role');
   const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true')
@@ -41,12 +41,13 @@ const NavBar = () => {
   }, []);
 
   return (
-    <Navbar collapseOnSelect expand='lg' style={{ backgroundColor: '#FAFBFC', boxShadow: '0 4px 2px -2px rgba(0,0,0,.2)' }}>
+    // style={{ backgroundColor: '#FAFBFC', boxShadow: '0 4px 2px -2px rgba(0,0,0,.2)' }}
+    <Navbar collapseOnSelect expand='lg' bg="dark" variant="dark">
       <Navbar.Brand href='/'>PhysioAtHome</Navbar.Brand>
       <Navbar.Toggle aria-controls='responsive-navbar-nav' />
       {/* collapse only if loggedin */}
       <Navbar.Collapse id='responsive-navbar-nav'>
-        <Nav className='mr-auto'>
+        <Nav className='mr-auto' activeKey={location.pathname}>
           
           { currentUserSignedIn && <Nav.Link href='/videos'> Videos </Nav.Link> }
 
