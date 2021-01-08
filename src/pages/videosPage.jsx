@@ -1,10 +1,22 @@
 import React from 'react';
 import YouTube from 'react-youtube';
-import { Container, Row, Col } from 'react-bootstrap'
+import { Accordion, Card, Container, Row, Col } from 'react-bootstrap'
 
 const VideosPage = () => {
 
-  const youtubeVideosID = ['N2ukHIBBFAA', 'T7sBeFEu4pw', '1uwAyZ2RyLQ', 'dFpVHc5vtSY', '_nBlN9yp9R8'];
+  const specialisations = [
+    { id: 'SHOULDER', name: 'SHOULDER' },
+    { id: 'KNEE', name: 'KNEE' },
+    { id: 'BACK', name: 'BACK' },
+    { id: 'ELBOW', name: 'ELBOW' },
+  ]
+
+  const youtubeVideosIDTemp = {
+    SHOULDER: ['T7sBeFEu4pw', 'T7sBeFEu4pw'],
+    KNEE: ['N2ukHIBBFAA', 'N2ukHIBBFAA'],
+    BACK: ['1uwAyZ2RyLQ', '1uwAyZ2RyLQ'],
+    ELBOW: ['dFpVHc5vtSY', 'dFpVHc5vtSY']
+  }
   
   const opts = {
     height: '170',
@@ -17,9 +29,42 @@ const VideosPage = () => {
 
   return (
     <>
-      <h2> Videos </h2>
+      {/* <h2> Videos </h2> */}
 
       <Container>
+        <Row>
+            { specialisations.map((specialisation, index) => {
+              return (
+                <Accordion style={{ marginTop: '1em' }}>
+                  <Card style={{ width: '70em' }} key={index}>
+
+                    <Accordion.Toggle as={Card.Header} eventKey={specialisation.id}>
+                      <b>{specialisation.name}</b>
+                    </Accordion.Toggle>
+
+                    <Accordion.Collapse eventKey={specialisation.id}>
+                      <Card.Body>
+                        <Row>
+                        { youtubeVideosIDTemp[specialisation.id].map(currentVideoID => {
+                            return <div id={currentVideoID} key={currentVideoID}> 
+                              <Col lg={true}>
+                                <YouTube videoId={currentVideoID} opts={opts} key={currentVideoID} />
+                              </Col>
+                            </div>
+                          })
+                        }
+                        </Row>
+                      </Card.Body>
+                    </Accordion.Collapse>
+
+                  </Card>
+                </Accordion>
+              )
+            })}
+        </Row>
+      </Container>
+
+      {/* <Container>
         <Row>
           { youtubeVideosID.map((currentID) => {
               return <div id={currentID} key={currentID}>
@@ -30,7 +75,7 @@ const VideosPage = () => {
               })
           }
         </Row>
-      </Container>
+      </Container> */}
     </>
   );  
 }
