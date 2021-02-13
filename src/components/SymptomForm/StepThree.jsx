@@ -6,11 +6,10 @@ import socketIOClient from "socket.io-client";
 import toastConfig from '../../config/toast.config';
 
 let socket = null;
+let minAngle = 180;
+let maxAngle = 0;
 
 const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAngle, setMaxAngle }) => {
-
-  let minAngle = 180;
-  let maxAngle = 0;
 
   const ENDPOINT = "http://127.0.0.1:8069";
   const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff'];
