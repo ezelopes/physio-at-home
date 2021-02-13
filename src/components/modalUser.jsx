@@ -34,9 +34,9 @@ const ModalUser = ({ userLogOutFunction }) => {
     <>
     <div ref={node}>
       <img 
+        id='profile-image'
         src={JSON.parse(localStorage.getItem('userInfo')).photoURL} 
         alt='profile-pic'
-        style={{ borderRadius: '25px', cursor: 'pointer'}}
         width='40'
         height='40'
         onClick={() => { setToggleDiv(!toggleDiv); }}

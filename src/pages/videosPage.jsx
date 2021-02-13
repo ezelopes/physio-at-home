@@ -35,8 +35,8 @@ const VideosPage = () => {
         <Row>
             { specialisations.map((specialisation, index) => {
               return (
-                <Accordion style={{ marginTop: '1em' }}>
-                  <Card style={{ width: '70em' }} key={index}>
+                <Accordion className='first-element'>
+                  <Card id='videos-card' key={index}>
 
                     <Accordion.Toggle as={Card.Header} eventKey={specialisation.id}>
                       <b>{specialisation.name}</b>

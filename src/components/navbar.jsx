@@ -41,7 +41,6 @@ const NavBar = ({ location }) => {
   }, []);
 
   return (
-    // style={{ backgroundColor: '#FAFBFC', boxShadow: '0 4px 2px -2px rgba(0,0,0,.2)' }}
     <Navbar collapseOnSelect expand='lg' bg="dark" variant="dark">
       <Navbar.Brand href='/'>PhysioAtHome</Navbar.Brand>
       <Navbar.Toggle aria-controls='responsive-navbar-nav' />

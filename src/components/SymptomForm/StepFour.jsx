@@ -52,7 +52,7 @@ const StepFour = ({
 
       <Button 
         type="submit"
-        style={{ marginTop: '2em', marginRight: '1em' }}
+        className='form-button left-button'
         onClick={(e) => { e.preventDefault(); prevStep(); }}
       >
         Back
@@ -62,7 +62,7 @@ const StepFour = ({
         id='addNewSymptomButton'
         variant="success"
         type="submit"
-        style={{ marginTop: '2em' }}
+        className='form-button'
         onClick={(e) => submitNewSymptom(e)}
         disabled={loading}
       >

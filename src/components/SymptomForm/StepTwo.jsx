@@ -21,7 +21,7 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
   return (
     <>
       <div>{renderSwitch(selectedBodyPart)}</div>
-      <Form.Group style={{ marginTop: '2em' }}>
+      <Form.Group>
         <Form.Label>Please insert more details</Form.Label>
         <Form.Control as='textarea' value={symptomDetails} placeholder="Insert here details..." id='symptomDetails' onChange={(e) => { setSymptomDetails(e.target.value) }} />
       </Form.Group>
@@ -29,7 +29,7 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
       <Button 
         // variant="warning"
         type="submit"
-        style={{ marginTop: '2em', marginRight: '1em' }}
+        className='form-button left-button'
         onClick={(e) => { e.preventDefault(); prevStep(); }}
       >
         Back
@@ -39,7 +39,7 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
         id='addNewSymptomButton'
         variant="success"
         type="submit"
-        style={{ marginTop: '2em' }}
+        className='form-button'
         onClick={(e) => { e.preventDefault(); nextStep(); }}
       >
         Next

@@ -72,8 +72,8 @@ const SelectedPatientPage = (props) => {
           { Object.keys(patientSymptomsList).map((symptomID) => {
                 return <div id={symptomID} key={symptomID}>
                   <Col lg={true}>
-                    <Card style={{ width: '23em' }}>
-                      <Card.Body style={{'max-height': '40vh', 'overflow-y': 'auto'}}>
+                    <Card>
+                      <Card.Body>
                         <Card.Title>
                           { patientSymptomsList[symptomID].symptomTitle }
                         </Card.Title>

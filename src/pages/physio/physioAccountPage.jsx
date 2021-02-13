@@ -83,8 +83,6 @@ const PhysioAccountPage = () => {
 
   return (
     <>
-      <h2 style={{ marginBottom: '1em' }}> Your Details </h2>
-
       <ToastContainer />
       { loading ? 
       <Spinner animation="border" role="status">
@@ -92,6 +90,7 @@ const PhysioAccountPage = () => {
       </Spinner> 
 
       : <Form id="accountForm">
+          <h2><Form.Text> Your Details </Form.Text></h2>
           <Form.Label> Username </Form.Label>
           <InputGroup>
             <InputGroup.Prepend>
@@ -118,7 +117,7 @@ const PhysioAccountPage = () => {
             selectAllLabel={false}
           />
 
-          <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} style={{ marginRight: '1em' }}>Update</Button>
+          <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} className='left-button'>Update</Button>
           <Button variant='danger' onClick={() => { clearChanges() }}> <span role='img' aria-label='bin'>🗑️</span> Clear </Button>
         </Form>
     }

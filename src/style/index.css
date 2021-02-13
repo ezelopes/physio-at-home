@@ -24,7 +24,7 @@ th, td, Form, p {
   font-size: large;
 }
 
-.homepage {
+#homepage {
   background: url('../images/homepage.jpg'); 
   background-attachment: fixed;
   background-color: rgba(255,255,255,0.2);
@@ -35,9 +35,30 @@ th, td, Form, p {
   margin: 0em;
 }
 
+#routes {
+  margin-top: 1.5rem;
+  margin-left: 4rem;
+  margin-right: 4rem;
+}
+
+#videos-card {
+  width: 70em;
+}
+
 .card {
   color: black;
-  width: 20em;
+  width: 23em;
+}
+
+.card-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.card-body img {
+  height: 10em;
+  width:10em;
+  border-radius: 50%;
 }
 
 .spinner-border {
@@ -52,6 +73,39 @@ th, td, Form, p {
 
 .container {
   width: 100%;
+  margin-bottom: 5em;
+}
+
+.form-group {
+  margin-top: 2em;
+}
+
+.first-element {
+  margin-top: 1em;
+}
+
+.left-button {
+  margin-right: 1em;
+}
+
+.form-button {
+  margin-top: 2em;
+}
+
+#form-kinect-wrapper {
+  color: white;
+  border: solid; 
+  border-color: #0069D9;
+}
+
+#profile-image {
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.body-part-image {
+  cursor: pointer; 
+  border-radius: 8px;
 }
 
 #accountForm {

@@ -8,7 +8,7 @@ const ElbowImage = ({ setSpecificBodyPart, specificBodyPart }) => {
         width={150}
         height={150}
         // onClick={(e) => handleImageClick(e)} 
-        style={{ cursor: 'pointer', borderRadius: '8px' }}
+        className='body-part-image'
       />
   );
 };

@@ -77,7 +77,6 @@ const PatientAccountPage = () => {
 
   return (
     <>
-      <h2 style={{ marginBottom: '1em' }}> Your Details </h2>
       <ToastContainer />
 
       { loading ? 
@@ -86,6 +85,7 @@ const PatientAccountPage = () => {
       </Spinner> 
 
       : <Form id="accountForm">
+          <h2><Form.Text> Your Details </Form.Text></h2>
           <Form.Label> Username </Form.Label>
           <InputGroup>
             <InputGroup.Prepend>
@@ -101,7 +101,7 @@ const PatientAccountPage = () => {
             <DatePicker id="dob" className="form-control" selected={dateOfBirth} onChange={date => setDateOfBirth(date)} dateFormat='dd/MM/yyyy' />
           </InputGroup>
         
-          <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} style={{ marginRight: '1em' }} disabled={btnDisabled}>Update</Button>
+          <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} className='left-button' disabled={btnDisabled}>Update</Button>
           <Button variant='danger' onClick={() => { clearChanges() }}> <span role='img' aria-label='bin'>🗑️</span> Clear </Button>
         </Form>
       }

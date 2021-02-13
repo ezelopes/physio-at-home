@@ -15,8 +15,8 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
       { Object.keys(symptomsList).map((currentSymptomID) => {
         return <div id={currentSymptomID} key={currentSymptomID}>
           <Col lg={true}>
-            <Card style={{ width: '23em' }}>
-              <Card.Body style={{'maxHeight': '50vh', 'overflowY': 'auto'}}>
+            <Card>
+              <Card.Body>
                 <Card.Title>
                   { symptomsList[currentSymptomID].symptomTitle }
                 </Card.Title>
@@ -41,7 +41,7 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
                 </Card.Text>
 
                 <Button 
-                  style={{ marginRight: '1em' }}
+                  className='left-button'
                   id={`read-${currentSymptomID}`}
                   variant="success"
                   onClick={() => { handleShowModal(currentSymptomID) }}

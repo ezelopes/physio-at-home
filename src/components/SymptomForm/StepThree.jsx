@@ -124,8 +124,8 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
 
   return (
     <>
-      <Form.Group style={{ marginTop: '2em' }}>
-        <Button variant="primary" type="button" style={{ marginRight: '1em' }} onClick={() => startRecording()} disabled={recording}>
+      <Form.Group className='first-element'>
+        <Button variant="primary" type="button" className='left-button' onClick={() => startRecording()} disabled={recording}>
           <span role="img" aria-label="back"> Record Video 📹 </span>
         </Button>
 
@@ -134,13 +134,13 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
         </Button>
       </Form.Group>
 
-      <div style={{color: 'white', border: 'solid', borderColor: '#0069D9' }}>
+      <div id='form-kinect-wrapper'>
         <canvas id="canvasKinect" width="1920" height="1080" ref={canvasRef} className="img-fluid"></canvas>
       </div>
 
       <Button
         type="submit"
-        style={{ marginTop: '2em', marginRight: '1em' }}
+        className='form-button left-button'
         onClick={(e) => { e.preventDefault(); prevStep(); }}
       >
         Back
@@ -150,7 +150,7 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
         id='addNewSymptomButton'
         variant="success"
         type="submit"
-        style={{ marginTop: '2em' }}
+        className='form-button'
         onClick={(e) => { e.preventDefault(); nextStep(); }}
       >
         Next

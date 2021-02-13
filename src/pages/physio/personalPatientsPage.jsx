@@ -72,13 +72,13 @@ const PersonalPatientsPage = () => {
                 <Col lg={true}>
                   <Card>
                     <Card.Body>
-                      <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL } style={{ borderRadius: '50%' }} />
-                      <Card.Title style={{ marginTop: '1em'}}> Name: { physioPatientsList[patientID].name } </Card.Title>
+                      <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL } />
+                      <Card.Title className='first-element'> Name: { physioPatientsList[patientID].name } </Card.Title>
                       <Card.Text>
                         Email: { physioPatientsList[patientID].email }
                       </Card.Text>
                       <Link to={{ pathname: `/physio/selectedPatient`, state: { patientID, name: physioPatientsList[patientID].name } }}>
-                        <Button variant="primary" style={{ marginRight: '1em' }}> See Details </Button>
+                        <Button variant="primary" className='left-button'> See Details </Button>
                       </Link>
                       <Button 
                         id={`${patientID}-removeConnectionButton`}

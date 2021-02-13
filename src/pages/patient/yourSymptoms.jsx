@@ -73,7 +73,7 @@ const YourSymptoms = () => {
       ? <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>
       </Spinner> 
-      : <Container style={{ marginBottom: '5em' }}>
+      : <Container>
         <Row>
           <SymptomsDisplayer updated={updated} symptoms={symptomsList} deleteSymptom={deleteSymptom} handleShowModal={handleShowModal}  userInfo={userInfo} />
         </Row>

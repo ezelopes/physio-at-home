@@ -91,8 +91,8 @@ const PatientInvitesPage = () => {
                   <Col lg={true}>
                     <Card>
                       <Card.Body>
-                        <Card.Img variant="top" src={photoURL} style={{ borderRadius: '50%' }} />
-                        <Card.Title style={{ marginTop: '1em'}} > Name: {name} </Card.Title>
+                        <Card.Img variant="top" src={photoURL} />
+                        <Card.Title className='first-element' > Name: {name} </Card.Title>
                         <Card.Text>
                           Email: {email}
                         </Card.Text>
@@ -100,7 +100,7 @@ const PatientInvitesPage = () => {
                           id={`${patientID}-acceptButton`}
                           variant="success"
                           onClick={() => acceptInviteRequest(patientID, name, email, photoURL)}
-                          style={{ marginRight: '1em' }}
+                          className='left-button'
                         >
                           Accept Invite
                         </Button>

@@ -36,7 +36,7 @@ const KneeImage = ({ setSpecificBodyPart, specificBodyPart }) => {
         width={width}
         height={height}
         onClick={(e) => handleImageClick(e)} 
-        style={{ cursor: 'pointer', borderRadius: '8px' }}
+        className='body-part-image'
       />
 
       <br />

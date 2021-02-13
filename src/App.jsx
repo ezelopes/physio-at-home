@@ -35,7 +35,7 @@ function App(props) {
   return (
       <div className="App">
         { pathsWhereNavbarIsHidden.includes(currentLocation) ? <></> : <NavbarWithRouter /> }
-        <div style={{ marginTop: '1.5rem', marginLeft: '4rem', marginRight: '4rem' }}>
+        <div id='routes'>
           <Switch>
             <Route path="/" component={homePage} exact />
             <Route path="/videos" component={videosPage} exact />
