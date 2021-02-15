@@ -31,6 +31,7 @@ function App(props) {
 
   const currentRole = localStorage.getItem('role');
   const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true');
+  const currentUserActivated = (localStorage.getItem('activated') === 'true'); // need to save it into firestore first
 
   return (
       <div className="App">
@@ -51,6 +52,7 @@ function App(props) {
               component={patientAccountPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole:  'PATIENT', currentRole: currentRole }}
               exact
             />
@@ -59,6 +61,7 @@ function App(props) {
               component={addNewSymptomPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
               exact
             />
@@ -67,6 +70,7 @@ function App(props) {
               component={searchPhysiotherapistPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
               exact
             />
@@ -75,6 +79,7 @@ function App(props) {
               component={yourSymptomsPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
               exact
             />
@@ -83,6 +88,7 @@ function App(props) {
               component={physioAccountPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole:  'PHYSIOTHERAPIST', currentRole: currentRole }}
               exact
             />
@@ -91,6 +97,7 @@ function App(props) {
               component={physioPersonalPatientsPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
               exact
             />
@@ -99,6 +106,7 @@ function App(props) {
               component={selectedPatientPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
               exact
             />
@@ -107,6 +115,7 @@ function App(props) {
               component={patientInvitesPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
               exact
             />
@@ -115,6 +124,7 @@ function App(props) {
               component={promoteToAdminPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
               roles={{ expectedRole: 'ADMIN', currentRole: currentRole }}
               exact
             />

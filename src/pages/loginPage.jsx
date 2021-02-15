@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import firebase from 'firebase';
 import { Spinner } from 'react-bootstrap';
 
@@ -19,9 +19,12 @@ const LoginPage = () => {
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      signInSuccessWithAuthResult: async () => {
+      signInSuccessWithAuthResult: async (authResult) => {
+        console.log(authResult);
+        const { isNewUser } = authResult.additionalUserInfo;
         setLoading(true);
-        setTimeout(() => { window.location.pathname = '/' }, 3000)
+        if (isNewUser) setTimeout(() => { window.location.pathname = '/accountSetUp' }, 3000)
+        else setTimeout(() => { window.location.pathname = '/' }, 3000)
         return false;
       },
     }
@@ -42,4 +45,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage;
+export default memo(LoginPage);
