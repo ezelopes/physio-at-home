@@ -7,7 +7,7 @@ const db = admin.firestore();
 
 // exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
 
-exports.updatePhysioAccount = functions.https.onRequest(async (req, res) => {
+exports.updatePhysioAccount = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       // physioID, dob: newDobTimestamp, specialisations: 
@@ -30,7 +30,7 @@ exports.updatePhysioAccount = functions.https.onRequest(async (req, res) => {
   })
 })
 
-exports.updatePatientAccount = functions.https.onRequest(async (req, res) => {
+exports.updatePatientAccount = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { patientID, name, dob } = req.body.data;
@@ -51,7 +51,7 @@ exports.updatePatientAccount = functions.https.onRequest(async (req, res) => {
   })
 })
 
-exports.deleteSymptomOfPatient = functions.https.onRequest(async (req, res) => {
+exports.deleteSymptomOfPatient = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { patientID, symptomID } = req.body.data;
@@ -68,7 +68,7 @@ exports.deleteSymptomOfPatient = functions.https.onRequest(async (req, res) => {
   })
 })
 
-exports.addFeebackToSymptom = functions.https.onRequest(async (req, res) => {
+exports.addFeebackToSymptom = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { patientID, symptomID, feedbackObject } = req.body.data;
@@ -89,7 +89,7 @@ exports.addFeebackToSymptom = functions.https.onRequest(async (req, res) => {
   })
 })
 
-exports.getAllSymptomsFromPatient = functions.https.onRequest(async (req, res) => {
+exports.getAllSymptomsFromPatient = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { patientID } = req.body.data;
@@ -111,14 +111,15 @@ exports.getAllSymptomsFromPatient = functions.https.onRequest(async (req, res) =
   })
 })
 
-exports.addNewPatientSymptom = functions.https.onRequest(async (req, res) => {
+exports.addNewPatientSymptom = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { patientID, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion } = req.body.data;
       const feedbackList = [];
+      const creationDate = admin.firestore.Timestamp.fromDate(new Date());
       console.log(patientID, symptomTitle, painRangeValue, bodyPart.rightOrLeft, bodyPart.bodyPart, bodyPart.specificBodyPart, symptomDetails, rangeOfMotion);
 
-      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion, feedbackList })
+      await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ creationDate, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion, feedbackList })
 
       console.log('Symptom Added Successfully!');
       res.status(200).send({ data: { message: 'Symptom Added Successfully!' } });
@@ -129,7 +130,7 @@ exports.addNewPatientSymptom = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.removeConnection = functions.https.onRequest(async (req, res) => {
+exports.removeConnection = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { physioID, patientID } = req.body.data;
@@ -147,7 +148,7 @@ exports.removeConnection = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.declineInviteRequest = functions.https.onRequest(async (req, res) => {
+exports.declineInviteRequest = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { physioID, patientID } = req.body.data;
@@ -166,7 +167,7 @@ exports.declineInviteRequest = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.acceptInviteRequest = functions.https.onRequest(async (req, res) => {
+exports.acceptInviteRequest = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { physioID, patientID, name, email, photoURL } = req.body.data;
@@ -190,7 +191,7 @@ exports.acceptInviteRequest = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.getAllPhysioInvites =  functions.https.onRequest(async (req, res) => {
+exports.getAllPhysioInvites =  functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       console.log(req.body.data);
@@ -215,7 +216,7 @@ exports.getAllPhysioInvites =  functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.getAllPhysioPatients = functions.https.onRequest(async (req, res) => {
+exports.getAllPhysioPatients = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       console.log(req.body.data);
@@ -240,7 +241,7 @@ exports.getAllPhysioPatients = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.sendInvite = functions.https.onRequest(async (req, res) => {
+exports.sendInvite = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       functions.logger.info("Req Body", { body: req.body.data });
@@ -259,7 +260,6 @@ exports.sendInvite = functions.https.onRequest(async (req, res) => {
 
       res.status(200).send({ data: { message: 'Request sent!' } })
     } catch (err) {
-      console.log('YOOOO');
       console.log(err);
       res.status(500).send({ data: 'There was an error with the request!' })
     }
@@ -268,7 +268,7 @@ exports.sendInvite = functions.https.onRequest(async (req, res) => {
 
 
 
-exports.getPhysioData = functions.https.onRequest(async (req, res) => {
+exports.getPhysioData = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { physioID } = req.body.data;
@@ -286,7 +286,7 @@ exports.getPhysioData = functions.https.onRequest(async (req, res) => {
 });
 
 
-exports.getPatientData = functions.https.onRequest(async (req, res) => {
+exports.getPatientData = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const { patientID } = req.body.data;
@@ -305,7 +305,7 @@ exports.getPatientData = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.getAllPhysiotherapists = functions.https.onRequest(async (req, res) => {
+exports.getAllPhysiotherapists = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       const physiotherapistsList = [];
@@ -329,7 +329,7 @@ exports.getAllPhysiotherapists = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.setUserAsAdmin = functions.https.onRequest(async (req, res) => {
+exports.setUserAsAdmin = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       functions.logger.info("Email", { body: req.body.data.email });
@@ -345,7 +345,7 @@ exports.setUserAsAdmin = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.setUserAsPhysiotherapist = functions.https.onRequest(async (req, res) => {
+exports.setUserAsPhysiotherapist = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       functions.logger.info("Email", { body: req.body.data.email });
@@ -361,7 +361,7 @@ exports.setUserAsPhysiotherapist = functions.https.onRequest(async (req, res) =>
   });
 });
 
-exports.setUserAsPatient = functions.https.onRequest(async (req, res) => {
+exports.setUserAsPatient = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
       functions.logger.info("Email", { body: req.body.data.email });
@@ -377,7 +377,7 @@ exports.setUserAsPatient = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
+exports.setDefaultRole = functions.region('europe-west1').auth.user().onCreate(async (user) => {
   try {
     functions.logger.info("User Email", { email: user.email });
 
@@ -388,6 +388,7 @@ exports.setDefaultRole = functions.auth.user().onCreate(async (user) => {
       photoURL: user.photoURL,
       dob: new Date('1/1/1900'),
       role: null,
+      activated: false
     }
 
     const isAdmin = user.email.endsWith('@port.ac.uk'); // @physioathome.admin.com
