@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { memo, useEffect } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap'
 import ModalUser from '../components/modalUser';
 
@@ -73,4 +73,4 @@ const NavBar = ({ location }) => {
   )
 };
 
-export default NavBar;
+export default memo(NavBar);

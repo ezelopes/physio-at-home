@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
  * @param {Object} component If logged in, load this component
  * @param {Object} redirectPath If logged out, redirect to given path
  */
-const ProtectedRoute = ({
+const GuestRoute = ({
   component: Component,
   redirectPath: RedirectPath,
   authenticated,
@@ -28,9 +28,8 @@ const ProtectedRoute = ({
   );
 };
 
-ProtectedRoute.propTypes = {
-  component: PropTypes.func.isRequired,
+GuestRoute.propTypes = {
   redirectPath: PropTypes.string.isRequired,
 };
 
-export default ProtectedRoute;
+export default GuestRoute;

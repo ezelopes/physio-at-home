@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
@@ -38,22 +38,23 @@ const PersonalPatientsPage = () => {
     }
   }
 
-  const removeConnection = async (patientID) => {
+  const removeConnection = async (e, patientID) => {
+    const removeConnectionBTN = e.target;
     try {
       const physioID = userInfo.uid;
-      document.getElementById(`${patientID}-removeConnectionButton`).disabled = true;
-      document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Loading...';
-      document.getElementById(`${patientID}-removeConnectionButton`).className = 'btn btn-primary';
+      removeConnectionBTN.disabled = true;
+      removeConnectionBTN.textContent = 'Loading...';
+      removeConnectionBTN.className = 'btn btn-primary';
       
       const removeConnection = functions.httpsCallable('removeConnection');
       await removeConnection({ physioID, patientID });
-
-      document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Connection Removed!';
+      
+      removeConnectionBTN.textContent = 'Connection Removed!';
       toast.success('🚀 Connection Removed Successfully!', toastConfig);
     } catch (err) {
       toast.error('😔 There was an error removing this connection!', toastConfig);
-      document.getElementById(`${patientID}-removeConnectionButton`).className = 'btn btn-warning';
-      document.getElementById(`${patientID}-removeConnectionButton`).textContent = 'Refresh Page!';
+      removeConnectionBTN.className = 'btn btn-warning';
+      removeConnectionBTN.textContent = 'Refresh Page!';
     }
   }
 
@@ -83,7 +84,7 @@ const PersonalPatientsPage = () => {
                       <Button 
                         id={`${patientID}-removeConnectionButton`}
                         variant="danger"
-                        onClick={() => { removeConnection(patientID) }}
+                        onClick={(e) => { removeConnection(e, patientID) }}
                       >
                         Remove Patient
                       </Button>
@@ -100,4 +101,4 @@ const PersonalPatientsPage = () => {
   );
 }
 
-export default PersonalPatientsPage;
+export default memo(PersonalPatientsPage);

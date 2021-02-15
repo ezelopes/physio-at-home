@@ -1,4 +1,4 @@
-import React /*, { useState }*/ from 'react';
+import React, { memo } /*, { useState }*/ from 'react';
 
 const ElbowImage = ({ setSpecificBodyPart, specificBodyPart }) => {
   return (
@@ -14,4 +14,4 @@ const ElbowImage = ({ setSpecificBodyPart, specificBodyPart }) => {
 };
 
 
-export default ElbowImage;
+export default memo(ElbowImage);

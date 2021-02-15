@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
@@ -21,4 +21,4 @@ PageNotFound.propTypes = {
   history: PropTypes.string.isRequired,
 };
 
-export default PageNotFound;
+export default memo(PageNotFound);

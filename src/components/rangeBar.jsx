@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { memo, useState, useRef } from 'react';
 import { useEffect } from 'react';
 
 const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
   const inactiveColor = '#EFEFEF'
   const min = 1;
-  const max = 300;
+  const max = 100;
   
   const inputRef = useRef();
   const [rangeBarValue, setRangeBarValue] = useState(painRangeValue);
@@ -54,4 +54,4 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
     )
 };
 
-export default RangeBar;
+export default memo(RangeBar);

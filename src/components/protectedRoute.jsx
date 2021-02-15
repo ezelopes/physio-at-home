@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 const ProtectedRoute = ({
   component: Component,
   redirectPath: RedirectPath,
+  activated,
   authenticated,
   roles,
   ...rest
@@ -19,6 +20,7 @@ const ProtectedRoute = ({
       {...rest}
       render={(props) => {
         if (authenticated && roles.expectedRole === roles.currentRole) {
+          // if (!activated) return (<AccountSetUp {...props} /> <Redirect to={{ pathname: '/setUpAccount'}} />)
           return <Component {...props} />;
         } else {
           return (
@@ -31,7 +33,6 @@ const ProtectedRoute = ({
 };
 
 ProtectedRoute.propTypes = {
-  component: PropTypes.func.isRequired,
   redirectPath: PropTypes.string.isRequired,
 };
 

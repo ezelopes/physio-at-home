@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 const ColoredLine = ({ color }) => {
   return (
@@ -10,4 +10,4 @@ const ColoredLine = ({ color }) => {
   />)
 };
 
-export default ColoredLine;
+export default memo(ColoredLine);

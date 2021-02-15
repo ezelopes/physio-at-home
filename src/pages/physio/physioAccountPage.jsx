@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { Form, FormControl, InputGroup, Button, Spinner } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import MultiSelect from "react-multi-select-component";
@@ -125,4 +125,4 @@ const PhysioAccountPage = () => {
   );
 }
 
-export default PhysioAccountPage;
+export default memo(PhysioAccountPage);

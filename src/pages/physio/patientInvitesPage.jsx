@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 
@@ -121,4 +121,4 @@ const PatientInvitesPage = () => {
   );
 }
 
-export default PatientInvitesPage;
+export default memo(PatientInvitesPage);

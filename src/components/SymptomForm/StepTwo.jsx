@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button, Form } from 'react-bootstrap'
 import KneeImage from '../kneeImage'
 import ElbowImage from '../elbowImage'
@@ -48,4 +48,4 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
   );
 }
 
-export default StepTwo;
+export default memo(StepTwo);

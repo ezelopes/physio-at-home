@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { Button, Form } from 'react-bootstrap'
+import React, { memo, useRef, useState } from 'react';
+import { Button, FormCheck } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 import socketIOClient from "socket.io-client";
 
@@ -14,6 +14,7 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
   const ENDPOINT = "http://127.0.0.1:8069";
   const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff'];
   const [recording, setRecording] = useState(false);
+  const [paralised, setParalised] = useState(false);
 
   const canvasRef = useRef(null);
 
@@ -124,15 +125,26 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
 
   return (
     <>
-      <Form.Group className='first-element'>
-        <Button variant="primary" type="button" className='left-button' onClick={() => startRecording()} disabled={recording}>
-          <span role="img" aria-label="back"> Record Video 📹 </span>
-        </Button>
+      <FormCheck className='first-element'>
+        <FormCheck.Label> 
+          <FormCheck.Input 
+            type='checkbox' 
+            onChange={() => {
+              if (!paralised) { setParalised(true); setMinAngle(180); setMaxAngle(180); }
+              else { setParalised(false); setMinAngle(180); setMaxAngle(0); }
+            }}
+          />
+          Tick if you are not able to move the selected extremity
+        </FormCheck.Label>
+      </FormCheck>
 
-        <Button variant="primary" type="button" onClick={() => stopRecording()} disabled={!recording}>
-        <span role="img" aria-label="back"> Stop Video 🛑 </span>
-        </Button>
-      </Form.Group>
+      <Button variant="primary" type="button" className='left-button first-element' onClick={() => startRecording()} disabled={recording || paralised}>
+        <span role="img" aria-label="back"> Record Video 📹 </span>
+      </Button>
+
+      <Button variant="primary" type="button" className='first-element' onClick={() => stopRecording()} disabled={!recording || paralised}>
+      <span role="img" aria-label="back"> Stop Video 🛑 </span>
+      </Button>
 
       <div id='form-kinect-wrapper'>
         <canvas id="canvasKinect" width="1920" height="1080" ref={canvasRef} className="img-fluid"></canvas>
@@ -159,4 +171,4 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
   );
 }
 
-export default StepThree;
+export default memo(StepThree);

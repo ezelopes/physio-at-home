@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Form, FormControl, InputGroup, Button, Spinner } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,9 +12,6 @@ const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 let initialDob;
 
 const PatientAccountPage = () => {
-
-  // GET DOB ON LOG IN AND STORE IT INTO. PHYSIO -> PATIENT -> Name is not updating though...
-
 
   const [loading, setLoading] = useState(true);
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
@@ -46,10 +43,7 @@ const PatientAccountPage = () => {
 
 
   const updateAccount = async (patientID) => {
-    try {
-      // height and weight?
-      // const user = firebase.auth().currentUser; await user.updateProfile({ displayName: newUsername });
-      
+    try {      
       setBtnDisabled(true);
 
       const updatePatientAccount = functions.httpsCallable('updatePatientAccount');
@@ -109,4 +103,4 @@ const PatientAccountPage = () => {
   );
 }
 
-export default PatientAccountPage;
+export default memo(PatientAccountPage);

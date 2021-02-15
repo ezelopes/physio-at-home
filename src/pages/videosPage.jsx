@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import YouTube from 'react-youtube';
 import { Accordion, Card, Container, Row, Col } from 'react-bootstrap'
 
@@ -80,4 +80,4 @@ const VideosPage = () => {
   );  
 }
 
-export default VideosPage;
+export default memo(VideosPage);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Button } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 
@@ -28,6 +28,9 @@ const StepFour = ({
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       const rangeOfMotion = { minAngle, maxAngle };
       const bodyPart = { rightOrLeft, bodyPart: selectedBodyPart, specificBodyPart }
+
+      if (!symptomTitle || !symptomDetails) return toast.error('⚠️ Missing required parameters!', toastConfig);
+      if (minAngle > maxAngle) return toast.error('⚠️ Range of Motion is not valid. Either tick the checkbox or use Kinect!', toastConfig);
       
       const addNewPatientSymptom = functions.httpsCallable('addNewPatientSymptom');
       await addNewPatientSymptom({ patientID: userInfo.uid, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion });
@@ -48,7 +51,7 @@ const StepFour = ({
       <p> Right/Left: { rightOrLeft } </p>
       <p> Body Part: { selectedBodyPart } </p>
       <p> Specific Body Part: { specificBodyPart } </p>
-      <p> Range of Motion: { minAngle } - { maxAngle } </p>
+      <p> Range of Motion: { minAngle }° to { maxAngle }° </p>
 
       <Button 
         type="submit"
@@ -72,4 +75,4 @@ const StepFour = ({
   );
 }
 
-export default StepFour;
+export default memo(StepFour);

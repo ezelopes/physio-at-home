@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { Button, Container, Row, Modal, Spinner } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 import ColoredLine from '../../components/coloredLine'
@@ -108,4 +108,4 @@ const YourSymptoms = () => {
   );
 }
 
-export default YourSymptoms;
+export default memo(YourSymptoms);

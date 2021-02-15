@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { Spinner, Button, Card, Container, Row, Col } from 'react-bootstrap';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -52,43 +52,45 @@ const SearchPhysiotherapistsPage = () => {
     }
   }
 
-  const sendInvite = async (physioID) => {
-    try {
-      document.getElementById(`${physioID}-sendInviteButton`).disabled = true;
-      document.getElementById(`${physioID}-sendInviteButton`).textContent = 'Loading...';
-      document.getElementById(`${physioID}-sendInviteButton`).className = 'btn btn-primary';
-      
-      const sendInvite = functions.httpsCallable('sendInvite');
-      await sendInvite({ 
-        physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name, photoURL: userInfo.photoURL
-      });
+  const handleFunctionCall = async (buttonRef, firebaseFunction, objParameter, btnTextAfter) => {
+    buttonRef.disabled = true;
+    buttonRef.textContent = 'Loading...';
+    buttonRef.className = 'btn btn-primary';
 
-      document.getElementById(`${physioID}-sendInviteButton`).textContent = 'Invite Sent!';
+    await firebaseFunction(objParameter);
+
+    return buttonRef.textContent = btnTextAfter;
+  }
+
+  const sendInvite = async (e, physioID) => {
+    const sendInviteBTN = e.target;
+    try {
+      const sendInvite = functions.httpsCallable('sendInvite');
+      const inviteObj = { physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name, photoURL: userInfo.photoURL };
+
+      await handleFunctionCall(sendInviteBTN, sendInvite, inviteObj, 'Invite Sent!');
+
       toast.success('🚀 Invite Sent Successfully!', toastConfig);
     } catch (err) {
       toast.error('😔 There was an error sending your invite!', toastConfig);
-      document.getElementById(`${physioID}-sendInviteButton`).className = 'btn btn-warning'; // -danger?
-      document.getElementById(`${physioID}-sendInviteButton`).textContent = 'Refresh Page!';
+      sendInviteBTN.className = 'btn btn-warning';
+      sendInviteBTN.textContent = 'Refresh Page!';
     }
   }
 
-  const removeConnection = async (physioID) => {
+  const removeConnection = async (e, physioID) => {
+    const removeConnectionBTN = e.target;
     try {
-      document.getElementById(`${physioID}-removeConnectionButton`).disabled = true;
-      document.getElementById(`${physioID}-removeConnectionButton`).textContent = 'Loading...';
-      document.getElementById(`${physioID}-removeConnectionButton`).className = 'btn btn-primary';
-      
       const removeConnection = functions.httpsCallable('removeConnection');
-      await removeConnection({ 
-        physioID, patientID: userInfo.uid,
-      });
+      const removeObj = { physioID, patientID: userInfo.uid } 
 
-      document.getElementById(`${physioID}-removeConnectionButton`).textContent = 'Connection Removed!';
+      await handleFunctionCall(removeConnectionBTN, removeConnection, removeObj, 'Connection Removed!');
+
       toast.success('🚀 Connection Removed Successfully!', toastConfig);
     } catch (err) {
       toast.error('😔 There was an error removing this connection!', toastConfig);
-      document.getElementById(`${physioID}-removeConnectionButton`).className = 'btn btn-warning';
-      document.getElementById(`${physioID}-removeConnectionButton`).textContent = 'Refresh Page!';
+      removeConnectionBTN.className = 'btn btn-warning';
+      removeConnectionBTN.textContent = 'Refresh Page!';
     }
   }
 
@@ -129,14 +131,14 @@ const SearchPhysiotherapistsPage = () => {
                           ? <Button
                               variant='danger'
                               id={`${physiotherapist.id}-removeConnectionButton`}
-                              onClick={() => { removeConnection(physiotherapist.id) }}
+                              onClick={(e) => { removeConnection(e, physiotherapist.id) }}
                             >
                               Remove Connection
                             </Button>
                           : <Button
                               variant='success'
                               id={`${physiotherapist.id}-sendInviteButton`}
-                              onClick={() => { sendInvite(physiotherapist.id) }}>
+                              onClick={(e) => { sendInvite(e, physiotherapist.id) }}>
                               Send Invite
                             </Button>
                         )
@@ -157,4 +159,4 @@ const SearchPhysiotherapistsPage = () => {
   );
 }
 
-export default SearchPhysiotherapistsPage;
+export default memo(SearchPhysiotherapistsPage);

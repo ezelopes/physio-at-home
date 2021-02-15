@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Form } from 'react-bootstrap'
 import { ToastContainer } from 'react-toastify';
 import { Stepper } from 'react-form-stepper';
@@ -39,6 +39,7 @@ const AddNewSymptomPage = () => {
           selectedBodyPart={selectedBodyPart}
           setRightOrLeft={setRightOrLeft}
           rightOrLeft={rightOrLeft}
+          setSpecificBodyPart={setSpecificBodyPart}
         />;
       case 1:
         return <StepTwo
@@ -109,4 +110,4 @@ const AddNewSymptomPage = () => {
   );
 }
 
-export default AddNewSymptomPage;
+export default memo(AddNewSymptomPage);

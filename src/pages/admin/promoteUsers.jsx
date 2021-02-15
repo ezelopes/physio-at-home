@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import functions from '../../config/firebase.functions';
@@ -59,4 +59,4 @@ const PromoteUsersPage = () => {
   );
 }
 
-export default PromoteUsersPage;
+export default memo(PromoteUsersPage);

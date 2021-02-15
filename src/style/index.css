@@ -92,7 +92,12 @@ th, td, Form, p {
   margin-top: 2em;
 }
 
+button:hover {
+  color: transparent;
+}
+
 #form-kinect-wrapper {
+  margin-top: 1em;
   color: white;
   border: solid; 
   border-color: #0069D9;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Button, Card, Col } from 'react-bootstrap'
 
 const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, userInfo }) => {
@@ -10,6 +10,13 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updated]);
 
+  const convertDate = (dateInSeconds) => {
+    const pad = (s) => { return (s < 10) ? '0' + s : s; }
+
+    const d = new Date(dateInSeconds * 1000)
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('-')
+  }
+
   return (
     <>
       { Object.keys(symptomsList).map((currentSymptomID) => {
@@ -20,6 +27,9 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
                 <Card.Title>
                   { symptomsList[currentSymptomID].symptomTitle }
                 </Card.Title>
+                <Card.Text>
+                  Date Created: { convertDate(symptomsList[currentSymptomID].creationDate._seconds) }
+                </Card.Text>
                 <Card.Text>
                   Body Part: { 
                     symptomsList[currentSymptomID].bodyPart.rightOrLeft + ' ' + 
@@ -52,7 +62,10 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
                 <Button 
                   id={`delete-${currentSymptomID}`}
                   variant="danger"
-                  onClick={() => { deleteSymptom(userInfo.uid, currentSymptomID) }}
+                  onClick={(e) => { 
+                    e.target.disabled = true;
+                    deleteSymptom(userInfo.uid, currentSymptomID);
+                  }}
                 >
                   Delete Symptom
                 </Button>
@@ -67,4 +80,4 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
   );
 }
 
-export default SymptomsDisplayer;
+export default memo(SymptomsDisplayer);

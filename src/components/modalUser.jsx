@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { memo, useEffect, useState, useRef } from 'react';
 import { Button, Nav } from 'react-bootstrap'
 
 const ModalUser = ({ userLogOutFunction }) => {
@@ -64,4 +64,4 @@ const ModalUser = ({ userLogOutFunction }) => {
   );
 }
 
-export default ModalUser;
+export default memo(ModalUser);

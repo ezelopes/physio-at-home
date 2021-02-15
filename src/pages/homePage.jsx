@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 const HomePage = () => {
   return (
@@ -6,5 +6,4 @@ const HomePage = () => {
   );
 }
 
-export default HomePage;
-
+export default memo(HomePage);

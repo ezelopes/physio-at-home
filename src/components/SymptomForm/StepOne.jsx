@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button, Form } from 'react-bootstrap'
 
 import RangeBar from '../rangeBar'
@@ -6,13 +6,14 @@ import RangeBar from '../rangeBar'
 import 'react-toastify/dist/ReactToastify.css';
 
 
-const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setPainRangeValue, setBodyPart, selectedBodyPart, setRightOrLeft, rightOrLeft }) => {
+const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setPainRangeValue, setBodyPart, selectedBodyPart, setRightOrLeft, rightOrLeft, setSpecificBodyPart }) => {
 
   const bodyPartsList = [ 'Knee', 'Elbow', 'Back' ];
 
   const handleBodyPartChange = (e) => {
     const { value } = e.target;
-    setBodyPart(value.toUpperCase());
+    setBodyPart(value);
+    setSpecificBodyPart('');
   }
 
   const handleRightLeftChange = (e) => {
@@ -61,4 +62,4 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
   );
 }
 
-export default StepOne;
+export default memo(StepOne);
