@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import { ToastContainer, toast } from 'react-toastify';
 
 import toastConfig from '../../config/toast.config';
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -32,7 +32,7 @@ const PatientAccountPage = () => {
 
   const getPatientData = async (userID) => {
     try {
-      const getPatientData = functions.httpsCallable('getPatientData');
+      const getPatientData = firebase.functions.httpsCallable('getPatientData');
       const response = await getPatientData({ patientID: userID });
 
       return response.data.patientData;
@@ -46,7 +46,7 @@ const PatientAccountPage = () => {
     try {      
       setBtnDisabled(true);
 
-      const updatePatientAccount = functions.httpsCallable('updatePatientAccount');
+      const updatePatientAccount = firebase.functions.httpsCallable('updatePatientAccount');
       const response = await updatePatientAccount({ patientID, name: username, dob: convertDate(dateOfBirth) });
 
       toast.success(`🚀 ${response.data.message}`, toastConfig);

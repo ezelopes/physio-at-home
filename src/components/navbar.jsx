@@ -11,13 +11,14 @@ const NavBar = ({ location }) => {
   const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true')
 
   const userLogOut = () => {
-    firebase.auth().signOut();
+    firebase.auth.signOut();
     localStorage.setItem('role', null);
     localStorage.setItem('signedIn', false);
+    localStorage.setItem('activated', false);
   }
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth.onAuthStateChanged(user => {
       if (!!user) {
         const userInfo = { 
           uid: user.uid, 
@@ -29,6 +30,7 @@ const NavBar = ({ location }) => {
           if (!idTokenResult.claims.role) await user.reload();
 
           localStorage.setItem('role', idTokenResult.claims.role);
+          localStorage.setItem('activated', idTokenResult.claims.activated);
           localStorage.setItem('signedIn', true);
           localStorage.setItem('userInfo', JSON.stringify(userInfo));
         })

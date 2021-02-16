@@ -3,7 +3,7 @@ import { Button, Card, Container, Row, Col, Modal } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
 import toastConfig from '../../config/toast.config';
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SelectedPatientPage = (props) => {
@@ -38,7 +38,7 @@ const SelectedPatientPage = (props) => {
 
   const getAllPatientSymptoms = async (patientID) => {
     try {
-      const getAllSymptomsFromPatient = functions.httpsCallable('getAllSymptomsFromPatient');
+      const getAllSymptomsFromPatient = firebase.functions.httpsCallable('getAllSymptomsFromPatient');
       const response = await getAllSymptomsFromPatient({ patientID });
       const { symptomList } = response.data;
 
@@ -52,7 +52,7 @@ const SelectedPatientPage = (props) => {
     try {
       const feedbackObject = { physioID: userInfo.uid, physioName: userInfo.name, feedbackContent };
 
-      const addFeebackToSymptom = functions.httpsCallable('addFeebackToSymptom');
+      const addFeebackToSymptom = firebase.functions.httpsCallable('addFeebackToSymptom');
       const response = await addFeebackToSymptom({ patientID, symptomID: selectedSymptomID, feedbackObject });
       
       toast.success(`🚀 ${response.data.message}`, toastConfig);

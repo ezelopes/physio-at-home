@@ -2,23 +2,31 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const cors =  require('cors')({ origin: true });
 
-admin.initializeApp();
-const db = admin.firestore();
+const useEmulator = true;
 
-// exports.temp = functions.region('europe-west1').https.onCall(async (req, res) => {});
+if (useEmulator){
+    process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8081';
+    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = 'localhost:9099';
+}
+
+admin.initializeApp({ projectId: 'physioathome-b2cdb' });
+const db = admin.firestore();
 
 exports.updatePhysioAccount = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
-      // physioID, dob: newDobTimestamp, specialisations: 
-      const { physioID, name, dob, specialisations } = req.body.data;
+      const { physioID, name, dob, height, weight, specialisations } = req.body.data;
       const dobFormatted = admin.firestore.Timestamp.fromDate(new Date(dob));
       
       await db.collection('PHYSIOTHERAPISTS').doc(physioID).update({ 
         name: name,
         dob: dobFormatted,
-        specialisations: specialisations
+        height: height,
+        weight: weight,
+        specialisations: specialisations,
+        activated: true
       })
+      await admin.auth().setCustomUserClaims(physioID, { activated: true });
 
       console.log('Account Updated successfully');
 
@@ -33,14 +41,20 @@ exports.updatePhysioAccount = functions.region('europe-west1').https.onRequest(a
 exports.updatePatientAccount = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
-      const { patientID, name, dob } = req.body.data;
+      const { patientID, name, dob, height, weight } = req.body.data;
       const dobFormatted = admin.firestore.Timestamp.fromDate(new Date(dob));
       
-      await db.collection('PATIENTS').doc(patientID).update({ 
+      const firestoreResponse = await db.collection('PATIENTS').doc(patientID).update({ 
         name: name,
-        dob: dobFormatted
+        dob: dobFormatted,
+        height: height,
+        weight: weight,
+        activated: true
       })
+      const claimsResponse = await admin.auth().setCustomUserClaims(patientID, { activated: true });
 
+      console.log(claimsResponse);
+      console.log(firestoreResponse);
       console.log('Account Updated successfully');
 
       res.status(200).send({ data: { message: 'Account Updated Successfully!' } });
@@ -387,6 +401,8 @@ exports.setDefaultRole = functions.region('europe-west1').auth.user().onCreate(a
       name: user.displayName,
       photoURL: user.photoURL,
       dob: new Date('1/1/1900'),
+      height: 0,
+      weight: 0,
       role: null,
       activated: false
     }
@@ -403,8 +419,9 @@ exports.setDefaultRole = functions.region('europe-west1').auth.user().onCreate(a
     functions.logger.info("User Info", { admin: isAdmin, userData: userData });
     functions.logger.info("Collection", { dbCollection: dbCollection });
     
+    await admin.auth().createUser({ uid: user.uid });
+    await admin.auth().setCustomUserClaims(user.uid, { role: userData.role, activated: false })
     await db.collection(dbCollection).doc(user.uid).set(userData);
-    await admin.auth().setCustomUserClaims(user.uid, { role: userData.role })
 
     const userRecord = await admin.auth().getUser(user.uid);
     functions.logger.info("User Created", { role: userRecord.customClaims.role });

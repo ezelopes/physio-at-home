@@ -1,10 +1,9 @@
 import React, { memo, useState } from 'react';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { Spinner } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-
 
 const LoginPage = () => {
   
@@ -19,12 +18,13 @@ const LoginPage = () => {
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      signInSuccessWithAuthResult: async (authResult) => {
-        console.log(authResult);
-        const { isNewUser } = authResult.additionalUserInfo;
+      signInSuccessWithAuthResult: async () => {
+        // console.log(authResult);
+        // const { isNewUser } = authResult.additionalUserInfo;
+        // if (isNewUser) setTimeout(() => { window.location.pathname = '/accountSetUp' }, 3000)
+        // else setTimeout(() => { window.location.pathname = '/videos' }, 3000)
         setLoading(true);
-        if (isNewUser) setTimeout(() => { window.location.pathname = '/accountSetUp' }, 3000)
-        else setTimeout(() => { window.location.pathname = '/' }, 3000)
+        setTimeout(() => { window.location.pathname = '/videos' }, 3000)
         return false;
       },
     }

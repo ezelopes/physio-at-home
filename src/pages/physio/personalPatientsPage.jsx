@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -28,7 +28,7 @@ const PersonalPatientsPage = () => {
 
   const getAllPhysioPatients = async (userID) => {
     try {
-      const getAllPhysioPatients = functions.httpsCallable('getAllPhysioPatients');
+      const getAllPhysioPatients = firebase.functions.httpsCallable('getAllPhysioPatients');
       const response = await getAllPhysioPatients({ physioID: userID });
       const { patientsList } = response.data;
 
@@ -46,7 +46,7 @@ const PersonalPatientsPage = () => {
       removeConnectionBTN.textContent = 'Loading...';
       removeConnectionBTN.className = 'btn btn-primary';
       
-      const removeConnection = functions.httpsCallable('removeConnection');
+      const removeConnection = firebase.functions.httpsCallable('removeConnection');
       await removeConnection({ physioID, patientID });
       
       removeConnectionBTN.textContent = 'Connection Removed!';

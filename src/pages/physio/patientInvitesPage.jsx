@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,7 +26,7 @@ const PatientInvitesPage = () => {
 
   const getAllPhysioInvites = async (userID) => {
     try {
-      const getAllPhysioInvites = functions.httpsCallable('getAllPhysioInvites');
+      const getAllPhysioInvites = firebase.functions.httpsCallable('getAllPhysioInvites');
       const response = await getAllPhysioInvites({ physioID: userID });
       const { invitesList } = response.data;
 
@@ -43,7 +43,7 @@ const PatientInvitesPage = () => {
       document.getElementById(`${patientID}-declineButton`).disabled = true;
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Loading...';
 
-      const acceptInviteRequest = functions.httpsCallable('acceptInviteRequest');
+      const acceptInviteRequest = firebase.functions.httpsCallable('acceptInviteRequest');
       await acceptInviteRequest({ physioID, patientID, name, email, photoURL });
 
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Accepted ✔️';
@@ -62,7 +62,7 @@ const PatientInvitesPage = () => {
       document.getElementById(`${patientID}-declineButton`).disabled = true;
       document.getElementById(`${patientID}-declineButton`).textContent = 'Loading...';
 
-      const declineInviteRequest = functions.httpsCallable('declineInviteRequest');
+      const declineInviteRequest = firebase.functions.httpsCallable('declineInviteRequest');
       await declineInviteRequest({ physioID, patientID });
       
       document.getElementById(`${patientID}-declineButton`).textContent = 'Declined ❌';

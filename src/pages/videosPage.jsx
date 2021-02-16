@@ -12,10 +12,10 @@ const VideosPage = () => {
   ]
 
   const youtubeVideosIDTemp = {
-    SHOULDER: ['T7sBeFEu4pw', 'T7sBeFEu4pw'],
-    KNEE: ['N2ukHIBBFAA', 'N2ukHIBBFAA'],
-    BACK: ['1uwAyZ2RyLQ', '1uwAyZ2RyLQ'],
-    ELBOW: ['dFpVHc5vtSY', 'dFpVHc5vtSY']
+    SHOULDER: ['T7sBeFEu4pw'],
+    KNEE: ['N2ukHIBBFAA'],
+    BACK: ['1uwAyZ2RyLQ'],
+    ELBOW: ['dFpVHc5vtSY']
   }
   
   const opts = {
@@ -35,7 +35,7 @@ const VideosPage = () => {
         <Row>
             { specialisations.map((specialisation, index) => {
               return (
-                <Accordion className='first-element'>
+                <Accordion className='first-element' key={index}>
                   <Card id='videos-card' key={index}>
 
                     <Accordion.Toggle as={Card.Header} eventKey={specialisation.id}>

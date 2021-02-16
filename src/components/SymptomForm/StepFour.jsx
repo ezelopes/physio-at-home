@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 import { Button } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
 
 const StepFour = ({ 
@@ -32,7 +32,7 @@ const StepFour = ({
       if (!symptomTitle || !symptomDetails) return toast.error('⚠️ Missing required parameters!', toastConfig);
       if (minAngle > maxAngle) return toast.error('⚠️ Range of Motion is not valid. Either tick the checkbox or use Kinect!', toastConfig);
       
-      const addNewPatientSymptom = functions.httpsCallable('addNewPatientSymptom');
+      const addNewPatientSymptom = firebase.functions.httpsCallable('addNewPatientSymptom');
       await addNewPatientSymptom({ patientID: userInfo.uid, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion });
     
       toast.success('🚀 Symptom Added Successfully!', toastConfig);

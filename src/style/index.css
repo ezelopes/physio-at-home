@@ -120,6 +120,7 @@ button:hover {
   border-radius: 8px;
   text-align: center;
   display: inline-block;
+  margin-bottom: 3em;
 }
 
 #accountForm >  .btn, .form-label  {

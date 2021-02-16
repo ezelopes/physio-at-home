@@ -7,9 +7,10 @@ import GuestRoute from './components/guestRoute';
 
 import homePage from './pages/homePage';
 import loginPage from './pages/loginPage';
-import videosPage from './pages/videosPage';
+import accountSetUpPage from './pages/accountSetUpPage';
 import notFoundPage from './pages/pageNotFound';
 
+import videosPage from './pages/videosPage';
 import promoteToAdminPage from './pages/admin/promoteUsers';
 import addNewSymptomPage from './pages/patient/addNewSymptomPage';
 import patientAccountPage from './pages/patient/patientAccountPage';
@@ -23,23 +24,20 @@ import selectedPatientPage from './pages/physio/selectedPatientPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/App.css';
 
-const pathsWhereNavbarIsHidden = ['/patient/startUpKinect']
 const NavbarWithRouter = withRouter(Navbar);
 
-function App(props) {
-  const currentLocation = props.location.pathname;
+function App() {
 
   const currentRole = localStorage.getItem('role');
   const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true');
-  const currentUserActivated = (localStorage.getItem('activated') === 'true'); // need to save it into firestore first
+  const currentUserActivated = (localStorage.getItem('activated') === 'true');
 
   return (
       <div className="App">
-        { pathsWhereNavbarIsHidden.includes(currentLocation) ? <></> : <NavbarWithRouter /> }
+        <NavbarWithRouter />
         <div id='routes'>
           <Switch>
             <Route path="/" component={homePage} exact />
-            <Route path="/videos" component={videosPage} exact />
             <GuestRoute
               path="/loginPage"
               component={loginPage}
@@ -47,13 +45,33 @@ function App(props) {
               authenticated={ currentUserSignedIn }
               exact
             />
-            <ProtectedRoute
-              path="/patient/patientAccountPage"
-              component={patientAccountPage}
+            {/*  */}
+            {/* <ProtectedRoute 
+              path="/accountSetUp" 
+              component={accountSetUpPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole:  'PATIENT', currentRole: currentRole }}
+              roles={{ expectedRole:  ['PATIENT'], currentRole: currentRole }}
+              exact
+            /> */}
+            
+            <ProtectedRoute
+              path="/videos"
+              component={videosPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
+              roles={{ expectedRole:  ['PATIENT', 'PHYSIOTHERAPIST'], currentRole: currentRole }}
+              exact
+            />
+            <ProtectedRoute
+              path="/patient/patientAccountPage"
+              component={accountSetUpPage}
+              redirectPath="/"
+              authenticated={ currentUserSignedIn }
+              activated={ currentUserActivated }
+              roles={{ expectedRole:  ['PATIENT'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
@@ -62,7 +80,7 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
+              roles={{ expectedRole: ['PATIENT'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
@@ -71,7 +89,7 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
+              roles={{ expectedRole: ['PATIENT'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
@@ -80,16 +98,16 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole: 'PATIENT', currentRole: currentRole }}
+              roles={{ expectedRole: ['PATIENT'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
               path="/physio/physioAccountPage"
-              component={physioAccountPage}
+              component={accountSetUpPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole:  'PHYSIOTHERAPIST', currentRole: currentRole }}
+              roles={{ expectedRole:  ['PHYSIOTHERAPIST'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
@@ -98,7 +116,7 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
+              roles={{ expectedRole: ['PHYSIOTHERAPIST'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
@@ -107,7 +125,7 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
+              roles={{ expectedRole: ['PHYSIOTHERAPIST'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute
@@ -116,7 +134,7 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole: 'PHYSIOTHERAPIST', currentRole: currentRole }}
+              roles={{ expectedRole: ['PHYSIOTHERAPIST'], currentRole: currentRole }}
               exact
             />
             <ProtectedRoute 
@@ -125,7 +143,7 @@ function App(props) {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }
-              roles={{ expectedRole: 'ADMIN', currentRole: currentRole }}
+              roles={{ expectedRole: ['ADMIN'], currentRole: currentRole }}
               exact
             />
             <Route path="*" component={notFoundPage} />

@@ -6,7 +6,7 @@ import SymptomsDisplayer from '../../components/symptomsDisplayer'
 
 import toastConfig from '../../config/toast.config';
 
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 import 'react-toastify/dist/ReactToastify.css';
 
 const YourSymptoms = () => {
@@ -42,7 +42,7 @@ const YourSymptoms = () => {
 
   const getAllSymptoms = async (patientID) => {
     try {
-      const getAllSymptomsFromPatient = functions.httpsCallable('getAllSymptomsFromPatient');
+      const getAllSymptomsFromPatient = firebase.functions.httpsCallable('getAllSymptomsFromPatient');
       const response = await getAllSymptomsFromPatient({ patientID });
       const { symptomList } = response.data;
 
@@ -54,7 +54,7 @@ const YourSymptoms = () => {
 
   const deleteSymptom = async (patientID, symptomID) => {
     try {
-      const deleteSymptomOfPatient = functions.httpsCallable('deleteSymptomOfPatient');
+      const deleteSymptomOfPatient = firebase.functions.httpsCallable('deleteSymptomOfPatient');
       const response = await deleteSymptomOfPatient({ patientID, symptomID });
       toast.success(`🚀 ${response.data.message}`, toastConfig);
 

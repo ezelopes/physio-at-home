@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 
 import toastConfig from '../../config/toast.config';
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -45,7 +45,7 @@ const PhysioAccountPage = () => {
 
   const getPhysioData = async (userID) => {
     try {
-      const getPhysioData = functions.httpsCallable('getPhysioData');
+      const getPhysioData = firebase.functions.httpsCallable('getPhysioData');
       const response = await getPhysioData({ physioID: userID  });
 
       return response.data.physioData;
@@ -58,7 +58,7 @@ const PhysioAccountPage = () => {
     try {
       const specialisationsFormatted = specialisations.map((current) => { return current.value});
 
-      const updatePhysioAccount = functions.httpsCallable('updatePhysioAccount');
+      const updatePhysioAccount = firebase.functions.httpsCallable('updatePhysioAccount');
       const response = await updatePhysioAccount({ physioID, name: username, dob: convertDate(dateOfBirth), specialisations: specialisationsFormatted });
       
       toast.success(`🚀 ${response.data.message}`, toastConfig);

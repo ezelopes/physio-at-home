@@ -3,7 +3,7 @@ import { Spinner, Button, Card, Container, Row, Col } from 'react-bootstrap';
 
 import { ToastContainer, toast } from 'react-toastify';
 
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -32,7 +32,7 @@ const SearchPhysiotherapistsPage = () => {
 
   const getPhysiotherapistsList = async () => {
     try {
-      const getAllPhysiotherapists = functions.httpsCallable('getAllPhysiotherapists');
+      const getAllPhysiotherapists = firebase.functions.httpsCallable('getAllPhysiotherapists');
       const response = await getAllPhysiotherapists();
 
       return response.data.physiotherapists;
@@ -43,7 +43,7 @@ const SearchPhysiotherapistsPage = () => {
 
   const getPatientData = async (userID) => {
     try {
-      const getPatientData = functions.httpsCallable('getPatientData');
+      const getPatientData = firebase.functions.httpsCallable('getPatientData');
       const response = await getPatientData({ patientID: userID });
 
       return response.data.patientData;
@@ -65,7 +65,7 @@ const SearchPhysiotherapistsPage = () => {
   const sendInvite = async (e, physioID) => {
     const sendInviteBTN = e.target;
     try {
-      const sendInvite = functions.httpsCallable('sendInvite');
+      const sendInvite = firebase.functions.httpsCallable('sendInvite');
       const inviteObj = { physioID, patientID: userInfo.uid, patientEmail: userInfo.email, patientName: userInfo.name, photoURL: userInfo.photoURL };
 
       await handleFunctionCall(sendInviteBTN, sendInvite, inviteObj, 'Invite Sent!');
@@ -81,7 +81,7 @@ const SearchPhysiotherapistsPage = () => {
   const removeConnection = async (e, physioID) => {
     const removeConnectionBTN = e.target;
     try {
-      const removeConnection = functions.httpsCallable('removeConnection');
+      const removeConnection = firebase.functions.httpsCallable('removeConnection');
       const removeObj = { physioID, patientID: userInfo.uid } 
 
       await handleFunctionCall(removeConnectionBTN, removeConnection, removeObj, 'Connection Removed!');

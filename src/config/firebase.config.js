@@ -1,4 +1,6 @@
-import * as firebase from "firebase/app";
+import firebase from 'firebase/app';
+import 'firebase/functions';
+import 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAAro6Z6xYWql0Ova2lOoufw2i78v1rvMU",
@@ -11,4 +13,14 @@ const firebaseConfig = {
   measurementId: "G-7PNQKRCV73"
 };
 
-export default !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+const functions = firebase.app().functions('europe-west1');
+const auth = firebase.app().auth();
+
+if (process.env.NODE_ENV === 'development') {
+  functions.useEmulator('localhost', 5001);
+  auth.useEmulator('http://localhost:9099/')
+}
+
+export default { auth, functions };

@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
-import functions from '../../config/firebase.functions';
+import firebase from '../../config/firebase.config';
 
 const PromoteUsersPage = () => {
 
@@ -11,7 +11,7 @@ const PromoteUsersPage = () => {
 
   const makeAdmin = async () => {
     try {
-      const setUserAsAdmin = functions.httpsCallable('setUserAsAdmin');
+      const setUserAsAdmin = firebase.functions.httpsCallable('setUserAsAdmin');
       const response = await setUserAsAdmin({ email: adminEmail });
       setAdminEmail('')
       console.log(response.data.message);
@@ -22,7 +22,7 @@ const PromoteUsersPage = () => {
 
   const makePhysiotherapist = async () => {
     try {
-      const setUserAsPhysiotherapist = functions.httpsCallable('setUserAsPhysiotherapist');
+      const setUserAsPhysiotherapist = firebase.functions.httpsCallable('setUserAsPhysiotherapist');
       const response = await setUserAsPhysiotherapist({ email: physiotherapistEmail });
       setPhysiotherapistEmail('')
       console.log(response.data.message);
