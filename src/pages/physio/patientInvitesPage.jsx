@@ -84,7 +84,10 @@ const PatientInvitesPage = () => {
 
       : <Container>
           <Row>
-          { Object.keys(patientInvitesList).map((patientID, index) => {
+          { 
+          
+            Object.keys(patientInvitesList).length === 0 ? <h2 className='center'> <div> No Patients Invites Yet </div> </h2>  
+            : Object.keys(patientInvitesList).map((patientID, index) => {
               const { name, email, photoURL } = patientInvitesList[patientID];
               return (
                 <div id={patientID} key={patientID}>

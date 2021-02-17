@@ -184,6 +184,7 @@ exports.declineInviteRequest = functions.region('europe-west1').https.onRequest(
 exports.acceptInviteRequest = functions.region('europe-west1').https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
+      // Add height and weight.
       const { physioID, patientID, name, email, photoURL } = req.body.data;
       console.log(physioID, patientID, name, email, photoURL)
 
@@ -260,6 +261,7 @@ exports.sendInvite = functions.region('europe-west1').https.onRequest(async (req
     try {
       functions.logger.info("Req Body", { body: req.body.data });
       
+      // Add height and weight
       const { physioID, patientID, patientEmail, patientName, photoURL } = req.body.data;
       
       await db.collection('PHYSIOTHERAPISTS').doc(physioID).collection('INVITES').doc(patientID).set({

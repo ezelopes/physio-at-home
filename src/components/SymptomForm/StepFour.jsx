@@ -26,11 +26,14 @@ const StepFour = ({
       setLoading(true);
 
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const rangeOfMotion = { minAngle, maxAngle };
+      const rangeOfMotion = { minAngle: parseFloat(minAngle), maxAngle: parseFloat(maxAngle) };
       const bodyPart = { rightOrLeft, bodyPart: selectedBodyPart, specificBodyPart }
 
       if (!symptomTitle || !symptomDetails) return toast.error('⚠️ Missing required parameters!', toastConfig);
-      if (minAngle > maxAngle) return toast.error('⚠️ Range of Motion is not valid. Either tick the checkbox or use Kinect!', toastConfig);
+      
+      console.log(rangeOfMotion)
+      if (rangeOfMotion.minAngle > rangeOfMotion.maxAngle) 
+        return toast.error('⚠️ Range of Motion is not valid. Either tick the checkbox or use Kinect!', toastConfig);
       
       const addNewPatientSymptom = firebase.functions.httpsCallable('addNewPatientSymptom');
       await addNewPatientSymptom({ patientID: userInfo.uid, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion });
@@ -45,13 +48,13 @@ const StepFour = ({
 
   return (
     <>
-      <p> Title: { symptomTitle } </p>
-      <p> Pain Value: { painRangeValue } </p>
-      <p> Details: { symptomDetails } </p>
-      <p> Right/Left: { rightOrLeft } </p>
-      <p> Body Part: { selectedBodyPart } </p>
-      <p> Specific Body Part: { specificBodyPart } </p>
-      <p> Range of Motion: { minAngle }° to { maxAngle }° </p>
+      <p> <b>Title:</b> { symptomTitle } </p>
+      <p> <b>Pain Value: </b> { painRangeValue } </p>
+      <p> <b>Details: </b> { symptomDetails } </p>
+      <p> <b>Right/Left: </b> { rightOrLeft } </p>
+      <p> <b>Body Part: </b> { selectedBodyPart } </p>
+      <p> <b>Specific Body Part: </b> { specificBodyPart.map((item, index) => { return <> {index === 0 ? '' : '-'} {item} </>}) } </p>
+      <p> <b>Range of Motion: </b> { minAngle }° to { maxAngle }° </p>
 
       <Button 
         type="submit"

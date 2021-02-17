@@ -84,6 +84,12 @@ th, td, Form, p {
   margin-top: 1em;
 }
 
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
 .left-button {
   margin-right: 1em;
 }
@@ -111,6 +117,7 @@ button:hover {
 .body-part-image {
   cursor: pointer; 
   border-radius: 8px;
+  display: none;
 }
 
 #accountForm {
@@ -151,20 +158,28 @@ button:hover {
 }
 
 .selectedBodyPartLabel {
-  color: white;
+  color: #1976D2;
   margin-top: 2em;
   font-family: Roboto;
   padding: 1em;
   font-weight: 500;
   border-radius: 8px;
-  background-color: #1976D2;
-}
-
-.selectedBodyPartLabel selected {
-  background-color: #28a745;
+  border: solid;
+  border-color: #1976D2;
 }
 
 /* RANGE BAR */
+.bubbleRangeBar {
+  background-color: #1976D2;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  text-align: center;
+  padding: 0.5em 0.5em 0.5em 0.5em ;
+  border: solid 2px #1976D2;
+  border-radius: 25%
+}
+
 .inputR {
   -webkit-appearance: none;
   appearance: none;

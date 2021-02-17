@@ -154,6 +154,7 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
         type="submit"
         className='form-button left-button'
         onClick={(e) => { e.preventDefault(); prevStep(); }}
+        disabled={recording}
       >
         Back
       </Button>
@@ -164,6 +165,7 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
         type="submit"
         className='form-button'
         onClick={(e) => { e.preventDefault(); nextStep(); }}
+        disabled={recording}
       >
         Next
       </Button>

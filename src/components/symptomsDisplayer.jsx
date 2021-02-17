@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Button, Card, Col } from 'react-bootstrap'
+import { Button, Card, Col, ListGroup } from 'react-bootstrap'
 
 const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, userInfo }) => {
 
@@ -33,10 +33,17 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
                 <Card.Text>
                   Body Part: { 
                     symptomsList[currentSymptomID].bodyPart.rightOrLeft + ' ' + 
-                    symptomsList[currentSymptomID].bodyPart.bodyPart + ' (' + 
-                    symptomsList[currentSymptomID].bodyPart.specificBodyPart + ')' 
+                    symptomsList[currentSymptomID].bodyPart.bodyPart
                   }
                 </Card.Text>
+                <Card.Text>
+                  Specific Body Part:
+                </Card.Text>
+                <ListGroup style={{ marginBottom: '1em' }}> 
+                  { symptomsList[currentSymptomID].bodyPart.specificBodyPart.map((item, index) => { 
+                    return <ListGroup.Item key={index}> {item} </ListGroup.Item>}) 
+                  }
+                </ListGroup>
                 <Card.Text>
                   Pain Range Value: { symptomsList[currentSymptomID].painRangeValue }
                 </Card.Text>

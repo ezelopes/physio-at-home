@@ -68,7 +68,10 @@ const PersonalPatientsPage = () => {
 
       : <Container>
           <Row>
-          { Object.keys(physioPatientsList).map((patientID) => {
+          { 
+            
+            Object.keys(physioPatientsList).length === 0 ? <h2 className='center'> <div> No Patients Yet. Wait for Connection Requests! </div> </h2>  
+            : Object.keys(physioPatientsList).map((patientID) => {
               return <div id={patientID} key={patientID}>
                 <Col lg={true}>
                   <Card>

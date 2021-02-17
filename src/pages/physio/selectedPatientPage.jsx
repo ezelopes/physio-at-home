@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Button, Card, Container, Row, Col, Modal } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col, Modal, ListGroup } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
 import toastConfig from '../../config/toast.config';
@@ -19,6 +19,7 @@ const SelectedPatientPage = (props) => {
     const fetchData = async () => { 
       const response = await getAllPatientSymptoms(patientID);
       setPatientSymptoms(response.symptomList);
+      console.log(response.symptomList)
      }
  
      fetchData();
@@ -80,10 +81,17 @@ const SelectedPatientPage = (props) => {
                         <Card.Text>
                           Body Part: { 
                             patientSymptomsList[symptomID].bodyPart.rightOrLeft + ' ' + 
-                            patientSymptomsList[symptomID].bodyPart.bodyPart + ' (' + 
-                            patientSymptomsList[symptomID].bodyPart.specificBodyPart + ')' 
+                            patientSymptomsList[symptomID].bodyPart.bodyPart
                           }
                         </Card.Text>
+                        <Card.Text>
+                          Specific Body Part:
+                        </Card.Text>
+                        <ListGroup style={{ marginBottom: '1em' }}> 
+                          { patientSymptomsList[symptomID].bodyPart.specificBodyPart.map((item, index) => { 
+                            return <ListGroup.Item key={index}> {item} </ListGroup.Item>}) 
+                          }
+                        </ListGroup>
                         <Card.Text>
                           Pain Range Value: { patientSymptomsList[symptomID].painRangeValue }
                         </Card.Text>

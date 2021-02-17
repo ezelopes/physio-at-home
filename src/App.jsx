@@ -2,8 +2,8 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import Navbar from './components/navbar';
-import ProtectedRoute from './components/protectedRoute';
-import GuestRoute from './components/guestRoute';
+import ProtectedRoute from './components/CustomRoutes/protectedRoute';
+import GuestRoute from './components/CustomRoutes/guestRoute';
 
 import homePage from './pages/homePage';
 import loginPage from './pages/loginPage';
@@ -13,10 +13,8 @@ import notFoundPage from './pages/pageNotFound';
 import videosPage from './pages/videosPage';
 import promoteToAdminPage from './pages/admin/promoteUsers';
 import addNewSymptomPage from './pages/patient/addNewSymptomPage';
-import patientAccountPage from './pages/patient/patientAccountPage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
 import yourSymptomsPage from './pages/patient/yourSymptoms';
-import physioAccountPage from './pages/physio/physioAccountPage';
 import physioPersonalPatientsPage from './pages/physio/personalPatientsPage';
 import patientInvitesPage from './pages/physio/patientInvitesPage';
 import selectedPatientPage from './pages/physio/selectedPatientPage';
@@ -44,18 +42,7 @@ function App() {
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               exact
-            />
-            {/*  */}
-            {/* <ProtectedRoute 
-              path="/accountSetUp" 
-              component={accountSetUpPage}
-              redirectPath="/"
-              authenticated={ currentUserSignedIn }
-              activated={ currentUserActivated }
-              roles={{ expectedRole:  ['PATIENT'], currentRole: currentRole }}
-              exact
-            /> */}
-            
+            />            
             <ProtectedRoute
               path="/videos"
               component={videosPage}

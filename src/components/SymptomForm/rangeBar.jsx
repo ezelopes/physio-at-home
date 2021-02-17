@@ -3,10 +3,11 @@ import { useEffect } from 'react';
 
 const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
   const inactiveColor = '#EFEFEF'
-  const min = 1;
+  const min = 0;
   const max = 100;
   
   const inputRef = useRef();
+  const bubbleRef = useRef();
   const [rangeBarValue, setRangeBarValue] = useState(painRangeValue);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
     const progress = (painRangeValue / max) * 100 + '%';
     const newBackgroundStyle = `linear-gradient(90deg, ${activeColor} 0% ${progress}, ${inactiveColor} ${progress} 100%)`
     inputRef.current.style.background = newBackgroundStyle
+    bubbleRef.current.style.left = `${rangeBarValue*10}px`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
@@ -29,6 +31,7 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
     setPainRangeValue(newValue)
     const newBackgroundStyle = `linear-gradient(90deg, ${activeColor} 0% ${progress}, ${inactiveColor} ${progress} 100%)`
     inputRef.current.style.background = newBackgroundStyle
+    bubbleRef.current.style.left = `${rangeBarValue*10}px`;
   }
 
   const getColor = (value) => {
@@ -37,7 +40,7 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
   }
 
     return (
-      <div>
+      <div style={{ position: 'relative', textAlign: 'center' }}>
         <input
           id={id}
           ref={inputRef}
@@ -50,6 +53,9 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
           onChange={(e) => handleChange(e)}
           style={styleInput}
         />
+        <div ref={bubbleRef} className='bubbleRangeBar'> 
+          {rangeBarValue}
+        </div>
       </div>
     )
 };

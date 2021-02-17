@@ -18,7 +18,7 @@ const AddNewSymptomPage = () => {
   const [symptomDetails, setSymptomDetails] = useState('');
   const [rightOrLeft, setRightOrLeft] = useState('RIGHT');
   const [selectedBodyPart, setBodyPart] = useState('KNEE');
-  const [specificBodyPart, setSpecificBodyPart] = useState('');
+  const [specificBodyPart, setSpecificBodyPart] = useState([]);
 
   const [minAngle, setMinAngle] = useState(180);
   const [maxAngle, setMaxAngle] = useState(0);

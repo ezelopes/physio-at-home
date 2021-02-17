@@ -1,19 +1,26 @@
 import React, { memo } from 'react';
 import { Button, Form } from 'react-bootstrap'
 
-import RangeBar from '../rangeBar'
+import RangeBar from './rangeBar'
+import IconWithMessage from '../iconWithMessage'
 
 import 'react-toastify/dist/ReactToastify.css';
 
 
 const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setPainRangeValue, setBodyPart, selectedBodyPart, setRightOrLeft, rightOrLeft, setSpecificBodyPart }) => {
 
-  const bodyPartsList = [ 'Knee', 'Elbow', 'Back' ];
+  const bodyPartsList = [ 'KNEE', 'ELBOW' ];
+  const toolTipMessage = {
+    Title: 'Give a meaning title to your symptom',
+    BodyLocation: 'Select where in your body the symptom is located',
+    RightLeft: 'Select Right or Left',
+    PainRange: 'Drag the bar up to how much pain you feel in a 0-100 scale'
+  }
 
   const handleBodyPartChange = (e) => {
     const { value } = e.target;
     setBodyPart(value);
-    setSpecificBodyPart('');
+    setSpecificBodyPart([]);
   }
 
   const handleRightLeftChange = (e) => {
@@ -24,12 +31,12 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
   return (
     <>
       <Form.Group className='first-element'>
-        <Form.Label>Symptom Title</Form.Label> 
+        <Form.Label>Symptom Title <IconWithMessage message={toolTipMessage.Title} /> </Form.Label> 
         <Form.Control type="text" placeholder="Insert here a title..." value={symptomTitle} onChange={(e) => { setSymptomTitle(e.target.value) }}/> 
       </Form.Group>
       
       <Form.Group>
-        <Form.Label> Where do you feel pain? </Form.Label>
+        <Form.Label> Where do you feel pain? <IconWithMessage message={toolTipMessage.BodyLocation} /> </Form.Label>
         <Form.Control defaultValue={selectedBodyPart} as="select" className="my-1 mr-sm-2" id="bodyPartSelect" onChange={(e) => { handleBodyPartChange(e) }} custom>
           {bodyPartsList.map((currentBodyPart, index) => {
             return <option value={currentBodyPart} key={index}> {currentBodyPart} </option>
@@ -38,7 +45,7 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
       </Form.Group>
 
       <Form.Group>
-        <Form.Label> Select Right or Left </Form.Label>
+        <Form.Label> Select Right or Left <IconWithMessage message={toolTipMessage.RightLeft} /> </Form.Label>
         <Form.Control defaultValue={rightOrLeft} as="select" className="my-1 mr-sm-2" id="rightOrLeft" onChange={(e) => { handleRightLeftChange(e) }} custom>
            <option value={'RIGHT'} key='RIGHT'> Right </option>
            <option value={'LEFT'} key='LEFT'> Left </option>
@@ -46,7 +53,7 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>How much pain do you feel?</Form.Label>
+        <Form.Label>How much pain do you feel? <IconWithMessage message={toolTipMessage.PainRange} /> </Form.Label>
         <RangeBar id="painRangeID" setPainRangeValue={setPainRangeValue} painRangeValue={painRangeValue} />
       </Form.Group>
 

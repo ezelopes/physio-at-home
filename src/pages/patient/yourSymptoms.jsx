@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Button, Container, Row, Modal, Spinner } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
-import ColoredLine from '../../components/coloredLine'
 import SymptomsDisplayer from '../../components/symptomsDisplayer'
 
 import toastConfig from '../../config/toast.config';
@@ -107,5 +106,11 @@ const YourSymptoms = () => {
     </>
   );
 }
+
+const ColoredLine = ({ color }) => {
+  return (
+    <hr style={{ color: color, backgroundColor: color }} />
+  )
+};
 
 export default memo(YourSymptoms);

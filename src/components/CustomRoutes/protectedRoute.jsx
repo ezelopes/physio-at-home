@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import AccountSetUp from '../pages/accountSetUpPage'
+import AccountSetUp from '../../pages/accountSetUpPage'
 
 /**
  * Component created to protect pages that require authentication

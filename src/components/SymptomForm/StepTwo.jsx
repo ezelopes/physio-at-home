@@ -1,9 +1,15 @@
 import React, { memo } from 'react';
 import { Button, Form } from 'react-bootstrap'
-import KneeImage from '../kneeImage'
-import ElbowImage from '../elbowImage'
+import KneeImage from '../BodyExtremities/kneeImage'
+import ElbowImage from '../BodyExtremities/elbowImage'
+
+import IconWithMessage from '../iconWithMessage'
 
 const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, specificBodyPart, setSymptomDetails, symptomDetails}) => {
+
+  const toolTipMessage = {
+    Details: 'Give a more in depth explanation about your symptom'
+  }
 
   const renderSwitch = (bodyPart) => {
     switch(bodyPart.toUpperCase()) {
@@ -11,8 +17,6 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
         return <KneeImage setSpecificBodyPart={setSpecificBodyPart} specificBodyPart={specificBodyPart} />;
       case 'ELBOW':
         return <ElbowImage setSpecificBodyPart={setSpecificBodyPart} specificBodyPart={specificBodyPart} />;
-      case 'BACK':
-        return 'BACK IMG';
       default:
         return null;
     }
@@ -20,9 +24,10 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
 
   return (
     <>
+      <h2 className='first-element' style={{ marginBottom: '1em'}}> Indicate where you feel pain by clicking on the red dots below </h2>
       <div>{renderSwitch(selectedBodyPart)}</div>
       <Form.Group>
-        <Form.Label>Please insert more details</Form.Label>
+        <Form.Label>Please insert more details <IconWithMessage message={toolTipMessage.Details} /> </Form.Label>
         <Form.Control as='textarea' value={symptomDetails} placeholder="Insert here details..." id='symptomDetails' onChange={(e) => { setSymptomDetails(e.target.value) }} />
       </Form.Group>
 
