@@ -44,7 +44,7 @@ const NavBar = ({ location }) => {
 
   return (
     <Navbar collapseOnSelect expand='lg' bg="dark" variant="dark">
-      <Navbar.Brand href='/'>PhysioAtHome</Navbar.Brand>
+      <Navbar.Brand href='/' title='Home Page'>PhysioAtHome</Navbar.Brand>
       <Navbar.Toggle aria-controls='responsive-navbar-nav' />
       {/* collapse only if loggedin */}
       <Navbar.Collapse id='responsive-navbar-nav'>

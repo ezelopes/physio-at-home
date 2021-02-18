@@ -1,7 +1,11 @@
 import React, { memo, useEffect, useState, useRef } from 'react';
 import { Button, Nav } from 'react-bootstrap'
 
+import ProfilePlaceHolderPicture from '../images/profilePlaceholderPicture.jpg'
+
 const ModalUser = ({ userLogOutFunction }) => {
+
+  const photoURL = JSON.parse(localStorage.getItem('userInfo')).photoURL;
 
   const currentRole = localStorage.getItem('role');
   const [toggleDiv, setToggleDiv] = useState(false);
@@ -34,8 +38,9 @@ const ModalUser = ({ userLogOutFunction }) => {
     <>
     <div ref={node}>
       <img 
+        title='User'
         id='profile-image'
-        src={JSON.parse(localStorage.getItem('userInfo')).photoURL} 
+        src={photoURL ? photoURL : ProfilePlaceHolderPicture} 
         alt='profile-pic'
         width='40'
         height='40'
