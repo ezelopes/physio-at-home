@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import MultiSelect from "react-multi-select-component";
 import { ToastContainer, toast } from 'react-toastify';
 
+import IconWithMessage from '../components/iconWithMessage'
 import toastConfig from '../config/toast.config';
 import firebase from '../config/firebase.config';
 
@@ -24,6 +25,14 @@ let initialWeight;
 
 const AccountSetUpPage = ({ role, activated }) => {
   
+  const toolTipMessage = {
+    Username: 'Name that will be displayed to other users',
+    Height: 'Your height in centimeters',
+    Weight: 'Your weight in Kilograms',
+    DoB: 'Select from the calendar the day you were born',
+    Specialisation: 'Select all specialisations you studied'
+  }
+
   const currentUserRole = role;
 
   const [loading, setLoading] = useState(true);
@@ -137,7 +146,7 @@ const AccountSetUpPage = ({ role, activated }) => {
         :
           <Form id="accountForm" className='first-element'>
             <h2><Form.Text> Your Details </Form.Text></h2>
-            <Form.Label> Username </Form.Label>
+            <Form.Label> Username <IconWithMessage message={toolTipMessage.Username} /> </Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='patient'>🙋‍♂️</span></InputGroup.Text>
@@ -145,7 +154,7 @@ const AccountSetUpPage = ({ role, activated }) => {
               <FormControl id="username" placeholder="Name" value={username} onChange={e => setUsername(e.target.value)} />
             </InputGroup>
 
-            <Form.Label> Height (in cm) </Form.Label>
+            <Form.Label> Height (in cm) <IconWithMessage message={toolTipMessage.Height} /> </Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='ruler'>📏</span></InputGroup.Text>
@@ -153,7 +162,7 @@ const AccountSetUpPage = ({ role, activated }) => {
               <FormControl id="height" placeholder="170" value={height} onChange={e => setHeight(e.target.value)} />
             </InputGroup>
 
-            <Form.Label> Weight (in kg) </Form.Label>
+            <Form.Label> Weight (in kg) <IconWithMessage message={toolTipMessage.Weight} /> </Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='scale'>⚖️</span></InputGroup.Text>
@@ -164,7 +173,7 @@ const AccountSetUpPage = ({ role, activated }) => {
             { currentUserRole === 'PHYSIOTHERAPIST' 
               ?
               <>
-                <Form.Label> Specialisations </Form.Label>
+                <Form.Label> Specialisations <IconWithMessage message={toolTipMessage.Specialisation} /> </Form.Label>
                 <MultiSelect
                   id='specialisations'
                   options={options}
@@ -178,7 +187,7 @@ const AccountSetUpPage = ({ role, activated }) => {
               : <></>
             }
 
-            <Form.Label> Date of Birth </Form.Label>
+            <Form.Label> Date of Birth <IconWithMessage message={toolTipMessage.DoB} /> </Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='calendar'>📅</span></InputGroup.Text>
