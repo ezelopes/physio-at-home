@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import IconWithMessage from '../components/iconWithMessage'
 import toastConfig from '../config/toast.config';
 import firebase from '../config/firebase.config';
+import "react-datepicker/dist/react-datepicker.css";
 
 const options = [
   { label: "Shoulders", value: "Shoulders" },
