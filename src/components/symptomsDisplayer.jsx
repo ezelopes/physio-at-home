@@ -7,6 +7,7 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
 
   useEffect(() => {
     setSymptomsList(symptoms);
+    console.log(symptoms)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updated]);
 
@@ -19,7 +20,8 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
 
   return (
     <>
-      { Object.keys(symptomsList).map((currentSymptomID) => {
+      { Object.keys(symptomsList).length === 0 ? <h2 className='center'> <div> No Symptoms to Display Yet </div> </h2>  
+        : Object.keys(symptomsList).map((currentSymptomID) => {
         return <div id={currentSymptomID} key={currentSymptomID}>
           <Col lg={true}>
             <Card>
