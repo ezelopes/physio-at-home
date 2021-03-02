@@ -1,7 +1,13 @@
 import React, { memo, useState, useRef } from 'react';
 import kneeImageJPG from '../../images/knee.png'
 
+import IconWithMessage from '../iconWithMessage'
+
 const KneeImage = ({ specificBodyPart, setSpecificBodyPart }) => {
+
+  const toolTipMessage = {
+    Details: 'Click again on the red dot to remove from the list'
+  }
 
   const width = '400'; const height = '300'; const radius = 10;
 
@@ -105,7 +111,7 @@ const KneeImage = ({ specificBodyPart, setSpecificBodyPart }) => {
       <br />
 
       <label className='selectedBodyPartLabel'> 
-         <> YOU SELECTED: 
+         <> YOU SELECTED: <IconWithMessage message={toolTipMessage.Details} /> 
           { 
             kneePart.map((part, index) => { return (<div key={index}> {part} </div>) } )
           }

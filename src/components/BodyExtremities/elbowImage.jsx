@@ -1,7 +1,13 @@
 import React, { memo, useState, useRef } from 'react';
 import elbowImageJPG from '../../images/elbow.jpg'
 
+import IconWithMessage from '../iconWithMessage'
+
 const ElbowImage = ({ specificBodyPart, setSpecificBodyPart }) => {
+
+  const toolTipMessage = {
+    Details: 'Click again on the red dot to remove from the list'
+  }
 
   const width = '500'; const height = '300'; const radius = 10;
 
@@ -104,7 +110,7 @@ const ElbowImage = ({ specificBodyPart, setSpecificBodyPart }) => {
       <br />
 
       <label className='selectedBodyPartLabel'> 
-         <> YOU SELECTED: 
+         <> YOU SELECTED: <IconWithMessage message={toolTipMessage.Details} /> 
           { 
             elbowPart.map((part, index) => { return (<div key={index}> {part} </div>) } )
           }
