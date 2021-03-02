@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Matches
+
+    match /{document=**} {
+      allow read, write: if false; // isSignedIn();
+    }
+ 
+    match /ADMINS/{adminID} {
+      allow read: if isSignedIn() && isAdmin()
+      allow write: if isSignedIn() && isSameUser()
+    }
+    
+    match /PHYSIOTHERAPISTS/{physiotherapistID} {
+      allow read: if isSignedIn()
+      allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(physiotherapistID))
+      allow update: if isSignedIn() && (
+        isSameUser(physiotherapistID) 
+        || adminEditingOnlyAllowedFields()
+      )
+    }
+
+    match /PHYSIOTHERAPISTS/{physiotherapistID}/PATIENTS/{patientID} {
+      allow read: if isSignedIn() // && (isAdmin() || isSameUser(physiotherapistID) || isSameUser(patientID))
+      allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(physiotherapistID) || isSameUser(patientID))
+      allow update: if isSignedIn() && ( 
+        (isSameUser(patientID) && patientEditingOnlyAllowedFields()) 
+        || adminEditingOnlyAllowedFields()
+        || isSameUser(patientID)
+      )
+    }
+
+    match /PHYSIOTHERAPISTS/{physiotherapistID}/INVITES/{patientID} {
+      allow read: if isSignedIn() // && (isAdmin() || isSameUser(physiotherapistID) || isSameUser(patientID))
+      allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(physiotherapistID) || isSameUser(patientID))
+      allow update: if isSignedIn() && ( 
+        (isSameUser(patientID) && patientEditingOnlyAllowedFields()) 
+        || adminEditingOnlyAllowedFields()
+        || isSameUser(patientID)
+      )
+    }
+
+    match /PATIENTS/{patientID} {
+      allow read: if isSignedIn()
+      allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(patientID))
+      allow update: if isSignedIn() && ( 
+        (isSameUser(patientID) && patientEditingOnlyAllowedFields()) 
+        || adminEditingOnlyAllowedFields() 
+        || physiotherapistEditingOnlyAllowedFields()
+      )
+    }
+
+    match /PATIENTS/{patientID}/SYMPTOMS/{symptomID} {
+      allow read: if isSignedIn() // && (isSameUser(patientID) || isPhysiotherapist() || isAdmin()) - but physiotherapist should be in patient's physiotherapistsList
+      allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(patientID))
+      allow update: if isSignedIn() && ( 
+        (isSameUser(patientID) && patientEditingOnlyAllowedFields()) 
+        || adminEditingOnlyAllowedFields() 
+        || physiotherapistEditingOnlyAllowedFields()
+      )
+    }
+
+    // Functions
+    	  
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSameUser(userId) {
+      return request.auth.uid == userId;
+    }
+ 
+    function isAdmin() {
+      return request.auth.token.role == 'ADMIN'
+    }
+    
+    function isPhysiotherapist() {
+      return request.auth.token.role == 'PHYSIOTHERAPIST'
+    }
+    
+    function isPatient() {
+      return request.auth.token.role == 'PATIENT'
+    }
+
+    function patientEditingOnlyAllowedFields() {
+      let allowedFields = [
+        'name', 'dob', 'height', 'weight', 'physiotherapistsList', 'requestsList',
+        'symptomTitle', 'painRangeValue', 'bodyPart', 'symptomDetails', 'rangeOfMotion'
+      ];
+      let affectedKeys = request.resource.data.diff(resource.data).affectedKeys();
+      return isPatient() && affectedKeys.hasOnly(allowedFields);
+    }
+
+    function physiotherapistEditingOnlyAllowedFields() {
+      let allowedFields = ['requestsList', 'physiotherapistsList', 'feedbackList'];
+      let affectedKeys = request.resource.data.diff(resource.data).affectedKeys();
+      return isPhysiotherapist() && affectedKeys.hasOnly(allowedFields);
+    }
+
+    function adminEditingOnlyAllowedFields() {
+      let allowedFields = [
+        'name', 'dob', 'height', 'weight', 'physiotherapistsList', 'requestsList',
+        'symptomTitle', 'painRangeValue', 'bodyPart', 'symptomDetails', 'rangeOfMotion', 'feedbackList'
+      ];
+      let affectedKeys = request.resource.data.diff(resource.data).affectedKeys();
+      return isAdmin() && affectedKeys.hasOnly(allowedFields);
+    }
+  }
+}
