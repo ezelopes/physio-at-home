@@ -5,10 +5,11 @@ const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 
 const kinect = new Kinect2();
+const PORT = 8069;
 
 if (kinect.open()) {
   try {
-    server.listen(8069, () => { console.log('Kinect opened. Server listening on port 8000') });
+    server.listen(PORT, () => { console.log('Kinect opened. Server listening on port 8000') });
     
     io.on('connection', (socket) => {
       console.log('SOMEONE CONNECTED')
