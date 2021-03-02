@@ -51,9 +51,9 @@ exports.updatePatientAccount = functions.region('europe-west1').https.onRequest(
         weight: weight,
         activated: true
       })
-      const claimsResponse = await admin.auth().setCustomUserClaims(patientID, { activated: true });
 
-      console.log(claimsResponse);
+      if(!useEmulator) await admin.auth().setCustomUserClaims(patientID, { activated: true });
+
       console.log(firestoreResponse);
       console.log('Account Updated successfully');
 
@@ -351,7 +351,7 @@ exports.setUserAsAdmin = functions.region('europe-west1').https.onRequest(async 
       functions.logger.info("Email", { body: req.body.data.email });
 
       const user = await admin.auth().getUserByEmail(req.body.data.email);
-      await admin.auth().setCustomUserClaims(user.uid, { role: 'ADMIN' });
+      if (!useEmulator) await admin.auth().setCustomUserClaims(user.uid, { role: 'ADMIN' });
 
       res.status(200).send({ data: { message: 'Success! User promoted to Admin' } })
     } catch (err) {
@@ -367,7 +367,7 @@ exports.setUserAsPhysiotherapist = functions.region('europe-west1').https.onRequ
       functions.logger.info("Email", { body: req.body.data.email });
 
       const user = await admin.auth().getUserByEmail(req.body.data.email);
-      await admin.auth().setCustomUserClaims(user.uid, { role: 'PHYSIOTHERAPIST' });
+      if (!useEmulator) await admin.auth().setCustomUserClaims(user.uid, { role: 'PHYSIOTHERAPIST' });
 
       res.status(200).send({ data: { message: 'Success! User promoted to Physiotherapst' } })
     } catch (err) {
@@ -383,7 +383,7 @@ exports.setUserAsPatient = functions.region('europe-west1').https.onRequest(asyn
       functions.logger.info("Email", { body: req.body.data.email });
 
       const user = await admin.auth().getUserByEmail(req.body.data.email);
-      await admin.auth().setCustomUserClaims(user.uid, { role: 'PATIENT' });
+      if (!useEmulator) await admin.auth().setCustomUserClaims(user.uid, { role: 'PATIENT' });
 
       res.status(200).send({ data: { message: 'Success! User promoted to Patient' } })
     } catch (err) {
@@ -422,11 +422,12 @@ exports.setDefaultRole = functions.region('europe-west1').auth.user().onCreate(a
     functions.logger.info("Collection", { dbCollection: dbCollection });
     
     await admin.auth().createUser({ uid: user.uid });
-    await admin.auth().setCustomUserClaims(user.uid, { role: userData.role, activated: false })
     await db.collection(dbCollection).doc(user.uid).set(userData);
 
-    const userRecord = await admin.auth().getUser(user.uid);
-    functions.logger.info("User Created", { role: userRecord.customClaims.role });
+    if (!useEmulator) await admin.auth().setCustomUserClaims(user.uid, { role: userData.role, activated: false })
+
+    // const userRecord = await admin.auth().getUser(user.uid);
+    // functions.logger.info("User Created", { role: userRecord.customClaims.role });
   
     return null;
   } catch (err) {
