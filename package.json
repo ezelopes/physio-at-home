@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/testing": "^0.20.11",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
@@ -39,8 +40,9 @@
     "client": "react-scripts start",
     "server": "node server.js",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react-test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "test": "mocha test/index.test.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,5 +58,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "mocha": "^8.3.0"
   }
 }
