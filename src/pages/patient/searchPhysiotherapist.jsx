@@ -101,6 +101,8 @@ const SearchPhysiotherapistsPage = () => {
       <br />
 
       <Container>
+        {/* Here Input fields for searching */}
+        {/* Export code below into an external components that accepts (Name and Specialisation) OR (physioList) as props */}
         <Row>
         { physiotherapistsList.length > 0
           ? Array.from(physiotherapistsList).map((physiotherapist, index) => {
