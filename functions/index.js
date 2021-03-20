@@ -26,7 +26,7 @@ exports.updatePhysioAccount = functions.region('europe-west1').https.onRequest(a
         specialisations: specialisations,
         activated: true
       })
-      await admin.auth().setCustomUserClaims(physioID, { activated: true });
+      if (!useEmulator) await admin.auth().setCustomUserClaims(physioID, { activated: true });
 
       console.log('Account Updated successfully');
 
