@@ -1,7 +1,9 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Spinner, Button, Card, Container, Row, Col } from 'react-bootstrap';
-
+import { Form, FormControl, Container, Spinner } from 'react-bootstrap';
+import MultiSelect from "react-multi-select-component";
 import { ToastContainer, toast } from 'react-toastify';
+
+import TherapistsDisplayer from '../../components/therapistsDisplayer'
 
 import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
@@ -9,11 +11,23 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const SearchPhysiotherapistsPage = () => {
 
+  const options = [
+    { label: "Shoulders", value: "Shoulders" },
+    { label: "Knee", value: "Knee" },
+    { label: "Back", value: "Back" },
+    { label: "Elbow", value: "Elbow" },
+  ];
+
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+  const [loading, setLoading] = useState(true);
 
   const [physiotherapistsList, setPhysiotherapistsList] = useState([]);
   const [patientRequestsList, setPatientRequestsList] = useState([]);
   const [myPhysiotherapistList, setMyPhysiotherapistList] = useState([]);
+
+  const [specialisationsFilter, setSpecialisationsFilter] = useState([]);
+  const [therapistNameFilter, setTherapistNameFilter] = useState('');
 
   useEffect(() => {
     const fetchData = async () => { 
@@ -24,6 +38,7 @@ const SearchPhysiotherapistsPage = () => {
      }
      const responsePhysio = await getPhysiotherapistsList(); 
      if (responsePhysio) setPhysiotherapistsList(responsePhysio);
+     setLoading(false);
     }
 
     fetchData();
@@ -97,66 +112,43 @@ const SearchPhysiotherapistsPage = () => {
   return (
     <>
       <ToastContainer />
-      <h2> SEND REQUEST TO YOUR PREFERRED PHYSIOTHERAPISTS </h2>
-      <br />
 
-      <Container>
-        {/* Here Input fields for searching */}
-        {/* Export code below into an external components that accepts (Name and Specialisation) OR (physioList) as props */}
-        <Row>
-        { physiotherapistsList.length > 0
-          ? Array.from(physiotherapistsList).map((physiotherapist, index) => {
+      <Form id="searchForm" className="first-element">
+          <FormControl 
+            id='searchTherapistName'
+            placeholder='Therapist Name'
+            value={therapistNameFilter}
+            onChange={e => setTherapistNameFilter(e.target.value)}
+          />
 
-            return (
-              <div id={index} key={index}>
-                <Col lg={true}>
-                  <Card>
-                    <Card.Body>
-                      <Card.Title> {physiotherapist.name} </Card.Title>
-                      <Card.Text>
-                        Email: {physiotherapist.email}
-                      </Card.Text>
-                      <Card.Text> 
-                        Specialisations: <br />
-                        { physiotherapist.specialisations.length === 0
-                          ? <b> NOT SPECIALISED </b>
-                          : Array.from(physiotherapist.specialisations).map((currentSpec, index) => (
-                              <b key={index}> {currentSpec} <br /> </b>
-                            ))
-                        }
-                      </Card.Text>
-                      { patientRequestsList.includes(physiotherapist.id) 
-                        ? <Button disabled>
-                            Invite Sent!
-                          </Button>
-                        : (myPhysiotherapistList.includes(physiotherapist.id) 
-                          ? <Button
-                              variant='danger'
-                              id={`${physiotherapist.id}-removeConnectionButton`}
-                              onClick={(e) => { removeConnection(e, physiotherapist.id) }}
-                            >
-                              Remove Connection
-                            </Button>
-                          : <Button
-                              variant='success'
-                              id={`${physiotherapist.id}-sendInviteButton`}
-                              onClick={(e) => { sendInvite(e, physiotherapist.id) }}>
-                              Send Invite
-                            </Button>
-                        )
-                      }
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </div>
-            )
-          }) 
-          : <Spinner animation="border" role="status">
-              <span className="sr-only">Loading...</span>
-            </Spinner> 
-        }
-        </Row>
-      </Container>
+        <MultiSelect
+          id='specialisations'
+          className='first-element'
+          options={options}
+          value={specialisationsFilter}
+          onChange={setSpecialisationsFilter}
+          labelledBy={"Select Specialisation"}
+          hasSelectAll={false}
+          selectAllLabel={false}
+        />
+      </Form>
+
+      { loading
+        ? <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner> 
+        : <Container>
+            <TherapistsDisplayer 
+              physiotherapistsList={physiotherapistsList} 
+              patientRequestsList={patientRequestsList}
+              myPhysiotherapistList={myPhysiotherapistList}
+              sendInvite={sendInvite}
+              removeConnection={removeConnection}
+              therapistNameFilter={therapistNameFilter}
+              specialisationsFilter={specialisationsFilter}
+            />
+          </Container>
+      }
     </>
   );
 }
