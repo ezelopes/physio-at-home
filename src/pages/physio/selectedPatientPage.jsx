@@ -51,6 +51,7 @@ const SelectedPatientPage = (props) => {
 
   const saveFeedback = async (selectedSymptomID) => {
     try {
+      if (!feedbackContent.replace(/\s/g,'')) throw new Error ('Feedback Content cannot be empty');
       const feedbackObject = { physioID: userInfo.uid, physioName: userInfo.name, feedbackContent };
 
       const addFeebackToSymptom = firebase.functions.httpsCallable('addFeebackToSymptom');
@@ -59,7 +60,7 @@ const SelectedPatientPage = (props) => {
       toast.success(`🚀 ${response.data.message}`, toastConfig);
       setFeedbackContent('')
     } catch (err) {
-      toast.error('😔 There was an error saving your feedback!', toastConfig)
+      toast.error(`😔 ${err.message}`, toastConfig)
     }
   }
 

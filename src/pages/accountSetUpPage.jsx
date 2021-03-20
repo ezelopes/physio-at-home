@@ -96,9 +96,21 @@ const AccountSetUpPage = ({ role, activated }) => {
     }
   }
 
+  const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+
+  const validateFields = () => {
+    if (!username.replace(/\s/g,'')) throw new Error ('Username cannot be empty');
+    else if (parseInt(height) < 50 || parseInt(height) > 275) throw new Error ('Height cannot be lower than 50 cm nor higher than 275 cm');
+    else if (parseInt(weight) < 30 || parseInt(weight) > 200) throw new Error ('Height cannot be lower than 50 KG nor higher than 200 KG');
+    else if (getAge(dateOfBirth) < 16) throw new Error('User must be at least 16 years old');
+  }
+
   const updateAccount = async (userID) => {
     try {      
+      console.log(role)
       setBtnDisabled(true);
+      validateFields();
+
       let response;
 
       if (currentUserRole === 'PATIENT') {
@@ -114,7 +126,7 @@ const AccountSetUpPage = ({ role, activated }) => {
       toast.success(`🚀 ${response.data.message}`, toastConfig);
 
     } catch (err) {
-      toast.error('😔 There was an error updating your account!', toastConfig)
+      toast.error(`😔 ${err.message}`, toastConfig)
     } finally { setBtnDisabled(false); }
   }
 
@@ -152,7 +164,11 @@ const AccountSetUpPage = ({ role, activated }) => {
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='patient'>🙋‍♂️</span></InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl id="username" placeholder="Name" value={username} onChange={e => setUsername(e.target.value)} />
+              <FormControl id="username" placeholder="Name" value={username} onChange={e => {
+                  if (!e.target.value) { e.target.style.borderWidth = 'medium'; e.target.style.borderColor = 'red'; } 
+                  else { e.target.style.borderWidth = '0'; e.target.style.borderColor = 'transparent'; }
+                  setUsername(e.target.value)
+                }} />
             </InputGroup>
 
             <Form.Label> Height (in cm) <IconWithMessage message={toolTipMessage.Height} /> </Form.Label>
@@ -160,7 +176,7 @@ const AccountSetUpPage = ({ role, activated }) => {
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='ruler'>📏</span></InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl id="height" placeholder="170" value={height} onChange={e => setHeight(e.target.value)} />
+              <FormControl id="height" placeholder="170" value={height} onChange={e => setHeight(e.target.value)} type='number' />
             </InputGroup>
 
             <Form.Label> Weight (in kg) <IconWithMessage message={toolTipMessage.Weight} /> </Form.Label>
@@ -168,7 +184,7 @@ const AccountSetUpPage = ({ role, activated }) => {
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='scale'>⚖️</span></InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl id="weight" placeholder="60" value={weight} onChange={e => setWeight(e.target.value)} />
+              <FormControl id="weight" placeholder="60" value={weight} onChange={e => setWeight(e.target.value)} type='number' />
             </InputGroup>
 
             { currentUserRole === 'PHYSIOTHERAPIST' 
@@ -180,7 +196,7 @@ const AccountSetUpPage = ({ role, activated }) => {
                   options={options}
                   value={specialisations}
                   onChange={setSpecialisations}
-                  labelledBy={"Select"}
+                  labelledBy={"Select Specialisation"}
                   hasSelectAll={false}
                   selectAllLabel={false}
                 />
