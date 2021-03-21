@@ -1,8 +1,7 @@
 require('dotenv').config()
-const assert = require('assert');
 const firebase = require('@firebase/testing');
 
-const MY_PROJECT_ID = process.env.PROJECT_ID;
+const MY_PROJECT_ID = process.env.REACT_APP_PROJECT_ID;
 
 const adminAuth = { uid: 'adminID', email: 'admin@admin.co.uk', role: 'ADMIN' };
 const physiotherpistAuth = { uid: 'physiotherapistID', email: 'physiotherpist@physiotherpist.co.uk', role: 'PHYSIOTHERAPIST' };
@@ -34,8 +33,8 @@ const mockSymptom = {
   feedbackList: [],
   painRangeValue: 0,
   rangeOfMotion: {},
-  symptomDetails: '',
-  symptomTitle: ''
+  symptomDetails: 'Non-Empty-Details',
+  symptomTitle: 'Non-Empty-Title'
 }
 
 const getFirestore = async (auth) => {
@@ -48,7 +47,7 @@ function getAdminFirestore() {
   return firebase.initializeAdminApp({ projectId: MY_PROJECT_ID }).firestore();
 }
 
-describe('Physio At Home App', () => {
+describe('Physio At Home App - Access Level Testing', () => {
 
   // eslint-disable-next-line no-undef
   after(() => {
