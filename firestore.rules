@@ -5,7 +5,7 @@ service cloud.firestore {
     // Matches
 
     match /{document=**} {
-      allow read, write: if false; // isSignedIn();
+      allow read, write: if false;
     }
  
     match /ADMINS/{adminID} {
@@ -15,7 +15,7 @@ service cloud.firestore {
     
     match /PHYSIOTHERAPISTS/{physiotherapistID} {
       allow read: if isSignedIn()
-      allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(physiotherapistID))
+      allow create, delete: if isAdmin() || isSameUser(physiotherapistID)
       allow update: if isSignedIn() && (
         isSameUser(physiotherapistID) 
         || adminEditingOnlyAllowedFields()
@@ -44,7 +44,7 @@ service cloud.firestore {
 
     match /PATIENTS/{patientID} {
       allow read: if isSignedIn()
-      allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(patientID))
+      allow create, delete: if isAdmin() || isSameUser(patientID)
       allow update: if isSignedIn() && ( 
         (isSameUser(patientID) && patientEditingOnlyAllowedFields()) 
         || adminEditingOnlyAllowedFields() 
@@ -53,7 +53,7 @@ service cloud.firestore {
     }
 
     match /PATIENTS/{patientID}/SYMPTOMS/{symptomID} {
-      allow read: if isSignedIn() // && (isSameUser(patientID) || isPhysiotherapist() || isAdmin()) - but physiotherapist should be in patient's physiotherapistsList
+      allow read: if isSignedIn() // && (isSameUser(patientID) || isPatientPhysiotherapist(patientID) || isAdmin()) - but physiotherapist should be in patient's physiotherapistsList
       allow create, delete: if isSignedIn() && (isAdmin() || isSameUser(patientID))
       allow update: if isSignedIn() && ( 
         (isSameUser(patientID) && patientEditingOnlyAllowedFields()) 
