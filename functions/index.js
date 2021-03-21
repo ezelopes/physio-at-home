@@ -9,6 +9,19 @@ if (useEmulator){
     process.env['FIREBASE_AUTH_EMULATOR_HOST'] = 'localhost:9099';
 }
 
+const validateFields = (name, dobFormatted, height, weight) => {
+  const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+
+  if (!name.replace(/\s/g,'') ||
+      parseInt(height) < 50 ||
+      parseInt(height) > 275 ||
+      parseInt(weight) < 30 ||
+      parseInt(weight) > 200 ||
+      getAge(dobFormatted) < 16) throw new Error(); // Should return 400
+ 
+  return true;
+}
+
 admin.initializeApp({ projectId: 'physioathome-b2cdb' });
 const db = admin.firestore();
 
@@ -17,6 +30,8 @@ exports.updatePhysioAccount = functions.region('europe-west1').https.onRequest(a
     try {
       const { physioID, name, dob, height, weight, specialisations } = req.body.data;
       const dobFormatted = admin.firestore.Timestamp.fromDate(new Date(dob));
+
+      validateFields(name, dobFormatted, height, weight)
       
       await db.collection('PHYSIOTHERAPISTS').doc(physioID).update({ 
         name: name,
@@ -26,6 +41,7 @@ exports.updatePhysioAccount = functions.region('europe-west1').https.onRequest(a
         specialisations: specialisations,
         activated: true
       })
+
       if (!useEmulator) await admin.auth().setCustomUserClaims(physioID, { activated: true });
 
       console.log('Account Updated successfully');
@@ -43,8 +59,10 @@ exports.updatePatientAccount = functions.region('europe-west1').https.onRequest(
     try {
       const { patientID, name, dob, height, weight } = req.body.data;
       const dobFormatted = admin.firestore.Timestamp.fromDate(new Date(dob));
+
+      validateFields(name, dobFormatted, height, weight);
       
-      const firestoreResponse = await db.collection('PATIENTS').doc(patientID).update({ 
+      await db.collection('PATIENTS').doc(patientID).update({ 
         name: name,
         dob: dobFormatted,
         height: height,
@@ -54,7 +72,6 @@ exports.updatePatientAccount = functions.region('europe-west1').https.onRequest(
 
       if(!useEmulator) await admin.auth().setCustomUserClaims(patientID, { activated: true });
 
-      console.log(firestoreResponse);
       console.log('Account Updated successfully');
 
       res.status(200).send({ data: { message: 'Account Updated Successfully!' } });
@@ -86,8 +103,9 @@ exports.addFeebackToSymptom = functions.region('europe-west1').https.onRequest(a
   cors(req, res, async () => {
     try {
       const { patientID, symptomID, feedbackObject } = req.body.data;
-      // feedbackObject -> { doctorID, doctorName, feedbackContent, dateCreated }
       feedbackObject.dateCreated = admin.firestore.Timestamp.now();
+
+      if (!feedbackObject.feedbackContent.replace(/\s/g,'')) throw new Error(); // Should return 400
 
       await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc(symptomID).update({ 
         feedbackList: admin.firestore.FieldValue.arrayUnion(feedbackObject),
@@ -131,6 +149,9 @@ exports.addNewPatientSymptom = functions.region('europe-west1').https.onRequest(
       const { patientID, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion } = req.body.data;
       const feedbackList = [];
       const creationDate = admin.firestore.Timestamp.fromDate(new Date());
+
+      if (!symptomTitle || !symptomDetails) throw new Error(); // Should return 400
+
       console.log(patientID, symptomTitle, painRangeValue, bodyPart.rightOrLeft, bodyPart.bodyPart, bodyPart.specificBodyPart, symptomDetails, rangeOfMotion);
 
       await db.collection('PATIENTS').doc(patientID).collection('SYMPTOMS').doc().set({ creationDate, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion, feedbackList })
@@ -419,15 +440,12 @@ exports.setDefaultRole = functions.region('europe-west1').auth.user().onCreate(a
     const dbCollection = userData.role + 'S';
     
     functions.logger.info("User Info", { admin: isAdmin, userData: userData });
-    functions.logger.info("Collection", { dbCollection: dbCollection });
+    functions.logger.info("Collection", { dbCollection: dbCollection })
     
     await admin.auth().createUser({ uid: user.uid });
     await db.collection(dbCollection).doc(user.uid).set(userData);
 
     if (!useEmulator) await admin.auth().setCustomUserClaims(user.uid, { role: userData.role, activated: false })
-
-    // const userRecord = await admin.auth().getUser(user.uid);
-    // functions.logger.info("User Created", { role: userRecord.customClaims.role });
   
     return null;
   } catch (err) {
