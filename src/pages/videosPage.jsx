@@ -32,7 +32,7 @@ const VideosPage = () => {
       {/* <h2> Videos </h2> */}
 
       <Container>
-        <Row>
+        <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             { specialisations.map((specialisation, index) => {
               return (
                 <Accordion className='first-element' key={index}>
