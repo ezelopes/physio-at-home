@@ -1,9 +1,11 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Button, Card, Col, ListGroup } from 'react-bootstrap'
+import { Button, Card, Col, ListGroup, Modal } from 'react-bootstrap'
 
 const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, userInfo }) => {
 
   const [symptomsList, setSymptomsList] = useState([]);
+  const [selectedSymtomID, setSelectedSymtomID] = useState('');
+  const [showModalDeleteConfirmation, setShowModalDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     setSymptomsList(symptoms);
@@ -16,6 +18,16 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
 
     const d = new Date(dateInSeconds * 1000)
     return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('-')
+  }
+
+  const handleModalDeleteConfirmation = (symptomID) => {
+    setSelectedSymtomID(symptomID);
+    setShowModalDeleteConfirmation(true);
+  }
+
+  const handleCloseModalDeleteConfirmation = () => {
+    setSelectedSymtomID('');
+    setShowModalDeleteConfirmation(false);
   }
 
   try {
@@ -72,9 +84,11 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
                   <Button 
                     id={`delete-${currentSymptomID}`}
                     variant="danger"
+                    disabled={showModalDeleteConfirmation}
                     onClick={(e) => { 
-                      e.target.disabled = true;
-                      deleteSymptom(userInfo.uid, currentSymptomID);
+                      // e.target.disabled = true;
+                      handleModalDeleteConfirmation(currentSymptomID);
+                      // deleteSymptom(userInfo.uid, currentSymptomID);
                     }}
                   >
                     Delete Symptom
@@ -86,6 +100,26 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
           </div>
         })
       }
+
+      <Modal show={showModalDeleteConfirmation} onHide={handleCloseModalDeleteConfirmation} centered>
+        <Modal.Header closeButton>
+            <Modal.Title> Delete Confirmation </Modal.Title>
+          </Modal.Header>
+          <Modal.Body> Are you sure about deleting this Symptom? </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => { handleCloseModalDeleteConfirmation() } }>
+              Close
+            </Button>
+            <Button variant="danger" onClick={async (e) => { 
+              e.target.disabled = true;
+              deleteSymptom(userInfo.uid, selectedSymtomID).then(() => {
+                handleCloseModalDeleteConfirmation()
+              }).catch(() => {})
+            } }>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
     </>
     );
   } catch(err) {
