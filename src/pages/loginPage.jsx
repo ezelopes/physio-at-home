@@ -18,13 +18,15 @@ const LoginPage = () => {
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      signInSuccessWithAuthResult: async () => {
-        // console.log(authResult);
-        // const { isNewUser } = authResult.additionalUserInfo;
-        // if (isNewUser) setTimeout(() => { window.location.pathname = '/accountSetUp' }, 3000)
-        // else setTimeout(() => { window.location.pathname = '/videos' }, 3000)
+      signInSuccessWithAuthResult: async (authResult) => {
         setLoading(true);
-        setTimeout(() => { window.location.pathname = '/videos' }, 3000)
+
+        authResult.user.getIdTokenResult().then(tokenResult => {
+          if (tokenResult.claims.role === 'PATIENT') window.location.assign('/patient/yoursymptoms')
+          else if (tokenResult.claims.role === 'PHYSIOTHERAPIST') window.location.assign('/physio/personalPatients')
+          else if (tokenResult.claims.role === 'ADMIN') window.location.assign('/admin/manageUsers')  
+          else window.location.assign('/')
+        });
         return false;
       },
     }

@@ -6,7 +6,8 @@ import IconWithMessage from '../iconWithMessage'
 const KneeImage = ({ specificBodyPart, setSpecificBodyPart }) => {
 
   const toolTipMessage = {
-    Details: 'Click again on the red dot to remove from the list'
+    NonEmptyListDetails: 'Click again on the red dot to remove from the list',
+    EmptyListDetails: 'Click Red Dot above to add to the list'
   }
 
   const width = '400'; const height = '300'; const radius = 10;
@@ -111,7 +112,9 @@ const KneeImage = ({ specificBodyPart, setSpecificBodyPart }) => {
       <br />
 
       <label className='selectedBodyPartLabel'> 
-         <> YOU SELECTED: <IconWithMessage message={toolTipMessage.Details} /> 
+         <> YOU SELECTED: <IconWithMessage message={
+           kneePart.length === 0 ?  toolTipMessage.EmptyListDetails : toolTipMessage.NonEmptyListDetails
+          } /> 
           { 
             kneePart.map((part, index) => { return (<div key={index}> {part} </div>) } )
           }

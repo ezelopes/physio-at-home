@@ -52,7 +52,7 @@ const SearchPhysiotherapistsPage = () => {
 
       return response.data.physiotherapists;
     } catch (err) {
-      toast.error('😔 An error occured while retrieving the information!', toastConfig);
+      toast.error('⚠️ An error occured while retrieving the information!', toastConfig);
     }
   }
 
@@ -63,7 +63,7 @@ const SearchPhysiotherapistsPage = () => {
 
       return response.data.patientData;
     } catch (err) {
-      toast.error('😔 An error occured while retrieving the information!', toastConfig);
+      toast.error('⚠️ An error occured while retrieving the information!', toastConfig);
     }
   }
 
@@ -87,7 +87,7 @@ const SearchPhysiotherapistsPage = () => {
 
       toast.success('🚀 Invite Sent Successfully!', toastConfig);
     } catch (err) {
-      toast.error('😔 There was an error sending your invite!', toastConfig);
+      toast.error('⚠️ There was an error sending your invite!', toastConfig);
       sendInviteBTN.className = 'btn btn-warning';
       sendInviteBTN.textContent = 'Refresh Page!';
     }
@@ -103,7 +103,7 @@ const SearchPhysiotherapistsPage = () => {
 
       toast.success('🚀 Connection Removed Successfully!', toastConfig);
     } catch (err) {
-      toast.error('😔 There was an error removing this connection!', toastConfig);
+      toast.error('⚠️ There was an error removing this connection!', toastConfig);
       removeConnectionBTN.className = 'btn btn-warning';
       removeConnectionBTN.textContent = 'Refresh Page!';
     }
@@ -113,12 +113,13 @@ const SearchPhysiotherapistsPage = () => {
     <>
       <ToastContainer />
 
-      <Form id="searchForm" className="first-element">
+      <Form id="searchForm" className="first-element" onSubmit={e => e.preventDefault()}>
           <FormControl 
             id='searchTherapistName'
             placeholder='Therapist Name'
             value={therapistNameFilter}
             onChange={e => setTherapistNameFilter(e.target.value)}
+            disabled={loading}
           />
 
         <MultiSelect
@@ -130,6 +131,8 @@ const SearchPhysiotherapistsPage = () => {
           labelledBy={"Select Specialisation"}
           hasSelectAll={false}
           selectAllLabel={false}
+          disabled={loading}
+          disableSearch={true}
         />
       </Form>
 

@@ -39,8 +39,9 @@ const StepFour = ({
       await addNewPatientSymptom({ patientID: userInfo.uid, symptomTitle, painRangeValue, bodyPart, symptomDetails, rangeOfMotion });
     
       toast.success('🚀 Symptom Added Successfully!', toastConfig);
+      window.location.assign('/patient/yoursymptoms');
     } catch(err) {
-      toast.error('😔 There was an error adding your symptom!', toastConfig);
+      toast.error('⚠️ There was an error adding your symptom!', toastConfig);
     } finally {
       setLoading(false);
     } 

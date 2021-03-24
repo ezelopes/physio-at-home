@@ -50,9 +50,9 @@ const ModalUser = ({ userLogOutFunction }) => {
       {
         toggleDiv
         ? <div id='userModal'>
-            <p> <span role='img' aria-label='account'>👤</span> {currentRole} </p>
+            <p> {currentRole === 'undefined' ?  '' : <><span role='img' aria-label='account'>👤</span> {currentRole} </> } </p>
             <hr />
-            <Nav.Link style={{ padding: 0 }} href={links[currentRole]}> Edit Your Account </Nav.Link> 
+            <Nav.Link style={{ padding: 0 }} href={links[currentRole]}> Edit Account </Nav.Link> 
             <hr />
 
             <Button 

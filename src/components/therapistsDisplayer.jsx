@@ -5,16 +5,24 @@ const TherapistsDisplayer = ({ physiotherapistsList, patientRequestsList, myPhys
 
   
   const checkSpecialisationFilter = (physiotherapistSpecialisation) => {
-    const filterSpecialisationsMapped = specialisationsFilter.map(s => s.value);
-    return filterSpecialisationsMapped.every(e=> physiotherapistSpecialisation.includes(e));
+    if (physiotherapistSpecialisation) {
+      const filterSpecialisationsMapped = specialisationsFilter.map(s => s.value);
+      return filterSpecialisationsMapped.every(e=> physiotherapistSpecialisation.includes(e));
+    }
   }
 
-  const filteredTherapistList = Array.from(physiotherapistsList).filter(therapist => therapist.name.includes(therapistNameFilter) && checkSpecialisationFilter(therapist.specialisations))
+  const checkName = (therapist) => {
+    if (therapist.name)
+      return therapist.name.toUpperCase().includes(therapistNameFilter.toUpperCase())
+  }
 
-  return (
+  const filteredTherapistList = Array.from(physiotherapistsList).filter(therapist => checkName(therapist) && checkSpecialisationFilter(therapist.specialisations))
+
+  try {
+    return (
       <Row>
         { filteredTherapistList.length === 0 ? <h2 className='center'> <div> No Therapists meeting the criteria </div> </h2>  
-          : filteredTherapistList.map((physiotherapist, index) => {
+          : filteredTherapistList.sort((a,b)=> (a.name > b.name ? 1 : -1)).map((physiotherapist, index) => {
 
             return (
               <div id={index} key={index}>
@@ -36,7 +44,7 @@ const TherapistsDisplayer = ({ physiotherapistsList, patientRequestsList, myPhys
                       </Card.Text>
                       { patientRequestsList.includes(physiotherapist.id) 
                         ? <Button disabled>
-                            Invite Sent!
+                            Connection Sent!
                           </Button>
                         : (myPhysiotherapistList.includes(physiotherapist.id) 
                           ? <Button
@@ -50,7 +58,7 @@ const TherapistsDisplayer = ({ physiotherapistsList, patientRequestsList, myPhys
                               variant='success'
                               id={`${physiotherapist.id}-sendInviteButton`}
                               onClick={(e) => { sendInvite(e, physiotherapist.id) }}>
-                              Send Invite
+                              Request Connection
                             </Button>
                         )
                       }
@@ -62,7 +70,11 @@ const TherapistsDisplayer = ({ physiotherapistsList, patientRequestsList, myPhys
           })
         }
       </Row>
-  );
+    );
+  } catch(err) {
+    return (<h2> An Error Occured when displaying the data. Please try again or contact an Administrator </h2>)
+  }
+ 
 }
 
 export default memo(TherapistsDisplayer);

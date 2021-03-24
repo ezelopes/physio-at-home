@@ -2,6 +2,8 @@ import React, { memo, useEffect, useState } from 'react';
 import { Button, Card, Container, Row, Col, Modal, ListGroup } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import toastConfig from '../../config/toast.config';
 import firebase from '../../config/firebase.config';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,7 +14,9 @@ const SelectedPatientPage = (props) => {
   const { patientID, name } = props.location.state;
   const [patientSymptomsList, setPatientSymptoms] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showModalHistory, setShowModalHistory] = useState(false);
   const [selectedSymptomID, setSelectedSymptomID] = useState(null);
+  const [currentFeedbackList, setCurrentFeedbackList] = useState([]);
   const [feedbackContent, setFeedbackContent] = useState('');
 
   useEffect(() => {
@@ -26,6 +30,19 @@ const SelectedPatientPage = (props) => {
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const convertDate = (dateInSeconds) => {
+    const pad = (s) => { return (s < 10) ? '0' + s : s; }
+
+    const d = new Date(dateInSeconds * 1000)
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('-')
+  }
+
+  const handleShowModalHistory = (symptomID) => {
+    console.log(patientSymptomsList[symptomID].feedbackList)
+    setCurrentFeedbackList(patientSymptomsList[symptomID].feedbackList)
+    setShowModalHistory(true);
+  }
+
   const handleShowModal = (symptomID) => {
     setSelectedSymptomID(symptomID);
     setShowModal(true);
@@ -36,6 +53,11 @@ const SelectedPatientPage = (props) => {
     setShowModal(false);
     setFeedbackContent('')
   }
+  
+  const handleCloseModalHistory = () => {
+    setSelectedSymptomID(null);
+    setShowModalHistory(false);
+  }
 
   const getAllPatientSymptoms = async (patientID) => {
     try {
@@ -45,7 +67,7 @@ const SelectedPatientPage = (props) => {
 
       return { symptomList };
     } catch (err) {
-      toast.error('😔 There was an error retrieving your patient information!', toastConfig)
+      toast.error('⚠️ There was an error retrieving your patient information!', toastConfig)
     }
   }
 
@@ -60,14 +82,14 @@ const SelectedPatientPage = (props) => {
       toast.success(`🚀 ${response.data.message}`, toastConfig);
       setFeedbackContent('')
     } catch (err) {
-      toast.error(`😔 ${err.message}`, toastConfig)
+      toast.error(`⚠️ ${err.message}`, toastConfig)
     }
   }
 
   return (
     <>
       <ToastContainer />
-      <Button onClick={() => props.history.goBack() } style={{ marginRight: '90%'}} > <span role="img" aria-label="back"> ⬅️ </span> GO BACK </Button> 
+      <Button onClick={() => props.history.goBack() } style={{ marginRight: '90%', boxShadow: '2px 4px' }} > <FontAwesomeIcon icon={faArrowAltCircleLeft} /> GO BACK </Button> 
       <h2> List of Symptoms of {name} </h2>
       <Container>
         <Row>
@@ -108,12 +130,25 @@ const SelectedPatientPage = (props) => {
 
                         <Button 
                           id={`${symptomID}-showModal`}
+                          className='left-button'
                           variant="primary"
                           onClick={() => {
                             handleShowModal(symptomID);
                           }}
                         >
-                          Give some feedback!
+                          <span role='img' aria-label='pencil'>✏️</span> 
+                          Give Feedback!
+                        </Button>
+                        
+                        <Button 
+                          id={`${symptomID}-showModalHistory`}
+                          variant="secondary"
+                          onClick={() => {
+                            handleShowModalHistory(symptomID);
+                          }}
+                        >
+                          <span role='img' aria-label='history'>📜</span> 
+                          History
                         </Button>
 
                       </Card.Body>
@@ -123,6 +158,30 @@ const SelectedPatientPage = (props) => {
               }) 
             }
         </Row>
+
+        <Modal show={showModalHistory} onHide={handleCloseModalHistory} centered>
+          <Modal.Header closeButton>
+            <Modal.Title> History of Symptom </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {
+              currentFeedbackList.length !== 0 
+              ? currentFeedbackList.map((currentFeedback, index) => {
+                  return (<div style={{ marginBottom: '1em' }} key={index}> 
+                    <p> {index + 1}. <b> {currentFeedback.physioID === userInfo.uid ? 'You' : currentFeedback.physioName} </b> said on <b> {convertDate(currentFeedback.dateCreated._seconds)} </b>: </p>
+                    {currentFeedback.feedbackContent} 
+                    <ColoredLine color='#0069D9' />
+                  </div>)
+                })
+              : <div> No feedback to display yet! </div>
+            }
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModalHistory}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         <Modal show={showModal} onHide={handleCloseModal} centered>
           <Modal.Header closeButton>
@@ -152,5 +211,11 @@ const SelectedPatientPage = (props) => {
     </>
   );
 }
+
+const ColoredLine = ({ color }) => {
+  return (
+    <hr style={{ color: color, backgroundColor: color }} />
+  )
+};
 
 export default memo(SelectedPatientPage);

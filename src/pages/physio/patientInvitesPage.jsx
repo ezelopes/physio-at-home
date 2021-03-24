@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 
+import ProfilePlaceHolderPicture from '../../images/profilePlaceholderPicture.jpg'
 import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,7 +33,7 @@ const PatientInvitesPage = () => {
 
       return { invitesList };
     } catch (err) {
-      toast.error('😔 An error occured while retrieving the information!', toastConfig);
+      toast.error('⚠️ An error occured while retrieving the information!', toastConfig);
     }
   }
 
@@ -49,7 +50,7 @@ const PatientInvitesPage = () => {
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Accepted ✔️';
       toast.success('🚀 Invite Accepted Successfully!', toastConfig);
     } catch (err) {
-      toast.error('😔 There was an error accepting the invite!', toastConfig);
+      toast.error('⚠️ There was an error accepting the invite!', toastConfig);
       document.getElementById(`${patientID}-acceptButton`).className = 'btn btn-warning'; // -danger?
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Refresh Page!';
     }
@@ -68,7 +69,7 @@ const PatientInvitesPage = () => {
       document.getElementById(`${patientID}-declineButton`).textContent = 'Declined ❌';
       toast.success('🚀 Invite Declined Successfully!', toastConfig);
     } catch (err) {
-      toast.error('😔 There was an error declining the invite!', toastConfig);
+      toast.error('⚠️ There was an error declining the invite!', toastConfig);
       document.getElementById(`${patientID}-declineButton`).className = 'btn btn-warning'; // -danger?
       document.getElementById(`${patientID}-declineButton`).textContent = 'Refresh Page!';
     }
@@ -94,7 +95,7 @@ const PatientInvitesPage = () => {
                   <Col lg={true}>
                     <Card>
                       <Card.Body>
-                        <Card.Img variant="top" src={photoURL} />
+                        <Card.Img variant="top" src={photoURL ? photoURL : ProfilePlaceHolderPicture} />
                         <Card.Title className='first-element' > Name: {name} </Card.Title>
                         <Card.Text>
                           Email: {email}

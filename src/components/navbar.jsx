@@ -9,6 +9,7 @@ const NavBar = ({ location }) => {
 
   const currentRole = localStorage.getItem('role');
   const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true')
+  const userName = JSON.parse(localStorage.getItem('userInfo')).name;
 
   const userLogOut = () => {
     firebase.auth.signOut();
@@ -47,12 +48,12 @@ const NavBar = ({ location }) => {
       <Navbar.Brand href='/' title='Home Page'>PhysioAtHome</Navbar.Brand>
       <Navbar.Toggle aria-controls='responsive-navbar-nav' />
       {/* collapse only if loggedin */}
-      <Navbar.Collapse id='responsive-navbar-nav'>
+      <Navbar.Collapse >
         <Nav className='mr-auto' activeKey={location.pathname}>
           
           { currentUserSignedIn && <Nav.Link href='/videos'> Videos </Nav.Link> }
 
-          { (currentRole === 'ADMIN' && currentUserSignedIn ) && <Nav.Link href='/admin/promoteToAdmin'> Promote Users </Nav.Link> }
+          { (currentRole === 'ADMIN' && currentUserSignedIn ) && <Nav.Link href='/admin/manageUsers'> Promote Users </Nav.Link> }
           { (currentRole === 'PHYSIOTHERAPIST' && currentUserSignedIn ) && <Nav.Link href='/physio/personalPatients'> My Patients </Nav.Link> }
           { (currentRole === 'PHYSIOTHERAPIST' && currentUserSignedIn ) && <Nav.Link href='/physio/patientInvites'> Invites </Nav.Link> }
           { (currentRole === 'PATIENT' && currentUserSignedIn ) && <Nav.Link href='/patient/addNewSymptomPage'> Add Symptom </Nav.Link> }
@@ -62,7 +63,10 @@ const NavBar = ({ location }) => {
         </Nav>
       </Navbar.Collapse>
         { currentUserSignedIn
-          ?  <ModalUser userLogOutFunction={userLogOut} />
+          ? <> 
+              <div style={{ marginRight: '1em', color: 'white'}}> { userName } </div>
+              <ModalUser userLogOutFunction={userLogOut} />
+            </>
           : <Button
               href='/loginPage'
               variant='success'

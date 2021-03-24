@@ -10,31 +10,32 @@ const PromoteUsersPage = () => {
   const [physiotherapistEmail, setPhysiotherapistEmail] = useState('');
 
   const makeAdmin = async () => {
-    try {
-      const setUserAsAdmin = firebase.functions.httpsCallable('setUserAsAdmin');
-      const response = await setUserAsAdmin({ email: adminEmail });
-      setAdminEmail('')
-      console.log(response.data.message);
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   const setUserAsAdmin = firebase.functions.httpsCallable('setUserAsAdmin');
+    //   const response = await setUserAsAdmin({ email: adminEmail });
+    //   setAdminEmail('')
+    //   console.log(response.data.message);
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 
   const makePhysiotherapist = async () => {
-    try {
-      const setUserAsPhysiotherapist = firebase.functions.httpsCallable('setUserAsPhysiotherapist');
-      const response = await setUserAsPhysiotherapist({ email: physiotherapistEmail });
-      setPhysiotherapistEmail('')
-      console.log(response.data.message);
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   const setUserAsPhysiotherapist = firebase.functions.httpsCallable('setUserAsPhysiotherapist');
+    //   const response = await setUserAsPhysiotherapist({ email: physiotherapistEmail });
+    //   setPhysiotherapistEmail('')
+    //   console.log(response.data.message);
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 
   return (
     <>
-      <h2> Promote Users Page </h2>
-      <Form>
+    {/* Delete connections -> Retrieve Therapists with subcollections, then list them with a delete button */}
+      <h2> Manage Users Page </h2>
+      <Form id="accountForm" className='first-element'>
         <Form.Group>
           <Form.Label>New Admin Email address</Form.Label>
           <Form.Control id='newAdminEmail' type="email" placeholder="Enter new Admin Email" onChange={ (e) => setAdminEmail(e.target.value) } />
@@ -45,7 +46,7 @@ const PromoteUsersPage = () => {
         </Button>
       </Form>
       <br/><br/>
-      <Form>
+      <Form id="accountForm" className='first-element'>
         <Form.Group>
           <Form.Label>New Physiotherapist Email address</Form.Label>
           <Form.Control id='newPhysiotherapistEmail' type="email" placeholder="Enter new Physiotherapist Email" />

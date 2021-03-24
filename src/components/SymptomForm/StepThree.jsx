@@ -3,6 +3,10 @@ import { Button, FormCheck } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 import socketIOClient from "socket.io-client";
 
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUndo } from '@fortawesome/free-solid-svg-icons'
+
 import toastConfig from '../../config/toast.config';
 
 let socket = null;
@@ -22,8 +26,8 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
     try {
       setRecording(true);
       socket = socketIOClient(ENDPOINT);
-      socket.on('connect_error', function(){
-        toast.error('😔 Connection Failed - Server might be down or Kinect disconnected!', toastConfig);
+      socket.on('connect_error', () => {
+        toast.error('⚠️ Connection Failed - Server might be down or Kinect disconnected!', toastConfig);
         socket.disconnect()
       });
       socket.on('connect', () => { toast.success('📹 Recording started, make sure you move the highlighted body part!', toastConfig); })
@@ -32,7 +36,7 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
        }
       );
     } catch (err) {
-      toast.error('😔 There was an error with the Kinect Connection!', toastConfig);
+      toast.error('⚠️ There was an error with the Kinect Connection!', toastConfig);
     }
   }
 
@@ -123,6 +127,12 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
     socket.disconnect();
   }
 
+  const resetMotionValues = () => {
+    setMinAngle(180);
+    setMaxAngle(0);
+    toast.success('🚀 Motion Values Reset!', toastConfig);
+  }
+
   return (
     <>
       <FormCheck className='first-element'>
@@ -142,8 +152,12 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
         <span role="img" aria-label="back"> Record Video 📹 </span>
       </Button>
 
-      <Button variant="primary" type="button" className='first-element' onClick={() => stopRecording()} disabled={!recording || paralised}>
+      <Button variant="primary" type="button" className='left-button first-element' onClick={() => stopRecording()} disabled={!recording || paralised}>
       <span role="img" aria-label="back"> Stop Video 🛑 </span>
+      </Button>
+      
+      <Button variant="primary" type="button" className='first-element' onClick={() => resetMotionValues()} disabled={recording || paralised}>
+      <span role="img" aria-label="back"> <FontAwesomeIcon icon={faUndo} /> Reset Values  </span>
       </Button>
 
       <div id='form-kinect-wrapper'>

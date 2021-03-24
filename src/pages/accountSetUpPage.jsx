@@ -11,6 +11,10 @@ import toastConfig from '../config/toast.config';
 import firebase from '../config/firebase.config';
 import "react-datepicker/dist/react-datepicker.css";
 
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUndo } from '@fortawesome/free-solid-svg-icons'
+
 const options = [
   { label: "Shoulders", value: "Shoulders" },
   { label: "Knee", value: "Knee" },
@@ -30,7 +34,7 @@ const AccountSetUpPage = ({ role, activated }) => {
     Username: 'Name that will be displayed to other users',
     Height: 'Your height in centimeters',
     Weight: 'Your weight in Kilograms',
-    DoB: 'Select from the calendar the day you were born',
+    DoB: 'Select the day you were born in this format: DD/MM/YYYY',
     Specialisation: 'Select all specialisations you studied'
   }
 
@@ -81,7 +85,7 @@ const AccountSetUpPage = ({ role, activated }) => {
 
       return response.data.patientData;
     } catch (err) {
-      toast.error('😔 There was an error while retrieving your data!', toastConfig)
+      toast.error('⚠️ There was an error while retrieving your data!', toastConfig)
     }
   }
 
@@ -92,22 +96,27 @@ const AccountSetUpPage = ({ role, activated }) => {
 
       return response.data.physioData;
     } catch (err) {
-      toast.error('😔 There was an error retrieving your account information!', toastConfig)
+      toast.error('⚠️ There was an error retrieving your account information!', toastConfig)
     }
   }
 
   const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
+  const isNumeric = (str) => {
+    if (typeof str != 'string') return false // we only process strings!  
+    return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+           !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+  }
+
   const validateFields = () => {
     if (!username.replace(/\s/g,'')) throw new Error ('Username cannot be empty');
-    else if (parseInt(height) < 50 || parseInt(height) > 275) throw new Error ('Height cannot be lower than 50 cm nor higher than 275 cm');
-    else if (parseInt(weight) < 30 || parseInt(weight) > 200) throw new Error ('Height cannot be lower than 50 KG nor higher than 200 KG');
-    else if (getAge(dateOfBirth) < 16) throw new Error('User must be at least 16 years old');
+    else if (!isNumeric(height) || parseInt(height) < 50 || parseInt(height) > 275) throw new Error ('Height must be between 50 and 275 cm');
+    else if (!isNumeric(weight) || parseInt(weight) < 30 || parseInt(weight) > 200) throw new Error ('Weight must be between 50 and 200 KG');
+    else if (getAge(dateOfBirth) < 16 && getAge(dateOfBirth) < 100) throw new Error('User must be at least 16 years old');
   }
 
   const updateAccount = async (userID) => {
     try {      
-      console.log(role)
       setBtnDisabled(true);
       validateFields();
 
@@ -126,7 +135,7 @@ const AccountSetUpPage = ({ role, activated }) => {
       toast.success(`🚀 ${response.data.message}`, toastConfig);
 
     } catch (err) {
-      toast.error(`😔 ${err.message}`, toastConfig)
+      toast.error(`⚠️ ${err.message}`, toastConfig)
     } finally { setBtnDisabled(false); }
   }
 
@@ -176,7 +185,7 @@ const AccountSetUpPage = ({ role, activated }) => {
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='ruler'>📏</span></InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl id="height" placeholder="170" value={height} onChange={e => setHeight(e.target.value)} type='number' />
+              <FormControl id="height" placeholder="170" value={height} onChange={e => setHeight(e.target.value)} type='number' min='50' max='275' />
             </InputGroup>
 
             <Form.Label> Weight (in kg) <IconWithMessage message={toolTipMessage.Weight} /> </Form.Label>
@@ -184,7 +193,7 @@ const AccountSetUpPage = ({ role, activated }) => {
               <InputGroup.Prepend>
                 <InputGroup.Text><span role='img' aria-label='scale'>⚖️</span></InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl id="weight" placeholder="60" value={weight} onChange={e => setWeight(e.target.value)} type='number' />
+              <FormControl id="weight" placeholder="60" value={weight} onChange={e => setWeight(e.target.value)} type='number' min='50' max='200' />
             </InputGroup>
 
             { currentUserRole === 'PHYSIOTHERAPIST' 
@@ -212,8 +221,8 @@ const AccountSetUpPage = ({ role, activated }) => {
               <DatePicker id="dob" className="form-control" selected={dateOfBirth} onChange={date => setDateOfBirth(date)} dateFormat='dd/MM/yyyy' />
             </InputGroup>
         
-            <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} className='left-button' disabled={btnDisabled}>Update</Button>
-            <Button variant='danger' onClick={() => { clearChanges() }}> <span role='img' aria-label='bin'>🗑️</span> Clear </Button>
+            <Button variant='success' onClick={() => { updateAccount(userInfo.uid) }} className='left-button' disabled={btnDisabled}> <span role='img' aria-label='floppy'>💾</span>  Update</Button>
+            <Button variant='danger' onClick={() => { clearChanges() }}> <FontAwesomeIcon icon={faUndo} /> Reset </Button>
           </Form>
       }
     </>

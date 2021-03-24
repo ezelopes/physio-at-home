@@ -20,7 +20,7 @@ const VideosPage = () => {
   
   const opts = {
     height: '170',
-    width: '240',
+    width: '302.22',
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
@@ -43,7 +43,7 @@ const VideosPage = () => {
                     </Accordion.Toggle>
 
                     <Accordion.Collapse eventKey={specialisation.id}>
-                      <Card.Body>
+                      <Card.Body style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Row>
                         { youtubeVideosIDTemp[specialisation.id].map(currentVideoID => {
                             return <div id={currentVideoID} key={currentVideoID}> 
@@ -63,19 +63,6 @@ const VideosPage = () => {
             })}
         </Row>
       </Container>
-
-      {/* <Container>
-        <Row>
-          { youtubeVideosID.map((currentID) => {
-              return <div id={currentID} key={currentID}>
-                  <Col lg={true}>
-                    <YouTube videoId={currentID} opts={opts} />
-                  </Col>
-                </div>
-              })
-          }
-        </Row>
-      </Container> */}
     </>
   );  
 }

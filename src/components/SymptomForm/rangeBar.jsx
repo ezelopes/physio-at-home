@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
   const inactiveColor = '#EFEFEF'
   const min = 0;
-  const max = 100;
+  const max = 10;
   
   const inputRef = useRef();
   const bubbleRef = useRef();

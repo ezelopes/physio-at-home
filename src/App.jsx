@@ -11,7 +11,7 @@ import accountSetUpPage from './pages/accountSetUpPage';
 import notFoundPage from './pages/pageNotFound';
 
 import videosPage from './pages/videosPage';
-import promoteToAdminPage from './pages/admin/promoteUsers';
+import manageUsersPage from './pages/admin/manageUsers';
 import addNewSymptomPage from './pages/patient/addNewSymptomPage';
 import searchPhysiotherapistPage from './pages/patient/searchPhysiotherapist';
 import yourSymptomsPage from './pages/patient/yourSymptoms';
@@ -125,8 +125,8 @@ function App() {
               exact
             />
             <ProtectedRoute 
-              path="/admin/promoteToAdmin"
-              component={promoteToAdminPage}
+              path="/admin/manageUsers"
+              component={manageUsersPage}
               redirectPath="/"
               authenticated={ currentUserSignedIn }
               activated={ currentUserActivated }

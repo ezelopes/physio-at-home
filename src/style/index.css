@@ -42,7 +42,7 @@ th, td, Form, p {
 }
 
 #videos-card {
-  width: 70em;
+  width: 60vw;
 }
 
 .card {
@@ -153,7 +153,7 @@ button:hover {
 }
 
 #addSymptomForm {
-  width: 60%;
+  width: 60vw;
   margin: auto;
   border: solid;
   border-color: #FAFBFC;

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
+import ProfilePlaceHolderPicture from '../../images/profilePlaceholderPicture.jpg'
 import firebase from '../../config/firebase.config';
 import toastConfig from '../../config/toast.config';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,7 +35,7 @@ const PersonalPatientsPage = () => {
 
       return { patientsList };
     } catch (err) {
-      toast.error('😔 An error occured when trying to retrieve your patients!', toastConfig);
+      toast.error('⚠️ An error occured when trying to retrieve your patients!', toastConfig);
     }
   }
 
@@ -52,7 +53,7 @@ const PersonalPatientsPage = () => {
       removeConnectionBTN.textContent = 'Connection Removed!';
       toast.success('🚀 Connection Removed Successfully!', toastConfig);
     } catch (err) {
-      toast.error('😔 There was an error removing this connection!', toastConfig);
+      toast.error('⚠️ There was an error removing this connection!', toastConfig);
       removeConnectionBTN.className = 'btn btn-warning';
       removeConnectionBTN.textContent = 'Refresh Page!';
     }
@@ -72,11 +73,12 @@ const PersonalPatientsPage = () => {
             
             Object.keys(physioPatientsList).length === 0 ? <h2 className='center'> <div> No Patients Yet. Wait for Connection Requests! </div> </h2>  
             : Object.keys(physioPatientsList).map((patientID) => {
+              // const { name, email, photoURL ... } = physioPatientsList[patientID];
               return <div id={patientID} key={patientID}>
                 <Col lg={true}>
                   <Card>
                     <Card.Body>
-                      <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL } />
+                      <Card.Img variant="top" src={ physioPatientsList[patientID].photoURL ? physioPatientsList[patientID].photoURL : ProfilePlaceHolderPicture } />
                       <Card.Title className='first-element'> Name: { physioPatientsList[patientID].name } </Card.Title>
                       <Card.Text>
                         Email: { physioPatientsList[patientID].email }

@@ -81,7 +81,7 @@ const AddNewSymptomPage = () => {
     <>
       <ToastContainer />
 
-      <Form id='addSymptomForm'> 
+      <Form id='addSymptomForm' onSubmit={e => e.preventDefault()}> 
 
         <Stepper
           activeStep={currentStep}

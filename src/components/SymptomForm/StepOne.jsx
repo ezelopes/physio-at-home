@@ -32,7 +32,7 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
     <>
       <Form.Group className='first-element'>
         <Form.Label>Symptom Title <IconWithMessage message={toolTipMessage.Title} /> </Form.Label> 
-        <Form.Control type="text" placeholder="Insert here a title..." value={symptomTitle} onChange={(e) => { setSymptomTitle(e.target.value) }}/> 
+        <Form.Control type="text" placeholder="Description" value={symptomTitle} onChange={(e) => { setSymptomTitle(e.target.value) }}/> 
       </Form.Group>
       
       <Form.Group>
