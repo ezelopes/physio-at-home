@@ -1,13 +1,13 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
-import firebase from '../../config/firebase.config';
+// import firebase from '../../config/firebase.config';
 
 const PromoteUsersPage = () => {
 
 
-  const [adminEmail, setAdminEmail] = useState('');
-  const [physiotherapistEmail, setPhysiotherapistEmail] = useState('');
+  // const [adminEmail, setAdminEmail] = useState('');
+  // const [physiotherapistEmail, setPhysiotherapistEmail] = useState('');
 
   const makeAdmin = async () => {
     // try {
@@ -37,8 +37,9 @@ const PromoteUsersPage = () => {
       <h2> Manage Users Page </h2>
       <Form id="accountForm" className='first-element'>
         <Form.Group>
-          <Form.Label>New Admin Email address</Form.Label>
-          <Form.Control id='newAdminEmail' type="email" placeholder="Enter new Admin Email" onChange={ (e) => setAdminEmail(e.target.value) } />
+          <Form.Label>Manage Patients</Form.Label>
+          {/* onChange={ (e) => setAdminEmail(e.target.value) } */}
+          <Form.Control placeholder="..." />
         </Form.Group>
 
         <Button variant="primary" type='button' onClick={makeAdmin}>
@@ -46,13 +47,15 @@ const PromoteUsersPage = () => {
         </Button>
       </Form>
       <br/><br/>
+
       <Form id="accountForm" className='first-element'>
         <Form.Group>
-          <Form.Label>New Physiotherapist Email address</Form.Label>
-          <Form.Control id='newPhysiotherapistEmail' type="email" placeholder="Enter new Physiotherapist Email" />
+          <Form.Label>Manage Physiotherapists</Form.Label>
+          <Form.Control placeholder="..." />
         </Form.Group>
 
-        <Button variant="primary" type='button' onClick={makePhysiotherapist} onChange={ (e) => setPhysiotherapistEmail(e.target.value) }>
+        {/* onChange={ (e) => setPhysiotherapistEmail(e.target.value) } */}
+        <Button variant="primary" type='button' onClick={makePhysiotherapist} >
           Submit
         </Button>
       </Form>
