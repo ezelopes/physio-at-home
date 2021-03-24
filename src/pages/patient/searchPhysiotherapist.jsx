@@ -93,8 +93,8 @@ const SearchPhysiotherapistsPage = () => {
     }
   }
 
-  const removeConnection = async (e, physioID) => {
-    const removeConnectionBTN = e.target;
+  const removeConnection = async (target, physioID) => {
+    const removeConnectionBTN = target;
     try {
       const removeConnection = firebase.functions.httpsCallable('removeConnection');
       const removeObj = { physioID, patientID: userInfo.uid } 
