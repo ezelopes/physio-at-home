@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Button, Card, Container, Row, Col, Modal, ListGroup } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col, Modal, ListGroup, Spinner } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -12,6 +12,7 @@ const SelectedPatientPage = (props) => {
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const { patientID, name } = props.location.state;
+  const [loading, setLoading] = useState(true);
   const [patientSymptomsList, setPatientSymptoms] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showModalHistory, setShowModalHistory] = useState(false);
@@ -23,7 +24,7 @@ const SelectedPatientPage = (props) => {
     const fetchData = async () => { 
       const response = await getAllPatientSymptoms(patientID);
       setPatientSymptoms(response.symptomList);
-      console.log(response.symptomList)
+      setLoading(false);
      }
  
      fetchData();
@@ -91,7 +92,12 @@ const SelectedPatientPage = (props) => {
       <ToastContainer />
       <Button onClick={() => props.history.goBack() } style={{ marginRight: '90%', boxShadow: '2px 4px' }} > <FontAwesomeIcon icon={faArrowAltCircleLeft} /> GO BACK </Button> 
       <h2> List of Symptoms of {name} </h2>
-      <Container>
+      { loading ? 
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner> 
+
+        : <Container>
         <Row>
           { Object.keys(patientSymptomsList).map((symptomID) => {
                 return <div id={symptomID} key={symptomID}>
@@ -208,6 +214,7 @@ const SelectedPatientPage = (props) => {
         </Modal>
 
       </Container>
+    }
     </>
   );
 }
