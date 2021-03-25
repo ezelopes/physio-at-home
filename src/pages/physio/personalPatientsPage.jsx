@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, Container, Row, Col, Spinner } from 'react-bootstrap'
+import { Button, Card, Container, Row, Col, Spinner, Modal } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 
 import ProfilePlaceHolderPicture from '../../images/profilePlaceholderPicture.jpg'
@@ -15,6 +15,9 @@ const PersonalPatientsPage = () => {
 
   const [loading, setLoading] = useState(true);
   const [physioPatientsList, setPhysioPatientsList] = useState([]);
+  const [showModalDeleteConfirmation, setShowModalDeleteConfirmation] = useState(false);
+  const [selectedPatientID, setSelectedPatientID] = useState('');
+  const [currentButtonTarget, setCurrentButtonTarget] = useState('');
 
   useEffect(() => {
     const fetchData = async () => { 
@@ -26,6 +29,18 @@ const PersonalPatientsPage = () => {
      fetchData();
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+
+  const handleModalDeleteConfirmation = (buttonTarget, patientID) => {
+    setSelectedPatientID(patientID);
+    setCurrentButtonTarget(buttonTarget)
+    setShowModalDeleteConfirmation(true);
+  }
+
+  const handleCloseModalDeleteConfirmation = () => {
+    setSelectedPatientID('');
+    setShowModalDeleteConfirmation(false);
+  }
 
   const getAllPhysioPatients = async (userID) => {
     try {
@@ -39,8 +54,8 @@ const PersonalPatientsPage = () => {
     }
   }
 
-  const removeConnection = async (e, patientID) => {
-    const removeConnectionBTN = e.target;
+  const removeConnection = async (target, patientID) => {
+    const removeConnectionBTN = target;
     try {
       const physioID = userInfo.uid;
       removeConnectionBTN.disabled = true;
@@ -89,7 +104,10 @@ const PersonalPatientsPage = () => {
                       <Button 
                         id={`${patientID}-removeConnectionButton`}
                         variant="danger"
-                        onClick={(e) => { removeConnection(e, patientID) }}
+                        onClick={(e) => { 
+                          handleModalDeleteConfirmation(e.target, patientID)
+                          // removeConnection(e, patientID)
+                        }}
                       >
                         Remove Patient
                       </Button>
@@ -100,6 +118,26 @@ const PersonalPatientsPage = () => {
             }) 
           }
           </Row>
+
+          <Modal show={showModalDeleteConfirmation} onHide={handleCloseModalDeleteConfirmation} centered>
+          <Modal.Header closeButton>
+              <Modal.Title> Delete Confirmation </Modal.Title>
+            </Modal.Header>
+            <Modal.Body> Are you sure about deleting this Connection? </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => { handleCloseModalDeleteConfirmation() } }>
+                Close
+              </Button>
+              <Button variant="danger" onClick={async (e) => { 
+                e.target.disabled = true;
+                removeConnection(currentButtonTarget, selectedPatientID).then(() => {
+                  handleCloseModalDeleteConfirmation()
+                }).catch(() => {})
+              } }>
+                Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Container>
       }
     </>
