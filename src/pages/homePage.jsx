@@ -1,8 +1,11 @@
 import React, { memo } from 'react';
+import logo from '../images/homepage_logo.png'
 
 const HomePage = () => {
   return (
-    <div id='homepage'></div>
+    <>
+      <img alt='Logo' src={logo} id='homepagelogo' />
+    </>
   );
 }
 
