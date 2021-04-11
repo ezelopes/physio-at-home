@@ -88,7 +88,6 @@ const PersonalPatientsPage = () => {
             
             Object.keys(physioPatientsList).length === 0 ? <h2 className='center'> <div> No Patients Yet. Wait for Connection Requests! </div> </h2>  
             : Object.keys(physioPatientsList).map((patientID) => {
-              // const { name, email, photoURL ... } = physioPatientsList[patientID];
               return <div id={patientID} key={patientID}>
                 <Col lg={true}>
                   <Card>
@@ -106,7 +105,6 @@ const PersonalPatientsPage = () => {
                         variant="danger"
                         onClick={(e) => { 
                           handleModalDeleteConfirmation(e.target, patientID)
-                          // removeConnection(e, patientID)
                         }}
                       >
                         Remove Patient

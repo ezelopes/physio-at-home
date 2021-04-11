@@ -67,7 +67,6 @@ const TherapistsDisplayer = ({ physiotherapistsList, patientRequestsList, myPhys
                                 id={`${physiotherapist.id}-removeConnectionButton`}
                                 onClick={(e) => { 
                                   handleModalDeleteConfirmation(e.target, physiotherapist.id)
-                                  // removeConnection(e, physiotherapist.id) 
                                 }}
                               >
                                 Remove Connection

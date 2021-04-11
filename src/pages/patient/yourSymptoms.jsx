@@ -60,9 +60,6 @@ const YourSymptoms = () => {
 
   const deleteSymptom = async (patientID, symptomID) => {
     try {
-
-      // Pop Up for Confirmation
-
       const deleteSymptomOfPatient = firebase.functions.httpsCallable('deleteSymptomOfPatient');
       const response = await deleteSymptomOfPatient({ patientID, symptomID });
       toast.success(`🚀 ${response.data.message}`, toastConfig);
@@ -86,21 +83,6 @@ const YourSymptoms = () => {
         <Row>
           <SymptomsDisplayer updated={updated} symptoms={symptomsList} deleteSymptom={deleteSymptom} handleShowModal={handleShowModal}  userInfo={userInfo} />
         </Row>
-
-        {/* <Modal show={showModalDelete} onHide={handleCloseModalDelete} centered>
-        <Modal.Header closeButton>
-            <Modal.Title> Delete Confirmation </Modal.Title>
-          </Modal.Header>
-          <Modal.Body> Are you sure about deleting this Symptom? </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => { handleCloseModalDelete() } }>
-              Close
-            </Button>
-            <Button variant="danger" onClick={() => { deleteSymptom() } }>
-              Delete
-            </Button>
-          </Modal.Footer>
-        </Modal> */}
 
         <Modal show={showModal} onHide={handleCloseModal} centered>
           <Modal.Header closeButton>

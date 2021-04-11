@@ -16,7 +16,6 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
     const progress = (painRangeValue / max) * 100 + '%';
     const newBackgroundStyle = `linear-gradient(90deg, ${activeColor} 0% ${progress}, ${inactiveColor} ${progress} 100%)`
     inputRef.current.style.background = newBackgroundStyle
-    // bubbleRef.current.style.left = '26vw' // `${rangeBarValue*0.35}em`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
@@ -31,7 +30,6 @@ const RangeBar = ({ id, setPainRangeValue, painRangeValue }) => {
     setPainRangeValue(newValue)
     const newBackgroundStyle = `linear-gradient(90deg, ${activeColor} 0% ${progress}, ${inactiveColor} ${progress} 100%)`
     inputRef.current.style.background = newBackgroundStyle
-    // bubbleRef.current.style.left = `${rangeBarValue*0.35}em`;
   }
 
   const getColor = (value) => {

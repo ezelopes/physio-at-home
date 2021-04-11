@@ -86,9 +86,7 @@ const SymptomsDisplayer = ({ updated, symptoms, deleteSymptom, handleShowModal, 
                     variant="danger"
                     disabled={showModalDeleteConfirmation}
                     onClick={(e) => { 
-                      // e.target.disabled = true;
                       handleModalDeleteConfirmation(currentSymptomID);
-                      // deleteSymptom(userInfo.uid, currentSymptomID);
                     }}
                   >
                     Delete Symptom

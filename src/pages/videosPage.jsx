@@ -22,49 +22,50 @@ const VideosPage = () => {
     height: '170',
     width: '302.22',
     playerVars: {
-      // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
     },
   };
 
-  return (
-    <>
-      {/* <h2> Videos </h2> */}
+  try {
+    return (
+      <>
+        <Container>
+          <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              { specialisations.map((specialisation, index) => {
+                return (
+                  <Accordion className='first-element' key={index}>
+                    <Card id='videos-card' key={index}>
 
-      <Container>
-        <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            { specialisations.map((specialisation, index) => {
-              return (
-                <Accordion className='first-element' key={index}>
-                  <Card id='videos-card' key={index}>
+                      <Accordion.Toggle as={Card.Header} eventKey={specialisation.id}>
+                        <b>{specialisation.name}</b>
+                      </Accordion.Toggle>
 
-                    <Accordion.Toggle as={Card.Header} eventKey={specialisation.id}>
-                      <b>{specialisation.name}</b>
-                    </Accordion.Toggle>
+                      <Accordion.Collapse eventKey={specialisation.id}>
+                        <Card.Body style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Row>
+                          { youtubeVideosIDTemp[specialisation.id].map(currentVideoID => {
+                              return <div id={currentVideoID} key={currentVideoID}> 
+                                <Col lg={true}>
+                                  <YouTube videoId={currentVideoID} opts={opts} key={currentVideoID} />
+                                </Col>
+                              </div>
+                            })
+                          }
+                          </Row>
+                        </Card.Body>
+                      </Accordion.Collapse>
 
-                    <Accordion.Collapse eventKey={specialisation.id}>
-                      <Card.Body style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Row>
-                        { youtubeVideosIDTemp[specialisation.id].map(currentVideoID => {
-                            return <div id={currentVideoID} key={currentVideoID}> 
-                              <Col lg={true}>
-                                <YouTube videoId={currentVideoID} opts={opts} key={currentVideoID} />
-                              </Col>
-                            </div>
-                          })
-                        }
-                        </Row>
-                      </Card.Body>
-                    </Accordion.Collapse>
-
-                  </Card>
-                </Accordion>
-              )
-            })}
-        </Row>
-      </Container>
-    </>
-  );  
+                    </Card>
+                  </Accordion>
+                )
+              })}
+          </Row>
+        </Container>
+      </>
+    );  
+  } catch(err) {
+    return (<h2> An Error Occured when displaying the data. Please try again or contact an Administrator </h2>)
+  }
 }
 
 export default memo(VideosPage);

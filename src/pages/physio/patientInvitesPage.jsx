@@ -51,7 +51,7 @@ const PatientInvitesPage = () => {
       toast.success('🚀 Invite Accepted Successfully!', toastConfig);
     } catch (err) {
       toast.error('⚠️ There was an error accepting the invite!', toastConfig);
-      document.getElementById(`${patientID}-acceptButton`).className = 'btn btn-warning'; // -danger?
+      document.getElementById(`${patientID}-acceptButton`).className = 'btn btn-warning';
       document.getElementById(`${patientID}-acceptButton`).textContent = 'Refresh Page!';
     }
   }
@@ -70,7 +70,7 @@ const PatientInvitesPage = () => {
       toast.success('🚀 Invite Declined Successfully!', toastConfig);
     } catch (err) {
       toast.error('⚠️ There was an error declining the invite!', toastConfig);
-      document.getElementById(`${patientID}-declineButton`).className = 'btn btn-warning'; // -danger?
+      document.getElementById(`${patientID}-declineButton`).className = 'btn btn-warning';
       document.getElementById(`${patientID}-declineButton`).textContent = 'Refresh Page!';
     }
   }

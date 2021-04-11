@@ -32,7 +32,6 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
       </Form.Group>
 
       <Button 
-        // variant="warning"
         type="submit"
         className='form-button left-button'
         onClick={(e) => { e.preventDefault(); prevStep(); }}
