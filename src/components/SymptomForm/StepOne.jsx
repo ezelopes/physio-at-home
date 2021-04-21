@@ -11,7 +11,7 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
 
   const bodyPartsList = [ 'KNEE', 'ELBOW' ];
   const toolTipMessage = {
-    Title: 'Give a meaning title to your symptom',
+    Title: 'REQUIRED: Give a meaning title to your symptom',
     BodyLocation: 'Select where in your body the symptom is located',
     RightLeft: 'Select Right or Left',
     PainRange: 'Drag the bar up to how much pain you feel in a 0-100 scale'
@@ -31,7 +31,7 @@ const StepOne = ({ nextStep, symptomTitle, setSymptomTitle, painRangeValue, setP
   return (
     <>
       <Form.Group className='first-element'>
-        <Form.Label>Symptom Title <IconWithMessage message={toolTipMessage.Title} /> </Form.Label> 
+        <Form.Label>Symptom Title <b style={{color: 'red'}}>*</b> <IconWithMessage message={toolTipMessage.Title} /> </Form.Label> 
         <Form.Control type="text" placeholder="Description" value={symptomTitle} onChange={(e) => { setSymptomTitle(e.target.value) }}/> 
       </Form.Group>
       

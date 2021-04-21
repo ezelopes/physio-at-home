@@ -8,7 +8,7 @@ import IconWithMessage from '../iconWithMessage'
 const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, specificBodyPart, setSymptomDetails, symptomDetails}) => {
 
   const toolTipMessage = {
-    Details: 'Give a more in depth explanation about your symptom'
+    Details: 'REQUIRED: Give a more in depth explanation about your symptom'
   }
 
   const renderSwitch = (bodyPart) => {
@@ -27,7 +27,7 @@ const StepTwo = ({ selectedBodyPart, prevStep, nextStep, setSpecificBodyPart, sp
       <h2 className='first-element' style={{ marginBottom: '1em'}}> Indicate where you feel pain by clicking on the red dots below </h2>
       <div>{renderSwitch(selectedBodyPart)}</div>
       <Form.Group>
-        <Form.Label>Please insert more details <IconWithMessage message={toolTipMessage.Details} /> </Form.Label>
+        <Form.Label>Please insert more details <b style={{color: 'red'}}>*</b> <IconWithMessage message={toolTipMessage.Details} /> </Form.Label>
         <Form.Control as='textarea' value={symptomDetails} placeholder="Insert here details..." id='symptomDetails' onChange={(e) => { setSymptomDetails(e.target.value) }} />
       </Form.Group>
 

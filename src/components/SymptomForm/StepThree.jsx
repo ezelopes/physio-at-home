@@ -128,6 +128,8 @@ const StepThree = ({ selectedBodyPart, rightOrLeft, prevStep, nextStep, setMinAn
   }
 
   const resetMotionValues = () => {
+    minAngle = 180;
+    maxAngle = 0;
     setMinAngle(180);
     setMaxAngle(0);
     toast.success('🚀 Motion Values Reset!', toastConfig);
