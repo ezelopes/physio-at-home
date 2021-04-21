@@ -8,8 +8,11 @@ import firebase from './../config/firebase.config';
 const NavBar = ({ location }) => {
 
   const currentRole = localStorage.getItem('role');
-  const currentUserSignedIn = (localStorage.getItem('signedIn') === 'true')
-  const userName = JSON.parse(localStorage.getItem('userInfo')).name;
+  const currentUserSignedIn = localStorage.getItem('signedIn') === 'true'
+  let userName = '';
+
+  if (JSON.parse(localStorage.getItem('userInfo'))) userName = JSON.parse(localStorage.getItem('userInfo')).name;
+  else localStorage.setItem('userInfo', JSON.stringify({uid: '', name: '', email: '', photoURL: ''}));
 
   const userLogOut = () => {
     firebase.auth.signOut();
