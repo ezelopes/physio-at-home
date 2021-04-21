@@ -39,6 +39,11 @@ th, td, Form, p {
   width: 60vw;
 }
 
+ .card-header:hover {
+  background-color: #b9b9b9b4;
+  cursor: pointer;
+}
+
 .card {
   color: black;
   width: 23em;
